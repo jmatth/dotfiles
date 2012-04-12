@@ -5,7 +5,6 @@ set number
 set shortmess=filnxtToOI
 set backspace=2
 set ts=3
-set expandtab
 set shiftwidth=3
 syn on
 if has("autocmd")
