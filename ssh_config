@@ -1,0 +1,7 @@
+#Host git
+#   Hostname 192.168.160.222
+#      Port 9922
+#	     User git
+Host *
+ControlMaster auto
+ControlPath ~/.tmp/%r@%h:%p
