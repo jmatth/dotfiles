@@ -1,0 +1,34 @@
+#export statements
+export EDITOR=vim
+export PS1='\[\e[0m\][\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]\$\[\e[m\]] \[\e[1;37m\]'
+
+#aliases for ls
+alias ls='/usr/local/gnu/bin/ls -hF --color=auto'
+alias lsd="ls --color=always -alh | grep ^d"
+alias lf="ls --color=always -lh | grep ^d"
+alias l="ls"
+alias s="l"
+alias la="ls -Alh"
+alias ll="ls -lh"
+
+#program shortcuts
+alias bashmod="vim ~/.bashrc"
+alias bashsave="source ~/.bashrc"
+alias vmod="vim ~/.vimrc"
+
+#aliases for random ops
+alias cc="clear"
+
+#aliases for directory navigation
+alias ..="cd .."
+alias me="cd ~;ls"
+alias testbuild="sudo mock -v --rebuild "
+
+#ssh aliases
+alias opus5='ssh opus5'
+alias sauron='ssh sauron'
+
+#functions
+function mockbuild (){
+   mock -v --rebuild ` rpmbuild -bs $1 | cut -d' ' -f2 ` 
+}
