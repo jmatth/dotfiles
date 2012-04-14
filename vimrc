@@ -7,6 +7,7 @@ set backspace=2
 set ts=3
 set shiftwidth=3
 syn on
+
 if has("autocmd")
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
     \| exe "normal! g'\"" | endif 
