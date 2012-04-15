@@ -27,6 +27,6 @@ colorscheme darkblue
 " Setup cursor kholer 
 set cursorline
 set cursorcolumn
-highlight CursorLine ctermbg=darkblue cterm=bold
-highlight CursorColumn ctermbg=darkblue
+highlight CursorLine ctermbg=20 cterm=bold
+highlight CursorColumn ctermbg=20
 highlight MatchParen ctermbg=white ctermfg=black
