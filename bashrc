@@ -31,12 +31,11 @@ alias v="vim"
 alias me="cd ~;ls"
 
 #ssh aliases
-#alias opus5="ssh opus5"
-#alias solaris9t="ssh solaris9-testing"
-#alias jla="ssh jla"
 alias ziti="ssh ziti.rutgers.edu"
 alias ravioli='ssh ravioli.rutgers.edu'
+alias sauron='ssh sauron.rutgers.edu'
 alias eden='ssh eden.rutgers.edu'
+alias wol='ssh ravioli.rutgers.edu wol'
 
 #autocomplete commnads
 complete -cf sudo
