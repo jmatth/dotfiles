@@ -35,6 +35,7 @@ alias me="cd ~;ls"
 #alias solaris9t="ssh solaris9-testing"
 #alias jla="ssh jla"
 alias ziti="ssh ziti.rutgers.edu"
+alias ravioli='ssh ravioli.rutgers.edu'
 alias eden='ssh eden.rutgers.edu'
 
 #autocomplete commnads
