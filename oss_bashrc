@@ -3,7 +3,7 @@ export EDITOR=vim
 export PS1='\[\e[0m\][\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]\$\[\e[m\]] \[\e[1;37m\]'
 
 #aliases for ls
-alias ls="ls --color=auto"
+alias ls="ls -Fh --color=auto"
 alias lsd="ls --color=always -alh | grep ^d"
 alias lf="ls --color=always -lh | grep ^d"
 alias l="ls"
