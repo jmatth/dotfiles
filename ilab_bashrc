@@ -42,3 +42,5 @@ alias mine="cd /filer/tmp2/josh/; ls"
 #ssh aliases
 alias facade="ssh facade"
 alias ziti="ssh ziti"
+alias wol='ssh -l root -p 8080 localhost "./wol.sh"'
+alias router='ssh -l root -p 8080 localhost'
