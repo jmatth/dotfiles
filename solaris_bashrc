@@ -33,6 +33,9 @@ alias rpms='cd ~/rpmbuild/RPMS'
 alias opus5='ssh opus5'
 alias sauron='ssh sauron'
 
+#program settings variables
+export GREP_OPTIONS='--color=auto'
+
 #functions
 function mockbuild (){
    mock -v --rebuild ` rpmbuild -bs $1 | cut -d' ' -f2 ` 
