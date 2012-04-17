@@ -24,7 +24,7 @@ alias ..="cd .."
 alias me="cd ~;ls"
 alias testbuild="sudo mock -v --rebuild "
 alias specs="cd ~/rpmbuild/SPECS"
-alias src='cd ~/rpmbuild/SOURCE'
+alias src='cd ~/rpmbuild/SOURCES'
 alias srpm='cd ~/rpmbuild/SRPMS'
 alias rpms='cd ~/rpmbuild/RPMS'
 
