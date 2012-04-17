@@ -1,6 +1,7 @@
 #export statements
 export EDITOR=vim
 export PS1='\[\e[0m\][\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]\$\[\e[m\]] \[\e[1;37m\]'
+export PATH='/usr/local/gnu/bin:/usr/dt/bin:/usr/openwin/bin:/usr/local/bin:/usr/bin:/usr/ucb:/opt/SUNWspro/bin:/usr/ccs/bin'
 
 #aliases for ls
 alias ls='/usr/local/gnu/bin/ls -hF --color=auto'
