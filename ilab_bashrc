@@ -39,6 +39,9 @@ alias media="cd /filer/tmp2/contrib/media;ls"
 alias me="cd ~;ls"
 alias mine="cd /filer/tmp2/josh/; ls"
 
+#program settings variables
+export GREP_OPTIONS='--color=auto'
+
 #ssh aliases
 alias facade="ssh facade"
 alias ziti="ssh ziti"
