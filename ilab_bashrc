@@ -15,7 +15,7 @@ alias bashsave="source ~/.bashrc"
 alias vmod="vim ~/.vimrc"
 
 #aliases for ls
-alias ls="ls --color=auto"
+alias ls='ls -Fh --color=auto'
 alias lsa="ls -a"
 alias lsd="ls --color=always -alh | grep ^d"
 alias lf="ls --color=always -lh | grep ^d"
