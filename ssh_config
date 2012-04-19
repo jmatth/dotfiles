@@ -1,7 +1,8 @@
-#Host git
-#   Hostname 192.168.160.222
-#      Port 9922
-#	     User git
 Host *
-ControlMaster auto
-ControlPath ~/.tmp/%r@%h:%p
+	ControlMaster auto
+	ControlPath ~/.ssh/mc-%r@%h:%p
+	ForwardX11 yes
+Host *.rutgers.edu
+	user jmatth
+Host DI-624
+	user root
