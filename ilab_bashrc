@@ -1,5 +1,5 @@
 #export statements
-export PATH=$PATH:/filer/tmp2/contrib/bin:/usr/sbin:/sbin:/filer/tmp2/katie/bin/
+export PATH=$PATH:/filer/tmp2/contrib/bin:/usr/sbin:/sbin:/filer/tmp2/josh/bin/
 export EDITOR=vim
 export PS1='\[\e[0m\][\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]\$\[\e[m\]] \[\e[1;37m\]'
 export TERM='xterm-256color'
@@ -15,7 +15,7 @@ alias bashsave="source ~/.bashrc"
 alias vmod="vim ~/.vimrc"
 
 #aliases for ls
-alias ls="ls --color=auto"
+alias ls='ls -Fh --color=auto'
 alias lsa="ls -a"
 alias lsd="ls --color=always -alh | grep ^d"
 alias lf="ls --color=always -lh | grep ^d"
@@ -39,6 +39,16 @@ alias media="cd /filer/tmp2/contrib/media;ls"
 alias me="cd ~;ls"
 alias mine="cd /filer/tmp2/josh/; ls"
 
+#program settings variables
+export GREP_OPTIONS='--color=auto'
+
 #ssh aliases
 alias facade="ssh facade"
 alias ziti="ssh ziti"
+alias wol='ssh -l root -p 8080 localhost "./wol.sh"'
+alias router='ssh -l root -p 8080 localhost'
+
+#autocomplete commnads
+complete -cf sudo
+complete -cf which
+complete -cf man

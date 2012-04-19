@@ -37,6 +37,9 @@ alias sauron='ssh sauron.rutgers.edu'
 alias eden='ssh eden.rutgers.edu'
 alias wol='ssh ravioli.rutgers.edu wol'
 
+#program settings variables
+export GREP_OPTIONS='--color=auto'
+
 #autocomplete commnads
 complete -cf sudo
 complete -cf which
