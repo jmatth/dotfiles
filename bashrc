@@ -10,7 +10,7 @@ export TERM='xterm-256color'
 	cd ~/rc-Files
 	git pull -q
 	exit
-)&
+)& disown
 
 #program shortcuts
 alias fire="firefox"

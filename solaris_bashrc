@@ -8,7 +8,7 @@ export PATH='/usr/local/gnu/bin:/usr/dt/bin:/usr/openwin/bin:/usr/local/bin:/usr
 	cd ~/rc-Files
 	git pull -q
 	exit
-)&
+)& disown
 
 #aliases for ls
 alias ls='/usr/local/gnu/bin/ls -hF --color=auto'
