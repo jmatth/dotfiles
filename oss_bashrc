@@ -27,6 +27,9 @@ alias testbuild="sudo mock -v --rebuild "
 #ssh aliases
 alias opus5='ssh opus5'
 alias sauron='ssh sauron'
+alias jla='ssh jla'
+alias solaris9t='ssh solaris9-testing'
+alias centsix='ssh centos5-64build'
 
 #program settings variables
 export GREP_OPTIONS='--color=auto'
