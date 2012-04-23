@@ -3,10 +3,11 @@ export EDITOR=vim
 export PS1='\[\e[0m\][\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]\$\[\e[m\]] \[\e[1;37m\]'
 
 #Sync config files:
-pushd ~/rc-Files
-git pull -q &
-popd
-clear
+(
+	cd ~/rc-Files
+	git pull -q
+	exit
+)
 
 #aliases for ls
 alias ls="ls -Fh --color=auto"
