@@ -45,5 +45,5 @@ colorscheme darkblue
 " Setup cursor crosshairs 
 set cursorline
 set cursorcolumn
-highlight CursorLine ctermbg=darkblue cterm=bold term=bold
-highlight CursorColumn ctermbg=darkblue
+highlight CursorLine ctermbg=20 cterm=bold term=bold
+highlight CursorColumn ctermbg=20
