@@ -26,6 +26,7 @@ alias vmod="vim ~/.vimrc"
 #aliases for random ops
 alias cc="clear"
 alias lock='xscreensaver-command -lock'
+alias hosts='sudo vim /etc/hosts'
 
 #aliases for directory navigation
 alias ..="cd .."
