@@ -25,6 +25,7 @@ alias vmod="vim ~/.vimrc"
 
 #aliases for random ops
 alias cc="clear"
+alias lock='xscreensaver-command -lock'
 
 #aliases for directory navigation
 alias ..="cd .."
@@ -40,6 +41,11 @@ alias centsix='ssh centos5-64build'
 
 #program settings variables
 export GREP_OPTIONS='--color=auto'
+
+#autocomplete commnads
+complete -cf sudo
+complete -cf which
+complete -cf man
 
 #functions
 function mockbuild (){
