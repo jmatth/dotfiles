@@ -2,7 +2,7 @@
 export TERM=xterm-256color
 export EDITOR=vim
 export PS1='\[\e[0m\][\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]\$\[\e[m\]] \[\e[1;37m\]'
-export PATH='/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin:/usr/sbin'
+export PATH='/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin:/usr/sbin:/sbin'
 
 #Sync config files:
 (
