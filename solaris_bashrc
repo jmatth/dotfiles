@@ -6,7 +6,7 @@ export PATH='/usr/local/gnu/bin:/usr/dt/bin:/usr/openwin/bin:/usr/local/bin:/usr
 #Sync config files:
 (
 	cd ~/rc-Files
-	git pull -q
+	git pull -q 2> /dev/null
 	exit
 )& disown
 

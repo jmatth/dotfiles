@@ -7,7 +7,7 @@ export TERM='xterm-256color'
 #Sync config files:
 (
 	cd ~/rc-Files
-	git pull -q
+	git pull -q 2> /dev/null
 	exit
 )& disown
 
