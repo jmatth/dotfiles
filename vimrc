@@ -42,6 +42,15 @@ set autoindent	  " Auto indent when starting a new line
 set smartindent  " Indent based on syntax
 colorscheme darkblue
 
+"Leader Mappings
+let mapleader=","
+nnoremap <Leader>l :noh<CR> 
+nnoremap <Leader>a gt
+noremap <Leader>n :NERDTreeToggle<CR>
+noremap <Leader>D :NERDTreeFind<CR>
+noremap <Leader>v :ConqueTermVSplit<Space>bash<cr>
+noremap <Leader>b :ConqueTermSplit<Space>bash<cr>
+
 " Setup cursor crosshairs 
 set cursorline
 set cursorcolumn
