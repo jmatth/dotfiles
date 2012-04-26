@@ -6,7 +6,6 @@ export TERM='xterm-256color'
 
 #Sync config files:
 (
-	sleep 5m
 	cd ~/rc-Files
 	git pull -q
 	exit
