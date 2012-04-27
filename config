@@ -2,7 +2,6 @@ Host *
 	ControlMaster auto
 	ControlPath ~/.ssh/mc-%r@%h:%p
 	ForwardX11 yes
-	ExitOnForwardFailure yes
 Host *.rutgers.edu
 	user jmatth
 Host DI-624

@@ -4,6 +4,13 @@ export EDITOR=vim
 export PS1='\[\e[0m\][\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]\$\[\e[m\]] \[\e[1;37m\]'
 export TERM='xterm-256color'
 
+#Sync config files:
+(
+	cd ~/rc-Files
+	git pull -q 2> /dev/null
+	exit
+)& disown
+
 #program shortcuts
 alias fire="firefox"
 alias bashmod="vim ~/.bashrc"
@@ -35,7 +42,7 @@ alias ziti="ssh ziti.rutgers.edu"
 alias ravioli='ssh ravioli.rutgers.edu'
 alias sauron='ssh sauron.rutgers.edu'
 alias eden='ssh eden.rutgers.edu'
-alias wol='ssh ravioli.rutgers.edu wol'
+alias wol='ssh ravioli.rutgers.edu wol.sh'
 
 #program settings variables
 export GREP_OPTIONS='--color=auto'

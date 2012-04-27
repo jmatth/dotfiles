@@ -1,9 +1,18 @@
 #export statements
+export TERM=xterm-256color
 export EDITOR=vim
 export PS1='\[\e[0m\][\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]\$\[\e[m\]] \[\e[1;37m\]'
+export PATH='/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin:/usr/sbin:/sbin'
+
+#Sync config files:
+(
+	cd ~/rc-Files
+	git pull -q 2> /dev/null
+	exit
+)& disown
 
 #aliases for ls
-alias ls="ls --color=auto"
+alias ls="ls -Fh --color=auto"
 alias lsd="ls --color=always -alh | grep ^d"
 alias lf="ls --color=always -lh | grep ^d"
 alias l="ls"
@@ -18,6 +27,8 @@ alias vmod="vim ~/.vimrc"
 
 #aliases for random ops
 alias cc="clear"
+alias lock='xscreensaver-command -lock'
+alias hosts='sudo vim /etc/hosts'
 
 #aliases for directory navigation
 alias ..="cd .."
@@ -27,9 +38,17 @@ alias testbuild="sudo mock -v --rebuild "
 #ssh aliases
 alias opus5='ssh opus5'
 alias sauron='ssh sauron'
+alias jla='ssh jla'
+alias solaris9t='ssh solaris9-testing'
+alias centsix='ssh centos5-64build'
 
 #program settings variables
 export GREP_OPTIONS='--color=auto'
+
+#autocomplete commnads
+complete -cf sudo
+complete -cf which
+complete -cf man
 
 #functions
 function mockbuild (){
