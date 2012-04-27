@@ -19,6 +19,7 @@ alias vmod="vim ~/.vimrc"
 
 #aliases for random ops
 alias cc="clear"
+alias sudo='slide'
 
 #aliases for directory navigation
 alias ..="cd .."
