@@ -5,5 +5,3 @@ Host *
 	ExitOnForwardFailure yes
 Host *.rutgers.edu
 	user jmatth
-Host DI-624
-	user root
