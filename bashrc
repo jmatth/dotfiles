@@ -1,7 +1,8 @@
 #export statements
 export EDITOR=vim
 #export PS1="[\[\e[01;32m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]]\$ "
-export PS1='\[\e[0m\][\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]\$\[\e[m\]] \[\e[1;37m\]'
+#export PS1='\[\e[0m\][\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]\$\[\e[m\]] \[\e[1;37m\]'
+export PS1='\[\e[0m\][\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\$\[\e[m\]] \[\e[1;37m\]'
 export TERM='xterm-256color'
 
 #Sync config files:
