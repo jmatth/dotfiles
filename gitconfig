@@ -1,0 +1,14 @@
+[user]
+	email = russ.frank@rutgers.edu
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+   interactive = auto
+   ui = auto
+[alias]
+   bless = merge --no-ff --log --no-commit
+   co = checkout
+   br = checkout -b
+   ci = commit
+   unstage = reset
