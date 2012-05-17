@@ -1,90 +1,54 @@
-TERM=xterm-256color
-
-[ -z "$PS1" ] && return # If not running interactively, don't do anything
-
-HISTCONTROL=ignoreboth
-
-shopt -s histappend   # append to history file
-shopt -s checkwinsize # ensure window size is correct
-
-set -o vi
-
-export CLICOLOR=true
-
-function EXT_COL () { echo -ne "\[\033[38;5;$1m\]"; }
-
-NC='\e[m'   # reset colors
-
-USERCOL=`EXT_COL 25`
-ATCOL=`EXT_COL 26`
-HOSTCOL=`EXT_COL 29`
-PATHCOL=`EXT_COL 115`
-BRANCHCOL=`EXT_COL 216`
-RETURNCOL=`EXT_COL 9`
-TIMECOL=`EXT_COL 242`
-
-parse_git_branch() {
-  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
-}
-
-function parse_git_dirty {
-        status=`git status 2> /dev/null`
-        dirty=`echo -n "${status}" 2> /dev/null | grep -q "modified:" 2> /dev/null; echo "$?"`
-        untracked=`echo -n "${status}" 2> /dev/null | grep -q "Untracked files" 2> /dev/null; echo "$?"`
-        ahead=`echo -n "${status}" 2> /dev/null | grep -q "Your branch is ahead of" 2> /dev/null; echo "$?"`
-        newfile=`echo -n "${status}" 2> /dev/null | grep -q "new file:" 2> /dev/null; echo "$?"`
-        renamed=`echo -n "${status}" 2> /dev/null | grep -q "renamed:" 2> /dev/null; echo "$?"`
-        bits=''
-        if [ "${dirty}" == "0" ]; then
-                bits="${bits}⚡"
-        fi
-        if [ "${untracked}" == "0" ]; then
-                bits="${bits}?"
-        fi
-        if [ "${newfile}" == "0" ]; then
-                bits="${bits}+"
-        fi
-        if [ "${ahead}" == "0" ]; then
-                bits="${bits}*"
-        fi
-        if [ "${renamed}" == "0" ]; then
-                bits="${bits}>"
-        fi
-        echo "${bits}"
-}
-
-nonzero_return() {
-   RETVAL=$?
-   [ $RETVAL -eq 1 ] && echo " ⏎ $RETVAL "
-}
-
-PS1="\n$TIMECOL\@ $USERCOL \u $ATCOL@ $HOSTCOL\h $PATHCOL \w $RETURNCOL\`nonzero_return\`$BRANCHCOL \`parse_git_branch\`\`parse_git_dirty\` $NC\n\\$ "
-
-if [ -f ~/.bash_aliases ]; then
-   . ~/.bash_aliases
-fi
-
-if [ -f ~/.bash_local ]; then
-   . ~/.bash_local
-fi
-
-DEBEMAIL=rfrank.nj@gmail.com
-DEBFULLNAME="Russell Frank"
-export DEBEMAIL DEBFULLNAME
-
-PATH=~/.bin/:~/node_modules/.bin/:/opt/local/bin/:$PATH
-
+#export statements
 export EDITOR=vim
+#export PS1="[\[\e[01;32m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]]\$ "
+#export PS1='\[\e[0m\][\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\[\e[00m\]\$\[\e[m\]] \[\e[1;37m\]'
+export PS1='\[\e[0m\][\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\$\[\e[m\]] \[\e[1;37m\]'
+export TERM='xterm-256color'
 
-if [ -f ~/.nvm/nvm.sh ]; then
-   . ~/.nvm/nvm.sh
-fi
+#Sync config files:
+(
+	cd ~/rc-Files
+	git pull -q 2> /dev/null
+	exit
+)& disown
 
-# {{{
-# Node Completion - Auto-generated, do not touch.
-shopt -s progcomp
-for f in $(command ls ~/.node-completion); do
-  f="$HOME/.node-completion/$f"
-  test -f "$f" && . "$f"
-done
-# }}}
+#program shortcuts
+alias fire="firefox"
+alias bashmod="vim ~/.bashrc"
+alias bashsave="source ~/.bashrc"
+alias vmod="vim ~/.vimrc"
+
+#aliases for ls
+alias ls="ls --color=auto"
+alias lsd="ls --color=always -alh | grep ^d"
+alias lf="ls --color=always -lh | grep ^d"
+alias l="ls"
+alias s="l"
+alias la="ls -Alh"
+alias ll="ls -lh"
+
+#aliases for random ops
+alias cc="clear"
+alias bus="~/./bus"
+alias hosts="vim /etc/hosts"
+
+#aliases for directory navigation
+alias ..="cd .."
+alias vi="vim"
+alias v="vim"
+alias me="cd ~;ls"
+
+#ssh aliases
+alias ziti="ssh ziti.rutgers.edu"
+alias ravioli='ssh ravioli.rutgers.edu'
+alias sauron='ssh sauron.rutgers.edu'
+alias eden='ssh eden.rutgers.edu'
+alias wol='ssh ravioli.rutgers.edu wol.sh'
+
+#program settings variables
+export GREP_OPTIONS='--color=auto'
+
+#autocomplete commnads
+complete -cf sudo
+complete -cf which
+complete -cf man
