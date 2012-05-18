@@ -4,7 +4,6 @@ export EDITOR=vim
 export TERM='xterm-256color'
 
 #program shortcuts
-alias fire="firefox"
 alias bashmod="vim ~/.bashrc"
 alias bashsave="source ~/.bashrc"
 alias vmod="vim ~/.vimrc"

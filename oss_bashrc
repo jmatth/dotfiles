@@ -1,0 +1,19 @@
+source bashrc
+
+export PATH='/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin:/usr/sbin:/sbin'
+
+#aliases for random ops
+alias lock='xscreensaver-command -lock'
+alias hosts='sudo vim /etc/hosts'
+
+#ssh aliases
+alias opus5='ssh opus5'
+alias sauron='ssh sauron'
+alias jla='ssh jla'
+alias solaris9t='ssh solaris9-testing'
+alias centsix='ssh centos5-64build'
+
+#functions
+function mockbuild (){
+   mock -v --rebuild ` rpmbuild -bs $1 | cut -d' ' -f2 ` 
+}
