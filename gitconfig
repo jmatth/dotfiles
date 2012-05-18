@@ -1,0 +1,15 @@
+[user]
+	email = jmatth@nbcs.rutgers.edu
+[color]
+	ui = auto
+	diff = auto
+	status = auto
+	branch = auto
+	interactive = auto
+[alias]
+	co = checkout
+	br = branch
+	cb = checkout -b
+	ci = commit
+	unstage = reset
+

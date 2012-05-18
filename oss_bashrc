@@ -1,4 +1,4 @@
-source bashrc
+source ~/dotfiles/bashrc
 
 export PATH='/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin:/usr/sbin:/sbin'
 
