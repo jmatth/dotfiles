@@ -57,6 +57,15 @@ export CLICOLOR=true
 
 function EXT_COL () { echo -ne "\[\033[38;5;$1m\]"; }
 
+function ROOT_COL () {
+	if id | cut -d' ' -f1 | grep -iq 'root'
+	then
+		echo -ne "\033[38;5;1m";
+	else
+		echo -ne '\e[m'
+	fi
+}
+
 NC='\e[m'   # reset colors
 
 USERCOL=`EXT_COL 25`
@@ -104,7 +113,7 @@ nonzero_return() {
 
 #PS1="\n$TIMECOL\@ $USERCOL \u $ATCOL@ $HOSTCOL\h $PATHCOL \w $RETURNCOL\`nonzero_return\`$BRANCHCOL \`parse_git_branch\`\`parse_git_dirty\` $NC\n\\$ "
 
-PS1="$USERCOL\u$ATCOL@$HOSTCOL\h$PATHCOL\w$RETURNCOL\`nonzero_return\`$BRANCHCOL\`parse_git_branch\`\`parse_git_dirty\`$NC\\$ "
+PS1="$USERCOL\u$ATCOL@$HOSTCOL\h$PATHCOL\w$RETURNCOL\`nonzero_return\`$BRANCHCOL\`parse_git_branch\`\`parse_git_dirty\`\`ROOT_COL\`\\$ $NC"
 
 #export PS1='\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W $NC\$ '
 if [ -f ~/.bash_aliases ]; then
