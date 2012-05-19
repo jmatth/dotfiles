@@ -59,7 +59,7 @@ function EXT_COL () { echo -ne "\[\033[38;5;$1;01m\]"; }
 function ROOT_COL () {
 	if id | cut -d' ' -f1 | grep -iq 'root'
 	then
-		echo -ne "\033[38;5;1;1m";
+		echo -ne "\e[m\033[38;5;124;5m";
 	else
 		echo -ne '\e[m'
 	fi
