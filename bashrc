@@ -54,26 +54,32 @@ set -o vi
 
 export CLICOLOR=true
 
-function EXT_COL () { echo -ne "\[\033[38;5;$1;01m\]"; }
+function EXT_COL () { echo -ne "\033[38;5;$1;01m"; }
 
 function ROOT_COL () {
 	if id | cut -d' ' -f1 | grep -iq 'root'
 	then
-		echo -ne "\e[m\033[38;5;124;5m";
+		if [ $2 ]
+		then
+			echo -ne "\033[38;5;1;05m";
+		else
+			echo -ne "\033[38;5;1;01m";
+		fi
 	else
-		echo -ne '\e[m'
+		echo -ne "\033[38;5;$1;01m";
 	fi
 }
 
 NC='\e[m'   # reset colors
 
-USERCOL=`EXT_COL 27`
+USERCOL=`ROOT_COL 27`
 ATCOL=`EXT_COL 3`
 HOSTCOL=`EXT_COL 34`
 PATHCOL=`EXT_COL 45`
 BRANCHCOL=`EXT_COL 220`
 RETURNCOL=`EXT_COL 9`
 TIMECOL=`EXT_COL 242`
+PROMPTCOL=`ROOT_COL 7 b`
 
 parse_git_branch() {
 	git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
@@ -112,9 +118,16 @@ nonzero_return() {
 
 #PS1="\n$TIMECOL\@ $USERCOL \u $ATCOL@ $HOSTCOL\h $PATHCOL \w $RETURNCOL\`nonzero_return\`$BRANCHCOL \`parse_git_branch\`\`parse_git_dirty\` $NC\n\\$ "
 
-PS1="$USERCOL\u$ATCOL@$HOSTCOL\h$NC:$PATHCOL\W$RETURNCOL\`nonzero_return\`$BRANCHCOL\`parse_git_branch\`\`parse_git_dirty\`\`ROOT_COL\`\\$ $NC"
+# One line w/ time
+#PS1="\[$TIMECOL\]\@\[$USERCOL\]\u\[$ATCOL\]@\[$HOSTCOL\]\h\[$PATHCOL\]\W\[$RETURNCOL\]\`nonzero_return\`\[$BRANCHCOL\]\`parse_git_branch\`\`parse_git_dirty\`\[$PROMPTCOL\]\\$ \[$NC\]"
+
+# One line w/o time
+PS1="\[$USERCOL\]\u\[$NC\]\[$ATCOL\]@\[$HOSTCOL\]\h\[$PATHCOL\]\W\[$RETURNCOL\]\`nonzero_return\`\[$BRANCHCOL\]\`parse_git_branch\`\`parse_git_dirty\`\[$PROMPTCOL\]\\$ \[$NC\]"
+
+#PS1="$USERCOL\u$ATCOL@$HOSTCOL\h$NC:$PATHCOL\W$RETURNCOL\`nonzero_return\`$BRANCHCOL\`parse_git_branch\`\`parse_git_dirty\`$ROOT_COL\\$ $NC"
 
 #export PS1='\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W $NC\$ '
+
 if [ -f ~/.bash_aliases ]; then
    . ~/.bash_aliases
 fi
