@@ -40,7 +40,12 @@ set incsearch    " Incremental search
 set hidden       " Hide buffellumrs when they are abandoned
 set autoindent	  " Auto indent when starting a new line
 set smartindent  " Indent based on syntax
-colorscheme darkblue
+
+if &diff
+	colorscheme desert
+else
+	colorscheme darkblue
+endif
 
 "Leader Mappings
 let mapleader=","
