@@ -92,6 +92,7 @@ function parse_git_dirty {
         ahead=`echo -n "${status}" 2> /dev/null | grep -q "Your branch is ahead of" 2> /dev/null; echo "$?"`
         newfile=`echo -n "${status}" 2> /dev/null | grep -q "new file:" 2> /dev/null; echo "$?"`
         renamed=`echo -n "${status}" 2> /dev/null | grep -q "renamed:" 2> /dev/null; echo "$?"`
+		  deleted=`echo -n "${status}" 2> /dev/null | grep -q "deleted:" 2> /dev/null; echo "$?"`
         bits=''
         if [ "${dirty}" == "0" ]; then
                 bits="${bits}⚡"
@@ -108,6 +109,9 @@ function parse_git_dirty {
         if [ "${renamed}" == "0" ]; then
                 bits="${bits}>"
         fi
+		  if [ "${renamed}" == "0" ]; then
+					 bits="${bits}⊗"
+		  fi
         echo "${bits}"
 }
 
