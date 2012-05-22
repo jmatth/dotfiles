@@ -109,7 +109,7 @@ function parse_git_dirty {
         if [ "${renamed}" == "0" ]; then
                 bits="${bits}>"
         fi
-		  if [ "${renamed}" == "0" ]; then
+		  if [ "${deleted}" == "0" ]; then
 					 bits="${bits}⊗"
 		  fi
         echo "${bits}"
