@@ -22,6 +22,9 @@ alias cc="clear"
 alias bus="~/./bus"
 alias hosts="vim /etc/hosts"
 
+#fix control-l not clearing screen
+alias ='clear'
+
 #aliases for directory navigation
 alias ..="cd .."
 alias me="cd ~;ls"
