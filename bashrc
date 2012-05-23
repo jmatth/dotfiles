@@ -50,8 +50,6 @@ HISTCONTROL=ignoreboth #ignore duplicate and leading whitespace commands in hist
 shopt -s histappend   # append to history file
 shopt -s checkwinsize # ensure window size is correct
 
-set -o vi
-
 export CLICOLOR=true
 
 function EXT_COL () { echo -ne "\033[38;5;$1;01m"; }
