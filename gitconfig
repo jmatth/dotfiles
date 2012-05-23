@@ -1,5 +1,6 @@
 [user]
 	email = jmatth@nbcs.rutgers.edu
+	name = Josh Matthews
 [color]
 	ui = auto
 	diff = auto
@@ -12,4 +13,3 @@
 	cb = checkout -b
 	ci = commit
 	unstage = reset
-
