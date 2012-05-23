@@ -37,9 +37,9 @@ alias wol='ssh ravioli.rutgers.edu wol.sh'
 export GREP_OPTIONS='--color=auto'
 
 #autocomplete commnads
-complete -cf sudo
-complete -cf which
-complete -cf man
+complete -c sudo
+complete -c which
+complete -c man
 
 #Start Russ Frank bashrc
 
