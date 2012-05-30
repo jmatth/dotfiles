@@ -80,11 +80,18 @@ TIMECOL=`EXT_COL 242`
 PROMPTCOL=`ROOT_COL 7 b`
 
 parse_git_branch() {
-	git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
+	BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
+	if [ ! "${BRANCH}" == "" ]
+	then
+		STAT=`parse_git_dirty`
+		echo "[${BRANCH}${STAT}]"
+	else
+		echo ""
+	fi
 }
 
 function parse_git_dirty {
-        status=`git status 2> /dev/null`
+        status=`git status 2>&1 | tee`
         dirty=`echo -n "${status}" 2> /dev/null | grep -q "modified:" 2> /dev/null; echo "$?"`
         untracked=`echo -n "${status}" 2> /dev/null | grep -q "Untracked files" 2> /dev/null; echo "$?"`
         ahead=`echo -n "${status}" 2> /dev/null | grep -q "Your branch is ahead of" 2> /dev/null; echo "$?"`
@@ -92,24 +99,24 @@ function parse_git_dirty {
         renamed=`echo -n "${status}" 2> /dev/null | grep -q "renamed:" 2> /dev/null; echo "$?"`
 		  deleted=`echo -n "${status}" 2> /dev/null | grep -q "deleted:" 2> /dev/null; echo "$?"`
         bits=''
-        if [ "${dirty}" == "0" ]; then
-                bits="${bits}⚡"
-        fi
-        if [ "${untracked}" == "0" ]; then
-                bits="${bits}?"
-        fi
-        if [ "${newfile}" == "0" ]; then
-                bits="${bits}+"
+		  if [ "${deleted}" == "0" ]; then
+					 bits="⊗${bits}"
+		  fi
+        if [ "${renamed}" == "0" ]; then
+                bits=">${bits}"
         fi
         if [ "${ahead}" == "0" ]; then
-                bits="${bits}*"
+                bits="*${bits}"
         fi
-        if [ "${renamed}" == "0" ]; then
-                bits="${bits}>"
+        if [ "${newfile}" == "0" ]; then
+                bits="+${bits}"
         fi
-		  if [ "${deleted}" == "0" ]; then
-					 bits="${bits}⊗"
-		  fi
+        if [ "${untracked}" == "0" ]; then
+                bits="?${bits}"
+        fi
+        if [ "${dirty}" == "0" ]; then
+                bits="⚡${bits}"
+        fi
         echo "${bits}"
 }
 
@@ -124,7 +131,8 @@ nonzero_return() {
 #PS1="\[$TIMECOL\]\@\[$USERCOL\]\u\[$ATCOL\]@\[$HOSTCOL\]\h\[$PATHCOL\]\W\[$RETURNCOL\]\`nonzero_return\`\[$BRANCHCOL\]\`parse_git_branch\`\`parse_git_dirty\`\[$PROMPTCOL\]\\$ \[$NC\]"
 
 # One line w/o time
-PS1="\[$USERCOL\]\u\[$NC\]\[$ATCOL\]@\[$HOSTCOL\]\h\[$PATHCOL\]\W\[$RETURNCOL\]\`nonzero_return\`\[$BRANCHCOL\]\`parse_git_branch\`\`parse_git_dirty\`\[$PROMPTCOL\]\\$ \[$NC\]"
+#PS1="\[$USERCOL\]\u\[$NC\]\[$ATCOL\]@\[$HOSTCOL\]\h\[$NC\]:\[$PATHCOL\]\W\[$RETURNCOL\]\`nonzero_return\`\[$BRANCHCOL\]\`parse_git_branch\`\`parse_git_dirty\`\[$PROMPTCOL\]\\$ \[$NC\]"
+PS1="\[$USERCOL\]\u\[$NC\]\[$ATCOL\]@\[$HOSTCOL\]\h\[$NC\]:\[$PATHCOL\]\W\[$RETURNCOL\]\`nonzero_return\`\[$BRANCHCOL\]\`parse_git_branch\`\[$PROMPTCOL\]\\$ \[$NC\]"
 
 #PS1="$USERCOL\u$ATCOL@$HOSTCOL\h$NC:$PATHCOL\W$RETURNCOL\`nonzero_return\`$BRANCHCOL\`parse_git_branch\`\`parse_git_dirty\`$ROOT_COL\\$ $NC"
 
