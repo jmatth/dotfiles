@@ -17,6 +17,10 @@ if [ -f .vimrc ] || [ -h .vimrc ]
 then
 	rm .vimrc
 fi
+if [ -f .tmux.conf ] || [ -h .tmux.conf ]
+then
+	rm .tmux.conf
+fi
 
 popd > /dev/null
 
@@ -51,4 +55,5 @@ else
 fi
 ln -s $f/vimrc ~/.vimrc
 ln -s $f/gitconfig ~/.gitconfig
+ln -s $f/tmux.conf ~/.tmux.conf
 exit 0

@@ -15,5 +15,5 @@ alias centsix='ssh centos5-64build'
 
 #functions
 function mockbuild (){
-   mock -v --rebuild ` rpmbuild -bs $1 | cut -d' ' -f2 ` 
+   mock -v --rebuild ` rpmbuild -bs $1 | tee cut -d' ' -f2 ` 
 }
