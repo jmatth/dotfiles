@@ -1,6 +1,5 @@
 #!/bin/bash
 pushd ~/ > /dev/null
-ls
 
 if [ -f .bashrc ] || [ -h .bashrc ]
 then
