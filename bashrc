@@ -150,3 +150,9 @@ if [ -f ~/.nvm/nvm.sh ]; then
    . ~/.nvm/nvm.sh
 fi
 #end Russ Frank bashrc
+
+#print archey if installed
+if which archey &> /dev/null
+then
+	archey
+fi
