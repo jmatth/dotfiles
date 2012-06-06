@@ -20,4 +20,5 @@ function mockbuild (){
    	rpmbuild -bs $1 | cut -d' ' -f2 | xargs mock -v --rebuild 
 	else
    	rpmbuild -bs $1 | cut -d' ' -f2 | xargs mock --rebuild 
+	fi
 }
