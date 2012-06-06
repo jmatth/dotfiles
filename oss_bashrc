@@ -24,7 +24,7 @@ function mockbuild (){
 }
 
 function unpatchify (){
-	echo "\e[1;34mTesting for bad patches in $1.\e[m"
+	echo -e "\e[1;34mTesting for bad patches in $1.\e[m"
 	SRPM=`rpmbuild -bs $1 | cut -d' ' -f2`
 	while ! mock --rebuild $SRPM 2>&1 | tee >(grep -i "command failed" > /dev/null)
 	do
