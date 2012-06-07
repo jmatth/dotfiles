@@ -20,9 +20,12 @@ set noexpandtab
 "number of spaces used to represent autoindents
 set shiftwidth=3
 
-"
+"syntax highlighting on
 syn on
 
+" use python/perl regexp syntax
+nnoremap / /\v
+vnoremap / /\v
 
 "???
 "if has("autocmd")
