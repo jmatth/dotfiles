@@ -161,7 +161,7 @@ fi
 #end Russ Frank bashrc
 
 #print archey if installed
-if which archey &> /dev/null
+if ! which archey | grep -iq "no archey"
 then
 	archey
 fi
