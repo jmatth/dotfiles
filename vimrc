@@ -33,7 +33,7 @@ vnoremap / /\v
 "    \| exe "normal! g'\"" | endif 
 "endif
 
-set nohlsearch
+"set nohlsearch	"don't highlight searches
 set showcmd      " Show (partial) command in status line. 
 set showmatch    " Show matching brackets.
 set ignorecase   " Do case insensitive matching
@@ -44,11 +44,13 @@ set hidden       " Hide buffellumrs when they are abandoned
 set autoindent	  " Auto indent when starting a new line
 set smartindent  " Indent based on syntax
 
-if &diff
-	colorscheme desert
-else
-	colorscheme darkblue
-endif
+"if &diff
+"	colorscheme desert
+"else
+"	colorscheme darkblue
+"endif"
+
+colorscheme inkpot
 
 "Leader Mappings
 let mapleader=","
@@ -64,3 +66,4 @@ set cursorline
 set cursorcolumn
 highlight CursorLine ctermbg=20 cterm=bold term=bold
 highlight CursorColumn ctermbg=20
+highlight Normal ctermbg=none

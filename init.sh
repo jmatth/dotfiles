@@ -56,4 +56,6 @@ fi
 ln -s $f/vimrc ~/.vimrc
 ln -s $f/gitconfig ~/.gitconfig
 ln -s $f/tmux.conf ~/.tmux.conf
+echo "Installing vim inkpot theme"
+cp -p $f/inkpot.vim ~/.vim/colors
 exit 0
