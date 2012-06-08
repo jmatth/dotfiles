@@ -5,8 +5,8 @@ export PATH='/usr/local/gnu/bin:/usr/dt/bin:/usr/openwin/bin:/usr/local/bin:/usr
 
 #aliases for ls
 alias ls='/usr/local/gnu/bin/ls -hF --color=auto'
-alias lsd="ls --color=always -alh | grep ^d"
-alias lf="ls --color=always -lh | grep ^d"
+alias lsd="ls --color=always -alh"
+alias lf="ls --color=always -lh"
 alias l="ls"
 alias s="l"
 alias la="ls -Alh"

@@ -10,8 +10,8 @@ alias vmod="vim ~/.vimrc"
 
 #aliases for ls
 alias ls="ls --color=auto"
-alias lsd="ls --color=always -alh | grep ^d"
-alias lf="ls --color=always -lh | grep ^d"
+alias lsd="ls --color=always -alh"
+alias lf="ls --color=always -lh"
 alias l="ls"
 alias s="l"
 alias la="ls -Alh"
