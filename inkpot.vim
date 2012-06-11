@@ -7,7 +7,6 @@
 " colour mode). It won't work in 8/16 colour terminals.
 "
 " To use a black background, :let g:inkpot_black_background = 1
-
 set background=light
 hi clear
 if exists("syntax_on")
@@ -142,9 +141,9 @@ if has("gui_running")
     endif
 else
     if ! g:inkpot_black_background
-        exec "hi Normal         cterm=NONE   ctermfg=" . <SID>X(79) . " ctermbg=" . <SID>X(80)
+        exec "hi Normal         cterm=NONE   ctermfg=" . <SID>X(79) . " ctermbg=NONE"
     else
-        exec "hi Normal         cterm=NONE   ctermfg=" . <SID>X(79) . " ctermbg=" . <SID>X(16)
+        exec "hi Normal         cterm=NONE   ctermfg=" . <SID>X(79) . " ctermbg=NONE"
     endif
 
     exec "hi IncSearch      cterm=BOLD   ctermfg=" . <SID>X(80) . " ctermbg=" . <SID>X(73)
