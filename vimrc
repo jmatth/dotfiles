@@ -66,4 +66,7 @@ set cursorline
 set cursorcolumn
 highlight CursorLine ctermbg=20 cterm=bold term=bold
 highlight CursorColumn ctermbg=20
+" Fix backgrounds for transparent terminals
 highlight Normal ctermbg=none
+highlight String ctermbg=none
+highlight LineNr ctermbg=none
