@@ -9,7 +9,7 @@ alias bashsave="source ~/.bashrc"
 alias vmod="vim ~/.vimrc"
 
 #aliases for ls
-alias ls="ls --color=auto"
+alias ls="ls --color=always"
 alias lsd="ls --color=always -alh"
 alias lf="ls --color=always -lh"
 alias l="ls"
@@ -34,7 +34,7 @@ alias eden='ssh eden.rutgers.edu'
 alias wol='ssh ravioli.rutgers.edu wol.sh'
 
 #program settings variables
-export GREP_OPTIONS='--color=auto'
+export GREP_OPTIONS='--color=always'
 
 #swap esc and capslock
 function keyswap () {
