@@ -5,6 +5,8 @@ export PATH='/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin:/usr/sbin:/sbin'
 #aliases for random ops
 alias lock='xscreensaver-command -lock'
 alias hosts='sudo vim /etc/hosts'
+alias poweroff="echo \"I wouldn't do that...\""
+alias reboot="echo \"I wouldn't do that...\""
 
 #ssh aliases
 alias opus5='ssh opus5'
