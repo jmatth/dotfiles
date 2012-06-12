@@ -1,7 +1,8 @@
-source ~/dotfiles/bashrc
+source ~/dotfiles/bashrc &> /dev/null
 
 #export statements
 export PATH='/usr/local/gnu/bin:/usr/xpg4/bin:/usr/dt/bin:/usr/openwin/bin:/usr/local/bin:/usr/bin:/usr/ucb:/opt/SUNWspro/bin:/usr/ccs/bin'
+export TERM='xterm'
 
 #aliases for ls
 alias ls='/usr/local/gnu/bin/ls -hF --color=auto'
