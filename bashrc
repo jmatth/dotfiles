@@ -131,7 +131,7 @@ function parse_git_dirty {
 
 nonzero_return() {
    RETVAL=$?
-   [ $RETVAL -eq 1 ] && echo " ⏎ $RETVAL "
+   [ $RETVAL -ne 0 ] && echo " ⏎$RETVAL "
 }
 
 #PS1="\n$TIMECOL\@ $USERCOL \u $ATCOL@ $HOSTCOL\h $PATHCOL \w $RETURNCOL\`nonzero_return\`$BRANCHCOL \`parse_git_branch\`\`parse_git_dirty\` $NC\n\\$ "
