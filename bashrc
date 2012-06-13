@@ -21,6 +21,7 @@ alias hosts="vim /etc/hosts"
 #aliases for directory navigation
 alias ..="cd .."
 alias me="cd ~;ls"
+alias dots="cd ~/dotfiles;ls"
 
 #ssh aliases
 alias ziti="ssh ziti.rutgers.edu"
