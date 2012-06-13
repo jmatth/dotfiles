@@ -160,6 +160,9 @@ if [ -f ~/.nvm/nvm.sh ]; then
 fi
 #end Russ Frank bashrc
 
+# keyswap if possible
+keyswap &> /dev/null
+
 #print archey if installed
 if ! which archey 2>&1 | grep -iq "no archey"
 then
