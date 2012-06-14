@@ -23,7 +23,7 @@ ln -s ~/.bashrc ~/.bash_profile
 ln -s ~/dotfiles/vimrc ~/.vimrc
 ln -s ~/dotfiles/gitconfig ~/.gitconfig
 ln -s ~/dotfiles/tmux.conf ~/.tmux.conf
-echo "Installing vim inkpot theme"
+echo "Linking vim inkpot theme"
 mkdir -p ~/.vim/colors
 rm -f ~/.vim/colors/inkpot.vim
 ln -s ~/dotfiles/inkpot.vim ~/.vim/colors/
