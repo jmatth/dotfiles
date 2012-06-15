@@ -9,9 +9,9 @@ alias bashsave="source ~/.bashrc"
 alias vmod="vim ~/.vimrc"
 
 #aliases for ls
-alias ls="ls --color=always -F"
+alias ls="ls -G"
 alias la="ls -Alh"
-alias ll="ls -lh"
+#alias ll="ls -lh"
 
 #aliases for random ops
 alias cc="clear"
@@ -158,10 +158,10 @@ fi
 #end Russ Frank bashrc
 
 # keyswap if possible
-keyswap &> /dev/null
+#keyswap &> /dev/null
 
 #print archey if installed
-if ! which archey 2>&1 | grep -iq "no archey"
-then
-	archey
-fi
+#if ! which archey 2>&1 | grep -iq "no archey"
+#then
+#	archey
+#fi
