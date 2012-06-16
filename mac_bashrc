@@ -1,7 +1,7 @@
 #export statements
 export EDITOR=vim
-#export PS1='\[\e[0m\][\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\$\[\e[m\]] \[\e[1;37m\]'
 export TERM='xterm-256color'
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
 
 #program shortcuts
 alias bashmod="vim ~/.bashrc"
@@ -128,7 +128,7 @@ function parse_git_dirty {
 
 nonzero_return() {
    RETVAL=$?
-   [ $RETVAL -ne 0 ] && echo " ⏎$RETVAL "
+   [ $RETVAL -ne 0 ] && echo " ⏎ $RETVAL "
 }
 
 #PS1="\n$TIMECOL\@ $USERCOL \u $ATCOL@ $HOSTCOL\h $PATHCOL \w $RETURNCOL\`nonzero_return\`$BRANCHCOL \`parse_git_branch\`\`parse_git_dirty\` $NC\n\\$ "
