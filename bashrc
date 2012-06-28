@@ -161,7 +161,7 @@ fi
 keyswap &> /dev/null
 
 #print archey if installed
-if ! which archey 2>&1 | grep -iq "no archey"
+if ! which archey 2>&1 | grep -iq "no archey" && which archey &> /dev/null
 then
 	archey
 fi
