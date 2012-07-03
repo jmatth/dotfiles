@@ -9,7 +9,7 @@ alias bashsave="source ~/.bashrc"
 alias vmod="vim ~/.vimrc"
 
 #aliases for ls
-alias ls="ls --color=always -F"
+alias ls="ls --color=auto -F"
 alias la="ls -Alh"
 alias ll="ls -lh"
 
