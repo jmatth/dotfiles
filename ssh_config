@@ -1,7 +1,6 @@
 Host *
 	ControlMaster auto
 	ControlPath ~/.ssh/cm-%r@%h:%p
-	ForwardX11 yes
 Host *.rutgers.edu
 	user jmatth
 Host github.com
