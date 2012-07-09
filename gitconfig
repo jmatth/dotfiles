@@ -13,6 +13,5 @@
 	st = status
 	br = branch
 	cb = checkout -b
-	ci = commit
 	unstage = reset
 	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
