@@ -39,6 +39,7 @@ ln -s ~/dotfiles/inkpot.vim ~/.vim/colors/
 if ! [ -f ~/.ssh/config ]
 then
 	echo "No ssh config found, installing base."
+	mkdir -p ~/.ssh
 	cp ~/dotfiles/ssh_config ~/.ssh/config
 	chmod 744 ~/.ssh/config
 fi
