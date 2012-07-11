@@ -76,7 +76,7 @@ function ROOT_COL () {
 
 NC='\e[m'   # reset colors
 
-USERCOL=`ROOT_COL 27`
+USERCOL=`EXT_COL 27`
 ATCOL=`EXT_COL 3`
 HOSTCOL=`EXT_COL 34`
 PATHCOL=`EXT_COL 45`
