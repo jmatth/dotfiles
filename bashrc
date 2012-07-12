@@ -17,6 +17,7 @@ alias ll="ls -lh"
 alias cc="clear"
 alias bus="~/./bus"
 alias hosts="vim /etc/hosts"
+alias cgrep="grep --color=always"
 
 #aliases for directory navigation
 alias ..="cd .."
@@ -31,7 +32,7 @@ alias eden='ssh eden.rutgers.edu'
 alias wol='ssh ravioli.rutgers.edu wol.sh'
 
 #program settings variables
-export GREP_OPTIONS='--color=always'
+export GREP_OPTIONS='--color=auto'
 
 #swap esc and capslock
 function keyswap () {
