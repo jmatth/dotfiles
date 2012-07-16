@@ -34,6 +34,3 @@ alias rpms='cd ~/rpmbuild/RPMS'
 #ssh aliases
 alias opus5='ssh opus5'
 alias sauron='ssh sauron'
-
-#program settings variables
-export GREP_OPTIONS='--color=auto'
