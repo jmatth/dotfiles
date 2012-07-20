@@ -18,6 +18,7 @@ alias cc="clear"
 alias bus="~/./bus"
 alias hosts="vim /etc/hosts"
 alias cgrep="grep --color=always"
+alias ps1bw="export PS1='\[$NC\]\u@\h:\W\`nonzero_return\`\`parse_git_branch\`\\$ '"
 
 #aliases for directory navigation
 alias ..="cd .."
