@@ -167,3 +167,17 @@ if ! which archey 2>&1 | grep -iq "no archey" && which archey &> /dev/null
 then
 	archey
 fi
+
+function up () {
+	if [ "$#" -eq "0" ]
+	then
+		cd ../
+	else
+		numdirs=""
+		for i in `seq 1 $1`
+		do
+			numdirs="$numdirs../"
+		done
+		cd $numdirs
+	fi
+}
