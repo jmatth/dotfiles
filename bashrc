@@ -172,6 +172,14 @@ function up () {
 	if [ "$#" -eq "0" ]
 	then
 		cd ../
+	elif [ "$#" -gt "1" ]
+	then
+		echo "Usage: up [int]"
+		return 2
+	elif ! [[ "$1" =~ ^[0-9]+$ ]]
+	then
+		echo "Usage: up [int]"
+		return 2
 	else
 		numdirs=""
 		for i in `seq 1 $1`
