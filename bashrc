@@ -30,7 +30,6 @@ alias ziti="ssh ziti.rutgers.edu"
 alias ravioli='ssh ravioli.rutgers.edu'
 alias sauron='ssh sauron.rutgers.edu'
 alias eden='ssh eden.rutgers.edu'
-alias wol='ssh ravioli.rutgers.edu wol.sh'
 
 #program settings variables
 export GREP_OPTIONS='--color=auto'
