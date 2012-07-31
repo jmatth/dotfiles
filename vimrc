@@ -50,16 +50,11 @@ set smartindent  " Indent based on syntax
 "	colorscheme darkblue
 "endif"
 
+" Set Colorscheme
 colorscheme inkpot
 
-"Leader Mappings
-let mapleader=","
-nnoremap <Leader>l :noh<CR> 
-nnoremap <Leader>a gt
-noremap <Leader>n :NERDTreeToggle<CR>
-noremap <Leader>D :NERDTreeFind<CR>
-noremap <Leader>v :ConqueTermVSplit<Space>bash<cr>
-noremap <Leader>b :ConqueTermSplit<Space>bash<cr>
+" Gain root privs if needed to write
+command W w !sudo tee % > /dev/null
 
 " Setup cursor crosshairs 
 set cursorline
