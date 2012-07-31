@@ -1,4 +1,10 @@
 source ~/dotfiles/bashrc
+
+if [ -f /etc/bash_completion.d/git ]
+then
+	source /etc/bash_completion.d/git
+fi
+
 export PATH='/usr/unsupported/bin:/filer/tmp2/contrib/bin:/usr/lib/qt-3.3/bin:/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin'
 
 alias filer="cd /filer/tmp2; ls"
