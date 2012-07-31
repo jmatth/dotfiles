@@ -1,5 +1,10 @@
 source ~/dotfiles/bashrc
 
+if [ -f /etc/bash_completion ]
+then
+	source /etc/bash_completion
+fi
+
 export PATH='/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin:/usr/sbin:/sbin'
 
 #aliases for random ops
