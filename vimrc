@@ -1,8 +1,11 @@
 "256 colors
 set t_Co=256
 
-filetype plugin indent on
+"filetype on
+"filetype plugin on
+"filetype indent on
 
+"Show Line Numbers
 set number
 
 "Default shortmess += I. Removes vim intro message.
@@ -51,6 +54,7 @@ set smartindent  " Indent based on syntax
 "endif"
 
 " Set Colorscheme
+let g:inkpot_black_background = 1
 colorscheme inkpot
 
 " Gain root privs if needed to write
