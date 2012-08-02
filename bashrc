@@ -64,14 +64,23 @@ function EXT_COL () { echo -ne "\033[38;5;$1;01m"; }
 function ROOT_COL () {
 	if id | cut -d' ' -f1 | grep -iq 'root'
 	then
-		if [ $2 ]
+		if [ $3 ]
 		then
-			echo -ne "\033[38;5;1;05m";
+			EXT_COL $2
 		else
-			echo -ne "\033[38;5;1;01m";
+			EXT_COL $2
 		fi
 	else
-		echo -ne "\033[38;5;$1;01m";
+		EXT_COL $1
+	fi
+}
+
+function DOMAIN_COL () {
+	if ! hostname | grep rutgers.edu &> /dev/null
+	then
+		EXT_COL $1
+	else
+		EXT_COL $2
 	fi
 }
 
@@ -79,12 +88,12 @@ NC='\e[m'   # reset colors
 
 USERCOL=`EXT_COL 27`
 ATCOL=`EXT_COL 3`
-HOSTCOL=`EXT_COL 34`
+HOSTCOL=`DOMAIN_COL 34 208`
 PATHCOL=`EXT_COL 45`
 BRANCHCOL=`EXT_COL 220`
 RETURNCOL=`EXT_COL 9`
 TIMECOL=`EXT_COL 242`
-PROMPTCOL=`ROOT_COL 7 b`
+PROMPTCOL=`ROOT_COL 7 1 b`
 
 parse_git_branch() {
 	BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
