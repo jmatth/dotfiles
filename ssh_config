@@ -1,6 +1,9 @@
 Host *
 	ControlMaster auto
 	ControlPath ~/.ssh/cm-%r@%h:%p
+Host localhost
+	StrictHostKeyChecking no
+	UserKnownHostsFile /dev/null
 Host *.rutgers.edu
 	user jmatth
 Host github.com
