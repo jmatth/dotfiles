@@ -75,20 +75,11 @@ function ROOT_COL () {
 	fi
 }
 
-function DOMAIN_COL () {
-	if ! hostname | grep rutgers.edu &> /dev/null
-	then
-		EXT_COL $1
-	else
-		EXT_COL $2
-	fi
-}
-
 NC='\e[m'   # reset colors
 
 USERCOL=`EXT_COL 27`
 ATCOL=`EXT_COL 3`
-HOSTCOL=`DOMAIN_COL 34 208`
+HOSTCOL=`EXT_COL 34`
 PATHCOL=`EXT_COL 45`
 BRANCHCOL=`EXT_COL 220`
 RETURNCOL=`EXT_COL 9`
@@ -148,7 +139,7 @@ nonzero_return() {
 
 # One line w/o time
 #PS1="\[$USERCOL\]\u\[$NC\]\[$ATCOL\]@\[$HOSTCOL\]\h\[$NC\]:\[$PATHCOL\]\W\[$RETURNCOL\]\`nonzero_return\`\[$BRANCHCOL\]\`parse_git_branch\`\`parse_git_dirty\`\[$PROMPTCOL\]\\$ \[$NC\]"
-PS1="\[$USERCOL\]\u\[$NC\]\[$ATCOL\]@\[$HOSTCOL\]\h\[$NC\]:\[$PATHCOL\]\W\[$RETURNCOL\]\`nonzero_return\`\[$BRANCHCOL\]\`parse_git_branch\`\[$PROMPTCOL\]\\$ \[$NC\]"
+export PS1="\[$USERCOL\]\u\[$NC\]\[$ATCOL\]@\[$HOSTCOL\]\h\[$NC\]:\[$PATHCOL\]\W\[$RETURNCOL\]\`nonzero_return\`\[$BRANCHCOL\]\`parse_git_branch\`\[$PROMPTCOL\]\\$ \[$NC\]"
 
 #PS1="$USERCOL\u$ATCOL@$HOSTCOL\h$NC:$PATHCOL\W$RETURNCOL\`nonzero_return\`$BRANCHCOL\`parse_git_branch\`\`parse_git_dirty\`$ROOT_COL\\$ $NC"
 
