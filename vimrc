@@ -1,6 +1,9 @@
 "256 colors
 set t_Co=256
 
+" set <Leader>
+let mapleader=","
+
 "filetype on
 "filetype plugin on
 "filetype indent on
@@ -27,8 +30,16 @@ set shiftwidth=3
 syn on
 
 " use python/perl regexp syntax
-nnoremap / /\v
-vnoremap / /\v
+" nnoremap / /\v
+" vnoremap / /\v
+
+" Quick esc
+inoremap jk <Esc>
+set timeoutlen=500
+
+" Hex mode
+map <Leader>hon :%!xxd<CR>
+map <Leader>hof :%!xxd -r<CR>
 
 "???
 "if has("autocmd")
