@@ -2,10 +2,6 @@ source ~/dotfiles/bashrc
 
 export PATH='/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin:/usr/sbin:/sbin'
 
-HOSTCOL=`EXT_COL 208`
-
-export PS1="\[$USERCOL\]\u\[$NC\]\[$ATCOL\]@\[$HOSTCOL\]\h\[$NC\]:\[$PATHCOL\]\W\[$RETURNCOL\]\`nonzero_return\`\[$BRANCHCOL\]\`parse_git_branch\`\[$PROMPTCOL\]\\$ \[$NC\]"
-
 #aliases for random ops
 alias lock='xscreensaver-command -lock'
 alias hosts='sudo vim /etc/hosts'

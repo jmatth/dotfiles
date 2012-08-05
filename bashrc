@@ -1,3 +1,6 @@
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return 
+
 #export statements
 export EDITOR=vim
 #export PS1='\[\e[0m\][\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\$\[\e[m\]] \[\e[1;37m\]'
@@ -50,8 +53,6 @@ complete -cf man
 
 #Start Russ Frank bashrc
 
-[ -z "$PS1" ] && return # If not running interactively, don't do anything
-
 HISTCONTROL=ignoreboth #ignore duplicate and leading whitespace commands in history
 
 shopt -s histappend   # append to history file
@@ -79,7 +80,15 @@ NC='\e[m'   # reset colors
 
 USERCOL=`EXT_COL 27`
 ATCOL=$NC
-HOSTCOL=`EXT_COL 34`
+
+# Indicate ssh session
+if [ "$SSH_CONNECTION" == "" ]
+then
+	HOSTCOL=`EXT_COL 34`
+	else
+	HOSTCOL=`EXT_COL 208`
+fi
+
 PATHCOL=`EXT_COL 45`
 BRANCHCOL=`EXT_COL 220`
 RETURNCOL=`EXT_COL 9`
