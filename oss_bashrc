@@ -1,5 +1,3 @@
-source ~/dotfiles/bashrc
-
 export PATH='/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin:/usr/sbin:/sbin'
 
 #aliases for random ops
