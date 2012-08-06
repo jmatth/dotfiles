@@ -8,20 +8,22 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if ! [ -z $1 ]
 then
-	if [ -f ~/dotfiles/$1_bashrc ]
+	if ! [ -f ~/dotfiles/$1_bashrc ]
 	then
-		echo "Linking for $1 machine."
-		unlink ~/.bashrc &> /dev/null
-		unlink ~/.bash_profile &> /dev/null
-		echo "source $DIR/bashrc" > ~/.bashrc
-		echo "source $DIR/$1_bashrc" >> ~/.bashrc
-	else
 		echo "That bashrc doesn't exist..."
 		exit 1
 	fi
-else
-	echo "Linking for personal machine."
-	echo "source $DIR/bashrc" > ~/.bashrc
+fi
+
+echo "Adding main bashrc"
+unlink ~/.bashrc &> /dev/null
+echo "source $DIR/bashrc" > ~/.bashrc
+echo "alias bashmod=\"vim $DIR/bashrc\"" >> ~/.bashrc
+if [ "$1" != "" ]
+then
+	echo "Adding $1 bashrc"
+	echo "source $DIR/$1_bashrc" >> ~/.bashrc
+	echo "alias lbashmod=\"vim $DIR/$1_bashrc\"" >> ~/.bashrc
 fi
 
 unlink ~/.bash_profile &> /dev/null

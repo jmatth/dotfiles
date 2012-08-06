@@ -3,18 +3,16 @@
 
 #export statements
 export EDITOR=vim
-#export PS1='\[\e[0m\][\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W\$\[\e[m\]] \[\e[1;37m\]'
 export TERM='xterm-256color'
 
 #program shortcuts
-alias bashmod="vim ~/.bashrc"
 alias bashsave="source ~/.bashrc"
 alias vmod="vim ~/.vimrc"
 
 #aliases for ls
 alias ls="ls --color=auto -F"
 alias la="ls -Alh"
-alias ll="ls -lh"
+alias lsa="ls -A"
 
 #aliases for random ops
 alias cc="clear"
