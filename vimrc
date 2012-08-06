@@ -34,7 +34,7 @@ syn on
 " vnoremap / /\v
 
 " Quick esc
-inoremap jk <Esc>
+inoremap jf <Esc>
 set timeoutlen=500
 
 " Hex mode
