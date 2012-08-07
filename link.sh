@@ -18,12 +18,12 @@ fi
 echo "Adding main bashrc"
 unlink ~/.bashrc &> /dev/null
 echo "source $DIR/bashrc" > ~/.bashrc
-echo "alias bashmod=\"vim $DIR/bashrc\"" >> ~/.bashrc
+echo "alias bashmod=\"vim -c 'set syn=sh' $DIR/bashrc\"" >> ~/.bashrc
 if [ "$1" != "" ]
 then
 	echo "Adding $1 bashrc"
 	echo "source $DIR/$1_bashrc" >> ~/.bashrc
-	echo "alias lbashmod=\"vim $DIR/$1_bashrc\"" >> ~/.bashrc
+	echo "alias lbashmod=\"vim -c 'set syn=sh' $DIR/$1_bashrc\"" >> ~/.bashrc
 fi
 
 unlink ~/.bash_profile &> /dev/null
