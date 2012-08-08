@@ -50,5 +50,3 @@ do
 	fi
 	ln -sf $DIR/$file ~/.$file
 done
-echo "Loading new config:"
-source ~/.bashrc
