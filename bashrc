@@ -4,6 +4,13 @@
 #export statements
 export EDITOR=vim
 export TERM='xterm-256color'
+export CLICOLOR=true
+
+#ignore duplicate and leading whitespace commands in history
+HISTCONTROL=ignoreboth
+
+shopt -s histappend   # append to history file
+shopt -s checkwinsize # ensure window size is correct
 
 #program shortcuts
 alias bashsave="source ~/.bashrc"
@@ -46,20 +53,18 @@ function keyswap () {
 
 #autocomplete commnads
 complete -cf sudo
-complete -cf which
-complete -cf man
+complete -c which
+complete -c man
 
-#Start Russ Frank bashrc
+#256 color codes
+function EXT_COL () { echo -ne "\[\033[38;5;$1;01m\]"; }
 
-HISTCONTROL=ignoreboth #ignore duplicate and leading whitespace commands in history
+#16 color codes
+function SIMPLE_COL () {
+		echo -ne "\[\033[1;$1m\]"
+}
 
-shopt -s histappend   # append to history file
-shopt -s checkwinsize # ensure window size is correct
-
-export CLICOLOR=true
-
-function EXT_COL () { echo -ne "\033[38;5;$1;01m"; }
-
+#color code if root
 function ROOT_COL () {
 	if id | cut -d' ' -f1 | grep -iq 'root'
 	then
@@ -74,7 +79,9 @@ function ROOT_COL () {
 	fi
 }
 
-NC='\e[m'   # reset colors
+# reset colors
+NC='\[\e[m\]'
+
 
 USERCOL=`EXT_COL 27`
 ATCOL=$NC
@@ -90,10 +97,20 @@ fi
 PATHCOL=`EXT_COL 45`
 BRANCHCOL=`EXT_COL 220`
 RETURNCOL=`EXT_COL 9`
-TIMECOL=`EXT_COL 242`
+#TIMECOL=`EXT_COL 242`
 PROMPTCOL=`ROOT_COL 7 1 b`
 
-parse_git_branch() {
+# simple colors
+S_USERCOL=`SIMPLE_COL 34`
+S_PATHCOL=`SIMPLE_COL 36`
+S_BRANCHCOL=`SIMPLE_COL 33`
+S_RETURNCOL=`SIMPLE_COL 31`
+#S_TIMECOL=`SIMPLE_COL 242`
+S_PROMPTCOL=$NC
+S_HOSTCOL=`SIMPLE_COL 32`
+
+# get current branch in git repo
+function parse_git_branch() {
 	BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
 	if [ ! "${BRANCH}" == "" ]
 	then
@@ -104,6 +121,7 @@ parse_git_branch() {
 	fi
 }
 
+# get current status of git repo
 function parse_git_dirty {
         status=`git status 2>&1 | tee`
         dirty=`echo -n "${status}" 2> /dev/null | grep -q "modified:" 2> /dev/null; echo "$?"`
@@ -134,46 +152,35 @@ function parse_git_dirty {
         echo "${bits}"
 }
 
-nonzero_return() {
+# print returned error codes
+function nonzero_return() {
    RETVAL=$?
    [ $RETVAL -ne 0 ] && echo " ⏎$RETVAL "
 }
 
-#PS1="\n$TIMECOL\@ $USERCOL \u $ATCOL@ $HOSTCOL\h $PATHCOL \w $RETURNCOL\`nonzero_return\`$BRANCHCOL \`parse_git_branch\`\`parse_git_dirty\` $NC\n\\$ "
-
-# One line w/ time
-#PS1="\[$TIMECOL\]\@\[$USERCOL\]\u\[$ATCOL\]@\[$HOSTCOL\]\h\[$PATHCOL\]\W\[$RETURNCOL\]\`nonzero_return\`\[$BRANCHCOL\]\`parse_git_branch\`\`parse_git_dirty\`\[$PROMPTCOL\]\\$ \[$NC\]"
-
-# One line w/o time
-#PS1="\[$USERCOL\]\u\[$NC\]\[$ATCOL\]@\[$HOSTCOL\]\h\[$NC\]:\[$PATHCOL\]\W\[$RETURNCOL\]\`nonzero_return\`\[$BRANCHCOL\]\`parse_git_branch\`\`parse_git_dirty\`\[$PROMPTCOL\]\\$ \[$NC\]"
-export PS1="\[$USERCOL\]\u\[$NC\]\[$ATCOL\]@\[$HOSTCOL\]\h\[$NC\]:\[$PATHCOL\]\W\[$RETURNCOL\]\`nonzero_return\`\[$BRANCHCOL\]\`parse_git_branch\`\[$PROMPTCOL\]\\$ \[$NC\]"
-
-#PS1="$USERCOL\u$ATCOL@$HOSTCOL\h$NC:$PATHCOL\W$RETURNCOL\`nonzero_return\`$BRANCHCOL\`parse_git_branch\`\`parse_git_dirty\`$ROOT_COL\\$ $NC"
-
-#export PS1='\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W $NC\$ '
-
-if [ -f ~/.bash_aliases ]; then
-   . ~/.bash_aliases
+# don't use 256 colors if file exists
+if [ -f ~/.simple_bash ]
+then
+	export PS1="$S_USERCOL\u$NC@$S_HOSTCOL\h$NC:$S_PATHCOL\W$S_RETURNCOL\`nonzero_return\`$S_BRANCHCOL\`parse_git_branch\`$S_PROMPTCOL\\$ $NC"
+else
+	export PS1="$USERCOL\u$NC$ATCOL@$HOSTCOL\h$NC:$PATHCOL\W$RETURNCOL\`nonzero_return\`$BRANCHCOL\`parse_git_branch\`$PROMPTCOL\\$ $NC"
 fi
 
-if [ -f ~/.bash_local ]; then
-   . ~/.bash_local
-fi
-
-if [ -f ~/.nvm/nvm.sh ]; then
-   . ~/.nvm/nvm.sh
-fi
-#end Russ Frank bashrc
+# switch to simple colors temporarily
+function ps1s () {
+	export PS1="$S_USERCOL\u$NC@$S_HOSTCOL\h$NC:$S_PATHCOL\W$S_RETURNCOL\`nonzero_return\`$S_BRANCHCOL\`parse_git_branch\`$S_PROMPTCOL\\$ $NC";
+}
 
 # keyswap if possible
 keyswap &> /dev/null
 
-#print archey if installed
+# print archey if installed
 if ! which archey 2>&1 | grep -iq "no archey" && which archey &> /dev/null
 then
 	archey
 fi
 
+# move up n directories
 function up () {
 	if [ "$#" -eq "0" ]
 	then
@@ -194,3 +201,18 @@ function up () {
 		cd $numdirs
 	fi
 }
+
+#old PS1s, preserved for science
+
+#two line with time
+#PS1="\n$TIMECOL\@ $USERCOL \u $ATCOL@ $HOSTCOL\h $PATHCOL \w $RETURNCOL\`nonzero_return\`$BRANCHCOL \`parse_git_branch\`\`parse_git_dirty\` $NC\n\\$ "
+
+# One line w/ time
+#PS1="\[$TIMECOL\]\@\[$USERCOL\]\u\[$ATCOL\]@\[$HOSTCOL\]\h\[$PATHCOL\]\W\[$RETURNCOL\]\`nonzero_return\`\[$BRANCHCOL\]\`parse_git_branch\`\`parse_git_dirty\`\[$PROMPTCOL\]\\$ \[$NC\]"
+
+# One line w/o time
+#PS1="\[$USERCOL\]\u\[$NC\]\[$ATCOL\]@\[$HOSTCOL\]\h\[$NC\]:\[$PATHCOL\]\W\[$RETURNCOL\]\`nonzero_return\`\[$BRANCHCOL\]\`parse_git_branch\`\`parse_git_dirty\`\[$PROMPTCOL\]\\$ \[$NC\]"
+
+#PS1="$USERCOL\u$ATCOL@$HOSTCOL\h$NC:$PATHCOL\W$RETURNCOL\`nonzero_return\`$BRANCHCOL\`parse_git_branch\`\`parse_git_dirty\`$ROOT_COL\\$ $NC"
+
+#export PS1='\[\e[32;1m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\W $NC\$ '
