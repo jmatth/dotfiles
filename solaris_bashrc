@@ -11,24 +11,9 @@ alias s="l"
 alias la="ls -Alh"
 alias ll="ls -lh"
 
-#program shortcuts
-alias bashmod="vim ~/.bashrc"
-alias bashsave="source ~/.bashrc"
-alias vmod="vim ~/.vimrc"
-
-#aliases for random ops
-alias cc="clear"
-alias sudo='slide'
-
-#aliases for directory navigation
-alias ..="cd .."
-alias me="cd ~;ls"
+#rpm aliases
 alias testbuild="sudo mock -v --rebuild "
 alias specs="cd ~/rpmbuild/SPECS"
 alias src='cd ~/rpmbuild/SOURCES'
 alias srpm='cd ~/rpmbuild/SRPMS'
 alias rpms='cd ~/rpmbuild/RPMS'
-
-#ssh aliases
-alias opus5='ssh opus5'
-alias sauron='ssh sauron'
