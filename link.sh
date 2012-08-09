@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script configs
-IGNORE="bashrc|ssh|link|gitignore"
+IGNORE="bashrc|bash_profile|ssh|link|gitignore"
 
 # Get current directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -26,8 +26,16 @@ then
 	echo "alias lbashmod=\"vim -c 'set syn=sh' $DIR/$1_bashrc\"" >> ~/.bashrc
 fi
 
-unlink ~/.bash_profile &> /dev/null
-echo "source ~/.bashrc" > ~/.bash_profile
+if [ "$1" != "" ]
+then
+	echo "Linking $1 bash_profile"
+	unlink ~/.bash_profile &> /dev/null
+	ln -s $DIR/$1_bash_profile ~/.bash_profile
+else
+	echo "Linking main bash_profile"
+	unlink ~/.bash_profile &> /dev/null
+	ln -s $DIR/bash_profile ~/.bash_profile
+fi
 
 if ! [ -f ~/.ssh/config ]
 then
