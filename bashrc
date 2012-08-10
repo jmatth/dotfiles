@@ -83,8 +83,7 @@ function ROOT_COL () {
 # reset colors
 NC='\[\e[m\]'
 
-
-USERCOL=`EXT_COL 27`
+USERCOL=`ROOT_COL 27 1 b`
 ATCOL=$NC
 
 # Indicate ssh session
@@ -99,7 +98,7 @@ PATHCOL=`EXT_COL 45`
 BRANCHCOL=`EXT_COL 220`
 RETURNCOL=`EXT_COL 9`
 #TIMECOL=`EXT_COL 242`
-PROMPTCOL=`ROOT_COL 7 1 b`
+PROMPTCOL=`EXT_COL 15`
 
 # simple colors
 S_USERCOL=`SIMPLE_COL 34`
