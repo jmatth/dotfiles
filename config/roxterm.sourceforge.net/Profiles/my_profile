@@ -1,0 +1,13 @@
+
+[roxterm profile]
+font=Monospace 11
+hide_menubar=1
+always_show_tabs=0
+background_type=0
+saturation=0.367525
+scrollback_lines=10000
+scrollbar_pos=0
+browser=google-chrome
+true_translucence=1
+audible_bell=1
+visible_bell=0

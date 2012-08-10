@@ -1,0 +1,8 @@
+
+[roxterm shortcuts scheme]
+Edit/Copy=<Shift><Control>c
+Edit/Paste=<Shift><Control>v
+Tabs/Previous Tab=<Control>Page_Up
+Tabs/Next Tab=<Control>Page_Down
+View/Normal Size=<Control>0
+View/Full Screen=F11

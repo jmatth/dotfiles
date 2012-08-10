@@ -1,0 +1,5 @@
+
+[roxterm options]
+warn_close=1
+shortcut_scheme=my_keys
+profile=my_profile
