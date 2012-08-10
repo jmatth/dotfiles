@@ -15,6 +15,7 @@ shopt -s checkwinsize # ensure window size is correct
 #program shortcuts
 alias bashsave="source ~/.bashrc"
 alias vmod="vim ~/.vimrc"
+alias sudo="sudo -E"
 
 #aliases for ls
 alias ls="ls --color=auto -F"
