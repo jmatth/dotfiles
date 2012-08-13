@@ -67,7 +67,7 @@ function SIMPLE_COL () {
 
 #color code if root
 function ROOT_COL () {
-	if id | cut -d' ' -f1 | grep -iq 'root'
+	if id | cut -d' ' -f1 | grep -i 'root' &> /dev/null
 	then
 		if [ $3 ]
 		then
@@ -124,12 +124,12 @@ function parse_git_branch() {
 # get current status of git repo
 function parse_git_dirty {
         status=`git status 2>&1 | tee`
-        dirty=`echo -n "${status}" 2> /dev/null | grep -q "modified:" 2> /dev/null; echo "$?"`
-        untracked=`echo -n "${status}" 2> /dev/null | grep -q "Untracked files" 2> /dev/null; echo "$?"`
-        ahead=`echo -n "${status}" 2> /dev/null | grep -q "Your branch is ahead of" 2> /dev/null; echo "$?"`
-        newfile=`echo -n "${status}" 2> /dev/null | grep -q "new file:" 2> /dev/null; echo "$?"`
-        renamed=`echo -n "${status}" 2> /dev/null | grep -q "renamed:" 2> /dev/null; echo "$?"`
-		  deleted=`echo -n "${status}" 2> /dev/null | grep -q "deleted:" 2> /dev/null; echo "$?"`
+        dirty=`echo -n "${status}" 2> /dev/null | grep "modified:" &> /dev/null; echo "$?"`
+        untracked=`echo -n "${status}" 2> /dev/null | grep "Untracked files" &> /dev/null; echo "$?"`
+        ahead=`echo -n "${status}" 2> /dev/null | grep "Your branch is ahead of" &> /dev/null; echo "$?"`
+        newfile=`echo -n "${status}" 2> /dev/null | grep "new file:" &> /dev/null; echo "$?"`
+        renamed=`echo -n "${status}" 2> /dev/null | grep "renamed:" &> /dev/null; echo "$?"`
+		  deleted=`echo -n "${status}" 2> /dev/null | grep "deleted:" &> /dev/null; echo "$?"`
         bits=''
 		  if [ "${deleted}" == "0" ]; then
 					 bits="⊗${bits}"
@@ -175,7 +175,7 @@ function ps1s () {
 keyswap &> /dev/null
 
 # print archey if installed
-if ! which archey 2>&1 | grep -iq "no archey" && which archey &> /dev/null
+if ! which archey 2>&1 | grep -i "no archey" &> /dev/null && which archey &> /dev/null
 then
 	archey
 fi
