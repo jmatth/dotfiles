@@ -15,7 +15,6 @@ alias la="ls -Alh"
 alias ll="ls -lh"
 
 #rpm aliases
-alias testbuild="sudo mock -v --rebuild "
 alias specs="cd ~/rpmbuild/SPECS"
 alias src='cd ~/rpmbuild/SOURCES'
 alias srpm='cd ~/rpmbuild/SRPMS'
