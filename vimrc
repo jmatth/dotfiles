@@ -37,6 +37,11 @@ syn on
 inoremap jf <Esc>
 set timeoutlen=500
 
+nnoremap j gj
+nnoremap k gk
+vnoremap j gj
+vnoremap k gk
+
 " Hex mode
 map <Leader>hon :%!xxd<CR>
 map <Leader>hof :%!xxd -r<CR>
@@ -57,6 +62,10 @@ set incsearch    " Incremental search
 set hidden       " Hide buffellumrs when they are abandoned
 set autoindent	  " Auto indent when starting a new line
 set smartindent  " Indent based on syntax
+set wrap lbr     " Wrap by word
+
+silent! autocmd InsertEnter * set nohlsearch
+silent! autocmd InsertLeave * set hlsearch
 
 "if &diff
 "	colorscheme desert
@@ -78,5 +87,5 @@ highlight CursorLine ctermbg=20 cterm=bold term=bold
 highlight CursorColumn ctermbg=20
 "" Fix backgrounds for transparent terminals
 "highlight Normal ctermbg=none
-highlight String ctermbg=none
-highlight LineNr ctermbg=none
+"highlight String ctermbg=none
+"highlight LineNr ctermbg=none
