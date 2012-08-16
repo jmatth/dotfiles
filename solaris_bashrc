@@ -1,9 +1,10 @@
-#export statements
-export TERM='xterm'
 export PATH='/usr/local/gnu/bin:/usr/xpg4/bin:/usr/dt/bin:/usr/openwin/bin:/usr/local/bin:/usr/ucb:/usr/bin:/opt/SUNWspro/bin:/usr/ccs/bin'
 
 #return if not running interactively
 [ -z "$PS1" ] && return 
+
+#export statements
+export TERM='xterm'
 
 #aliases for ls
 alias ls='/usr/local/gnu/bin/ls -hF --color=auto'

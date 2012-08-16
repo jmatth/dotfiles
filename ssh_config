@@ -1,6 +1,7 @@
 Host *
 	ControlMaster auto
 	ControlPath ~/.ssh/cm-%r@%h:%p
+	VisualHostKey yes
 Host localhost
 	StrictHostKeyChecking no
 	UserKnownHostsFile /dev/null
