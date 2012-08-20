@@ -2,13 +2,12 @@
 set t_Co=256
 
 " set <Leader>
-let mapleader=","
+"let mapleader=","
 
-"filetype on
-"filetype indent on
+call pathogen#infect()
 
 " Enable omnicomplete
-filetype plugin on
+filetype plugin indent on
 set ofu=syntaxcomplete#Complete
 
 "Show Line Numbers
