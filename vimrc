@@ -5,8 +5,11 @@ set t_Co=256
 let mapleader=","
 
 "filetype on
-"filetype plugin on
 "filetype indent on
+
+" Enable omnicomplete
+filetype plugin on
+set ofu=syntaxcomplete#Complete
 
 "Show Line Numbers
 set number
@@ -18,13 +21,13 @@ set shortmess=filnxtToOI
 set backspace=2
 
 "number of spaces a tab is represented by
-set ts=3
+set ts=4
 
 "do not replace tab characters with spaces
 set noexpandtab
 
 "number of spaces used to represent autoindents
-set shiftwidth=3
+set shiftwidth=4
 
 "syntax highlighting on
 syn on
@@ -34,9 +37,10 @@ syn on
 " vnoremap / /\v
 
 " Quick esc
-inoremap jf <Esc>
+inoremap kj <Esc>
 set timeoutlen=500
 
+" Easier navigation on wrapped lines
 nnoremap j gj
 nnoremap k gk
 vnoremap j gj
@@ -58,15 +62,16 @@ set showmatch    " Show matching brackets.
 set ignorecase   " Do case insensitive matching
 set smartcase    " Do smart case matching
 set incsearch    " Incremental search
-"set autowrite    " Automatically save before commands like :next and :make
+set autowrite    " Automatically save before commands like :next and :make
 set hidden       " Hide buffellumrs when they are abandoned
 set autoindent	  " Auto indent when starting a new line
-set smartindent  " Indent based on syntax
-set wrap lbr     " Wrap by word
+set nosmartindent " Don't indent based on syntax
+set wrap lbr      " Wrap by word
 
 silent! autocmd InsertEnter * set nohlsearch
 silent! autocmd InsertLeave * set hlsearch
 
+" Different colorscheme if in diff mode
 "if &diff
 "	colorscheme desert
 "else
