@@ -11,6 +11,7 @@ HISTCONTROL=ignoreboth
 
 shopt -s histappend   # append to history file
 shopt -s checkwinsize # ensure window size is correct
+set -o vi             #vi mode shortcuts
 
 #program shortcuts
 alias bashsave="source ~/.bashrc"
