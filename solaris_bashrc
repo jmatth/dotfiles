@@ -20,3 +20,29 @@ alias specs="cd ~/rpmbuild/SPECS"
 alias src='cd ~/rpmbuild/SOURCES'
 alias srpm='cd ~/rpmbuild/SRPMS'
 alias rpms='cd ~/rpmbuild/RPMS'
+
+function rpmsubmit () {
+	if [ -z "$1" ]
+	then
+		echo "Usage rpmsubmit packagename [repo]"
+		return 2
+	fi
+
+	pushd ~/rpmbuild &> /dev/null
+	vnum=`ls -lt SRPMS/$1-* | awk 'NR == 1 { print $NF }' | cut -d/ -f2- | egrep -o "[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*-[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*.src.rpm$" | sed "s/.src.rpm//g"`
+	if [ vnum == "" ]
+	then
+		echo "File not found."
+		return 1
+	fi
+	echo "Most recent appears to be $vnum"
+
+	repo="testing"
+	if ! [ -z "$2" ]
+	then
+		repo="$2"
+	fi
+
+	rpm --resign SRPMS/$1-$vnum.src.rpm RPMS/sparc64/$1*$vnum* && scp SRPMS/$1-$vnum.src.rpm RPMS/sparc64/$1*$vnum* rpm:/rpm/CHECK_PEND.$repo
+	popd &> /dev/null
+}
