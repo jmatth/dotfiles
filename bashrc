@@ -9,9 +9,10 @@ export CLICOLOR=true
 #ignore duplicate and leading whitespace commands in history
 HISTCONTROL=ignoreboth
 
-shopt -s histappend   # append to history file
-shopt -s checkwinsize # ensure window size is correct
-set -o vi             #vi mode shortcuts
+shopt -s histappend      # append to history file
+shopt -s checkwinsize    # ensure window size is correct
+set -o vi                #vi mode shortcuts
+bind "\C-l":clear-screen #still use control-l to clear screen.
 
 #program shortcuts
 alias bashsave="source ~/.bashrc"
