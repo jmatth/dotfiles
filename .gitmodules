@@ -7,3 +7,6 @@
 [submodule "vim/bundle/syntastic"]
 	path = vim/bundle/syntastic
 	url = git://github.com/scrooloose/syntastic.git
+[submodule "vim/bundle/colorscheme-inkpot"]
+	path = vim/bundle/colorscheme-inkpot
+	url = git://github.com/ciaranm/inkpot.git
