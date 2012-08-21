@@ -58,3 +58,13 @@ do
 	fi
 	ln -sf $DIR/$file ~/.$file
 done
+
+if ! [ -f .git/hooks/post-merge ]
+then
+	echo "Installing post merge hook"
+	hook=".git/hooks/post-merge"
+	echo "cd $DIR" > $hook
+	echo "git submodule init && git submodule update" >> $hook
+	echo "./link.sh" >> $hook
+	chmod 755 $hook
+fi
