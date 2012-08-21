@@ -65,6 +65,10 @@ then
 	hook=".git/hooks/post-merge"
 	echo "cd $DIR" > $hook
 	echo "git submodule init && git submodule update" >> $hook
-	echo "./link.sh" >> $hook
+	if [ -z $1 ]
+	then
+		echo "./link.sh $1" >> $hook
+	else
+		echo "./link.sh" >> $hook
 	chmod 755 $hook
 fi
