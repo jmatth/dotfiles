@@ -25,7 +25,6 @@ alias la="ls -Alh"
 alias lsa="ls -A"
 
 #aliases for random ops
-alias cc="clear"
 alias bus="~/./bus"
 alias hosts="vim /etc/hosts"
 alias cgrep="grep --color=always"
