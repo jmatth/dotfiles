@@ -13,3 +13,6 @@
 [submodule "vim/bundle/colorscheme-jellybeans"]
 	path = vim/bundle/colorscheme-jellybeans
 	url = git://github.com/nanotech/jellybeans.vim.git
+[submodule "vim/bundle/snipmate"]
+	path = vim/bundle/snipmate
+	url = git://github.com/garbas/vim-snipmate.git
