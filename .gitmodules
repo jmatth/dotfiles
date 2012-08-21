@@ -10,3 +10,6 @@
 [submodule "vim/bundle/colorscheme-inkpot"]
 	path = vim/bundle/colorscheme-inkpot
 	url = git://github.com/ciaranm/inkpot.git
+[submodule "vim/bundle/colorscheme-jellybeans"]
+	path = vim/bundle/colorscheme-jellybeans
+	url = git://github.com/nanotech/jellybeans.vim.git
