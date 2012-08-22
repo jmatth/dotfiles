@@ -4,7 +4,11 @@ set t_Co=256
 " set <Leader>
 "let mapleader=","
 
+" Plugins
 call pathogen#infect()
+
+" Name used by some snippets
+let g:snips_author = 'Josh Matthews'
 
 " Enable omnicomplete
 filetype plugin indent on
