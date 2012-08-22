@@ -1,4 +1,11 @@
 # snippets for making rpm spec files
-snippet clog
-	* ${3:Day} ${4:Month} ${5:DD} ${6:YYYY} Josh Matthews <jmatth@nbcs.rutgers.edu> - ${1:Ver}-${2:Rel}
-	- ${7:Message}
+
+snippet def define variable
+	%define ${1:var} ${2:value}
+snippet if simple if
+	%if %{${1:var}}
+	${2:statements}
+	%endif
+snippet clog changelog
+	* `strftime("%a")` `strftime("%b")` `strftime("%d")` `strftime("%Y")` Josh Matthews <jmatth@nbcs.rutgers.edu> - ${1:Ver}-${2:Rel}
+	- ${3:Message}
