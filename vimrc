@@ -2,7 +2,7 @@
 set t_Co=256
 
 " set <Leader>
-"let mapleader=","
+"let mapleader = "\\"
 
 " Plugins
 call pathogen#infect()
@@ -48,6 +48,9 @@ nnoremap j gj
 nnoremap k gk
 vnoremap j gj
 vnoremap k gk
+
+" Bring up NERDtree
+map  <Leader>n :NERDTreeToggle<CR>
 
 " Hex mode
 map <Leader>hon :%!xxd<CR>
