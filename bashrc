@@ -34,7 +34,7 @@ alias ps1bw="export PS1='\[$NC\]\u@\h:\W\`nonzero_return\`\`parse_git_branch\`\\
 alias ..="cd .."
 alias me="cd ~;ls"
 alias dots="cd ~/dotfiles;ls"
-alias gitroot='cd $(git rev-parse --show-cdup)'
+alias gitroot='cd $(git rev-parse --show-toplevel)'
 
 #ssh aliases
 alias ziti="ssh ziti.rutgers.edu"
