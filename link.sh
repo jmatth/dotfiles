@@ -26,15 +26,15 @@ then
 	echo "alias lbashmod=\"vim -c 'set syn=sh' $DIR/$1_bashrc\"" >> ~/.bashrc
 fi
 
-if [ "$1" != "" ]
+if [ -h ~/.bash_profile ]
 then
-	echo "Linking $1 bash_profile"
-	unlink ~/.bash_profile &> /dev/null
-	ln -s $DIR/$1_bash_profile ~/.bash_profile
-else
-	echo "Linking main bash_profile"
-	unlink ~/.bash_profile &> /dev/null
-	ln -s $DIR/bash_profile ~/.bash_profile
+	unlink ~/.bash_profile
+fi
+
+if ! grep 'source ~/.bashrc' ~/.bash_profile &> /dev/null
+then
+	echo -e "\e[31;1mbash_profile doesn't seem to source bashrc. Adding.\e[m"
+	echo 'source ~/.bashrc' >> ~/.bash_profile
 fi
 
 if ! [ -f ~/.ssh/config ]
