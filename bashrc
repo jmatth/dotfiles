@@ -57,7 +57,6 @@ function keyswap () {
 #autocomplete commnads
 complete -cf sudo
 complete -c which
-complete -c man
 
 #256 color codes
 function EXT_COL () { echo -ne "\[\033[38;5;$1;01m\]"; }
