@@ -19,4 +19,4 @@
 [push]
 	default = tracking
 [core]
-	excludesfile = /home/josh/.gitignore_global
+	excludesfile = ~/.gitignore_global
