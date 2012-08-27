@@ -13,6 +13,8 @@ let g:snips_author = 'Josh Matthews'
 " Enable omnicomplete
 filetype plugin indent on
 set ofu=syntaxcomplete#Complete
+" Automatic backups
+set backup
 
 "Show Line Numbers
 set number
