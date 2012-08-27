@@ -54,7 +54,7 @@ function keyswap () {
 	-e 'keycode 66 = Escape'
 }
 
-#autocomplete commnads
+#autocomplete commands
 complete -cf sudo
 complete -c which
 
