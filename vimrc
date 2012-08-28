@@ -64,7 +64,7 @@ map <Leader>hof :%!xxd -r<CR>
 "    \| exe "normal! g'\"" | endif 
 "endif
 
-"set nohlsearch	"don't highlight searches
+set hlsearch     " highlight searches
 set showcmd      " Show (partial) command in status line. 
 set showmatch    " Show matching brackets.
 set ignorecase   " Do case insensitive matching
