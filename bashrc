@@ -25,7 +25,6 @@ alias la="ls -Alh"
 alias lsa="ls -A"
 
 #aliases for random ops
-alias bus="~/./bus"
 alias hosts="vim /etc/hosts"
 alias cgrep="grep --color=always"
 alias ps1bw="export PS1='\[$NC\]\u@\h:\W\`nonzero_return\`\`parse_git_branch\`\\$ '"
@@ -201,6 +200,17 @@ function up () {
 		done
 		cd $numdirs
 	fi
+}
+
+# get nextbus info
+function bus () {
+	stop="$1$2$3"
+
+	if [ -z "$stop" ]; then
+		stop="hill"
+	fi
+
+	curl "http://vverma.net/nextbus/nextbus.php?android=1&s=$stop"
 }
 
 #old PS1s, preserved for science
