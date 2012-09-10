@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Script configs
-IGNORE="bashrc|bash_profile|ssh|link|gitmodules"
+IGNORE="bashrc|bash_profile|ssh|link|gitmodules|pathogen_submodule"
 
 # Get current directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
