@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Script configs
 IGNORE="bashrc|bash_profile|ssh|link|gitmodules"
@@ -47,16 +47,19 @@ echo "Symlinking all other config files:"
 cd $DIR
 for file in $(git ls-files | egrep -v $IGNORE)
 do
-	echo $file
-	if test ! -d `dirname ~/.$file`
+	if [ "$(readlink ~/.$file)" != "$DIR/$file" ]
 	then
-		mkdir -p `dirname ~/.$file`
+		echo $file
+		if test ! -d `dirname ~/.$file`
+		then
+			mkdir -p `dirname ~/.$file`
+		fi
+		if test -h ~/.$file
+		then
+			unlink ~/.$file
+		fi
+		ln -sf $DIR/$file ~/.$file
 	fi
-	if test -h ~/.$file
-	then
-		unlink ~/.$file
-	fi
-	ln -sf $DIR/$file ~/.$file
 done
 
 if ! [ -f .git/hooks/post-merge ]
