@@ -10,18 +10,18 @@ if ! [ -z $1 ]
 then
 	if ! [ -f ~/dotfiles/$1_bashrc ]
 	then
-		echo "That bashrc doesn't exist..."
+		echo -e "\e[1;31mThat bashrc doesn't exist...\e[m"
 		exit 1
 	fi
 fi
 
-echo "Adding main bashrc"
+echo -e "\e[1;34mAdding main bashrc...\e[m"
 unlink ~/.bashrc &> /dev/null
 echo "source $DIR/bashrc" > ~/.bashrc
 echo "alias bashmod=\"vim -c 'set syn=sh' $DIR/bashrc\"" >> ~/.bashrc
 if [ "$1" != "" ]
 then
-	echo "Adding $1 bashrc"
+	echo -e "\e[1;36mAdding $1 bashrc...\e[m"
 	echo "source $DIR/$1_bashrc" >> ~/.bashrc
 	echo "alias lbashmod=\"vim -c 'set syn=sh' $DIR/$1_bashrc\"" >> ~/.bashrc
 fi
@@ -29,6 +29,21 @@ fi
 if [ -h ~/.bash_profile ]
 then
 	unlink ~/.bash_profile
+fi
+
+if ! [ -d ~/.vim/autoload ]
+then
+	mkdir -p ~/.vim/autoload
+fi
+
+echo -e "\e[1;33mAdding Pathogen. I should really find a better way to do this.\e[m"
+if [ -h ~/.vim/autoload/pathogen.vim ] && [ "$(readlink ~/.vim/autoload/pathogen.vim)" != "$DIR/pathogen_submodule/autoload/pathogen.vim" ]
+then
+	echo -e "\e[1;31mPathogen link not present or consistent, creating...\e[m"
+	unlink ~/.vim/autoload/pathogen.vim
+	ln -sf $DIR/pathogen_submodule/autoload/pathogen.vim ~/.vim/autoload/pathogen.vim
+else
+	echo -e "\e[1;32mLink already present and working. I should still fix this.\e[m"
 fi
 
 if ! grep 'source ~/.bashrc' ~/.bash_profile &> /dev/null
@@ -43,7 +58,7 @@ then
 	cp $DIR/ssh_config ~/.ssh/config
 fi
 
-echo "Symlinking all other config files:"
+echo -e "\e[1;35mSymlinking all other config files:\e[m"
 cd $DIR
 for file in $(git ls-files | egrep -v $IGNORE)
 do
