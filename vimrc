@@ -1,41 +1,33 @@
-"256 colors
-set t_Co=256
+set t_Co=256  "256 colors
 
 " set <Leader>
 "let mapleader = "\\"
+"
+set nocompatible    " Disable vi-compatibility
+set laststatus=2    " Always show the statusline
+set encoding=utf-8  " Necessary to show Unicode glyphs
 
-" Plugins
-call pathogen#infect()
+" old versions cause sadness
+if version >= 702
+	call pathogen#infect()
+	call pathogen#helptags()
+endif
 
-" Name used by some snippets
-let g:snips_author = 'Josh Matthews'
+let g:snips_author = 'Josh Matthews'  " Name used by some snippets
 
-" Enable omnicomplete
-filetype plugin indent on
-set ofu=syntaxcomplete#Complete
-" Automatic backups
-set backup
+filetype plugin indent on        " needed by some plugins and features
+set ofu=syntaxcomplete#Complete  " enable omnicomplete
+set nocompatible                 " use all the cool new features
 
-"Show Line Numbers
-set number
+set backup                " Automatic backups
+set number                " Show Line Numbers
+set shortmess=filnxtToOI  " Default shortmess += I. Removes vim intro message.
+set backspace=2           " allows backspacing over eol, autoindents, and start of insert
+set ts=4                  " number of spaces a tab is represented by
+set noexpandtab           " do not replace tab characters with spaces
+set shiftwidth=4          "number of spaces used to represent autoindents
 
-"Default shortmess += I. Removes vim intro message.
-set shortmess=filnxtToOI
-
-"allows backspacing over eol, autoindents, and start of insert
-set backspace=2
-
-"number of spaces a tab is represented by
-set ts=4
-
-"do not replace tab characters with spaces
-set noexpandtab
-
-"number of spaces used to represent autoindents
-set shiftwidth=4
-
-"syntax highlighting on
-syn on
+syn on "syntax highlighting on
 
 " use python/perl regexp syntax
 " nnoremap / /\v
@@ -64,14 +56,14 @@ map <Leader>hof :%!xxd -r<CR>
 "    \| exe "normal! g'\"" | endif 
 "endif
 
-set hlsearch     " highlight searches
-set showcmd      " Show (partial) command in status line. 
-set showmatch    " Show matching brackets.
-set ignorecase   " Do case insensitive matching
-set smartcase    " Do smart case matching
-set incsearch    " Incremental search
-set autowrite    " Automatically save before commands like :next and :make
-set hidden       " Hide buffellumrs when they are abandoned
+set hlsearch      " highlight searches
+set showcmd       " Show (partial) command in status line. 
+set showmatch     " Show matching brackets.
+set ignorecase    " Do case insensitive matching
+set smartcase     " Do smart case matching
+set incsearch     " Incremental search
+set autowrite     " Automatically save before commands like :next and :make
+set hidden        " Hide buffellumrs when they are abandoned
 set autoindent	  " Auto indent when starting a new line
 set nosmartindent " Don't indent based on syntax
 set wrap lbr      " Wrap by word
