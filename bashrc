@@ -36,8 +36,7 @@ alias dots="cd ~/dotfiles;ls"
 alias gitroot='cd $(git rev-parse --show-toplevel)'
 
 #ssh aliases
-alias ziti="ssh ziti.rutgers.edu"
-alias ravioli='ssh ravioli.rutgers.edu'
+alias assembly="ssh assembly.rutgers.edu"
 alias sauron='ssh sauron.rutgers.edu'
 alias eden='ssh eden.rutgers.edu'
 
