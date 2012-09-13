@@ -7,6 +7,14 @@ set nocompatible    " Disable vi-compatibility
 set laststatus=2    " Always show the statusline
 set encoding=utf-8  " Necessary to show Unicode glyphs
 
+set backup                   " Automatic backups
+set backupdir=~/.vim/backups " Where to save the automatic backups
+
+set undofile            " Enable persistent undo history
+set undodir=~/.vim/undo " Directory to save undo history in
+set undolevels=1000     " Max number of undos that can be done
+set undoreload=10000    " Max number of lines to save for undo on buffer reload
+
 " old versions cause sadness
 if version >= 702
 	call pathogen#infect()
@@ -19,7 +27,6 @@ filetype plugin indent on        " needed by some plugins and features
 set ofu=syntaxcomplete#Complete  " enable omnicomplete
 set nocompatible                 " use all the cool new features
 
-set backup                " Automatic backups
 set number                " Show Line Numbers
 set shortmess=filnxtToOI  " Default shortmess += I. Removes vim intro message.
 set backspace=2           " allows backspacing over eol, autoindents, and start of insert
