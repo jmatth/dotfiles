@@ -1,5 +1,3 @@
-set rtp+=~/.vim/pathogen
-
 set t_Co=256  "256 colors
 
 " set <Leader>
