@@ -31,10 +31,10 @@ then
 	unlink ~/.bash_profile
 fi
 
-if ! [ -d ~/.vim/autoload ]
-then
-	mkdir -p ~/.vim/autoload
-fi
+# vim directories
+mkdir -p ~/.vim/autoload
+mkdir -p ~/.vim/backups
+mkdir -p ~/.vim/undo
 
 echo -e "\e[1;33mAdding Pathogen. I should really find a better way to do this.\e[m"
 if [ -h ~/.vim/autoload/pathogen.vim ] && [ "$(readlink ~/.vim/autoload/pathogen.vim)" != "$DIR/pathogen_submodule/autoload/pathogen.vim" ]
