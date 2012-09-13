@@ -32,19 +32,9 @@ then
 fi
 
 # vim directories
-mkdir -p ~/.vim/autoload
+rm -rf ~/.vim/autoload
 mkdir -p ~/.vim/backups
 mkdir -p ~/.vim/undo
-
-echo -e "\e[1;33mAdding Pathogen. I should really find a better way to do this.\e[m"
-if [ -h ~/.vim/autoload/pathogen.vim ] && [ "$(readlink ~/.vim/autoload/pathogen.vim)" != "$DIR/pathogen_submodule/autoload/pathogen.vim" ]
-then
-	echo -e "\e[1;31mPathogen link not present or consistent, creating...\e[m"
-	unlink ~/.vim/autoload/pathogen.vim
-	ln -sf $DIR/pathogen_submodule/autoload/pathogen.vim ~/.vim/autoload/pathogen.vim
-else
-	echo -e "\e[1;32mLink already present and working. I should still fix this.\e[m"
-fi
 
 if ! grep 'source ~/.bashrc' ~/.bash_profile &> /dev/null
 then
