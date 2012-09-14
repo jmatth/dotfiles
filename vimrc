@@ -1,5 +1,7 @@
 set t_Co=256  "256 colors
 
+let g:Powerline_symbols = 'fancy' " Fancy powerline symbols
+
 " set <Leader>
 "let mapleader = "\\"
 "
