@@ -12,7 +12,7 @@ else
 fi
 
 # And different colors if over ssh
-if (($+SSHCONNECTION)); then
+if (($+SSH_CONNECTION)); then
 	local host="%{$FX[reset]$FG[bold]$FG[208]%}%m"
 else
 	local host="%{$FX[reset]$FG[bold]$FG[034]%}%m"
