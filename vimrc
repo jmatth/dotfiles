@@ -12,15 +12,18 @@ set encoding=utf-8  " Necessary to show Unicode glyphs
 set backup                   " Automatic backups
 set backupdir=~/.vim/backups " Where to save the automatic backups
 
-set undofile            " Enable persistent undo history
-set undodir=~/.vim/undo " Directory to save undo history in
-set undolevels=1000     " Max number of undos that can be done
-set undoreload=10000    " Max number of lines to save for undo on buffer reload
-
 " old versions cause sadness
 if version >= 702
-	call pathogen#infect()
-	call pathogen#helptags()
+	call pathogen#infect()   " load plugins
+	call pathogen#helptags() " load plugin help
+endif
+
+" slightly old versions cause slight saddness
+if version >= 705
+	set undofile            " Enable persistent undo history
+	set undodir=~/.vim/undo " Directory to save undo history in
+	set undolevels=1000     " Max number of undos that can be done
+	set undoreload=10000    " Max number of lines to save for undo on buffer reload
 endif
 
 let g:snips_author = 'Josh Matthews'  " Name used by some snippets
