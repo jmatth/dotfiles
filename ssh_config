@@ -1,4 +1,5 @@
 Host *
+	ServerAliveInterval 60
 	ControlMaster auto
 	ControlPath ~/.ssh/cm-%r@%h:%p
 	VisualHostKey yes
