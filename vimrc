@@ -19,7 +19,7 @@ if version >= 702
 endif
 
 " slightly old versions cause slight saddness
-if version >= 705
+if version >= 703
 	set undofile            " Enable persistent undo history
 	set undodir=~/.vim/undo " Directory to save undo history in
 	set undolevels=1000     " Max number of undos that can be done
