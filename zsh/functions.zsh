@@ -27,3 +27,25 @@ case $TERM in
             print -Pn "\e]2;[${2:q}]\a"
         }
 esac
+
+# Swap esc and capslock
+function keyswap () {
+	if (($+1))
+	then
+		xmodmap -e 'keycode 9 = Caps_Lock' \
+		-e 'keycode 66 = Escape' \
+		-e 'remove Lock = Caps_Lock' \
+		-e 'keycode 66 = Caps_Lock' \
+		-e 'keycode 9 = Escape'
+	else
+		xmodmap -e 'keycode 66 = Caps_Lock' \
+		-e 'keycode 9 = Escape' \
+		-e 'remove Lock = Caps_Lock' \
+		-e 'keycode 9 = Caps_Lock' \
+		-e 'keycode 66 = Escape'
+	fi
+}
+
+# Try to swap
+
+keyswap 2>&1 >/dev/null
