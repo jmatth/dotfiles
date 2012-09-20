@@ -3,8 +3,8 @@
 
 # Directory Changing options
 setopt AUTO_CD                      # Automatically cd in to directories if it's not a command name.
-setopt AUTO_PUSHD                   # Automatically push visited directories to the stack.
-setopt PUSHD_IGNORE_DUPS            # ...and don't duplicate them.
+#setopt AUTO_PUSHD                   # Automatically push visited directories to the stack.
+#setopt PUSHD_IGNORE_DUPS            # ...and don't duplicate them.
 
 # History Options
 setopt APPEND_HISTORY               # Don't overwrite history.
@@ -23,7 +23,7 @@ setopt EXTENDED_GLOB                # Give meaning to lots of crazy characters.
 setopt AUTO_LIST                    # Always automatically show a list of ambiguous completions.
 setopt COMPLETE_IN_WORD             # Complete items from the beginning to the cursor.
 
-setopt NO_BEEP                      # Never, ever, beep at me.
+setopt NO_BEEP                      # STFU
 
 setopt PROMPT_SUBST                 # Expand parameters within prompts.
 

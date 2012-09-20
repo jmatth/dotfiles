@@ -2,7 +2,7 @@
 # P.C. Shyamshankar <sykora@lucentbeing.com>
 
 # Where everything is.
-Z=~/etc/zsh
+Z=~/.zsh
 
 # Set up a working environment.
 source $Z/environment.zsh
@@ -17,7 +17,7 @@ source $Z/options.zsh
 source $Z/functions.zsh
 
 # Set up the Z line editor.
-source $Z/zle.zsh
+#source $Z/zle.zsh
 
 # Set the prompt.
 if (( C == 256 )); then
@@ -27,9 +27,9 @@ else
 fi
 
 # Set up some colors for directory listings.
-if (( C == 256 )); then
-    source $Z/ls_colors_256.zsh
-fi
+#if (( C == 256 )); then
+#    source $Z/ls_colors_256.zsh
+#fi
 
 # Initialize the completion system.
 source $Z/completion.zsh
