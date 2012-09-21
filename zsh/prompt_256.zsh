@@ -32,7 +32,7 @@ zstyle ':vcs_info:*' check-for-changes true
 #zstyle ':vcs_info:*' unstagedstr "%{$FX[reset]$FG[160]%}"
 zstyle ':vcs_info:*' stagedstr "%{$FX[reset]$FG[082]%}⚛"
 zstyle ':vcs_info:*' unstagedstr "%{$FX[reset]$FG[160]%}⚡"
-zstyle ':vcs_info:*' formats "%{$FX[reset]$FG[220]%}[%b%u%c$FX[reset]$FG[220]%}]"
+zstyle ':vcs_info:*' formats "%{$FX[reset]$FG[220]%}[%b%u%c%{$FX[reset]$FG[220]%}]"
 
 local vcsi="\${vcs_info_msg_0_}"
 
