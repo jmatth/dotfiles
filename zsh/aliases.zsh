@@ -1,7 +1,7 @@
 # aliases.zsh: Sets up aliases which make working at the command line easier.
 
 #program shortcuts
-alias zmod="vim ~/.zshrc"
+alias zmod="vim ~/.zsh"
 alias zsave="source ~/.zshrc"
 alias vmod="vim ~/.vimrc"
 alias sudo="sudo -E"
