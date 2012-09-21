@@ -12,3 +12,6 @@ true_translucence=1
 audible_bell=1
 visible_bell=0
 term=xterm-256color
+login_shell=0
+use_custom_command=1
+command=zsh
