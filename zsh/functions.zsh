@@ -48,4 +48,4 @@ function keyswap () {
 
 # Try to swap
 
-keyswap 2>&1 >/dev/null
+keyswap &> /dev/null
