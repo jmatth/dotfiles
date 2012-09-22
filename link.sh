@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Script configs
-IGNORE="bashrc|bash_profile|ssh|link|gitmodules|pathogen_submodule"
+IGNORE="bashrc|bash_profile|zshrc|ssh|link|gitmodules|pathogen_submodule"
 
 # Get current directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -31,6 +31,22 @@ then
 	unlink ~/.bash_profile
 fi
 
+echo -e "\e[1;34mAdding main zshrc...\e[m"
+unlink ~/.zshrc &> /dev/null
+echo "source $DIR/zshrc" > ~/.zshrc
+echo "alias zmod=\"vim -c 'set syn=zsh' $DIR/zsh\"" >> ~/.zshrc
+if [ "$1" != "" ]
+then
+	echo -e "\e[1;36mAdding $1 zshrc...\e[m"
+	echo "source $DIR/$1_zshrc" >> ~/.zshrc
+	echo "alias lzmod=\"vim -c 'set syn=zsh' $DIR/$1_zshrc\"" >> ~/.zshrc
+fi
+
+if [ -h ~/.zprofile ]
+then
+	unlink ~/.zprofile
+fi
+
 # vim directories
 mkdir -p ~/.vim/backups
 mkdir -p ~/.vim/undo
@@ -39,6 +55,12 @@ if ! grep 'source ~/.bashrc' ~/.bash_profile &> /dev/null
 then
 	echo -e "\e[31;1mbash_profile doesn't seem to source bashrc. Adding.\e[m"
 	echo 'source ~/.bashrc' >> ~/.bash_profile
+fi
+
+if ! grep 'source ~/.zshrc' ~/.zprofile &> /dev/null
+then
+	echo -e "\e[31;1mzprofile doesn't seem to source bashrc. Adding.\e[m"
+	echo 'source ~/.zshrc' >> ~/.zprofile
 fi
 
 if ! [ -f ~/.ssh/config ]
