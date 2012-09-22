@@ -6,6 +6,7 @@ let g:Powerline_symbols = 'fancy' " Fancy powerline symbols
 "let mapleader = "\\"
 "
 set nocompatible    " Disable vi-compatibility
+set modeline        " File specific settings
 set laststatus=2    " Always show the statusline
 set encoding=utf-8  " Necessary to show Unicode glyphs
 
