@@ -1,3 +1,4 @@
+# vim: set filetype=sh :
 #autocomplete homebrew
 if [ -f `brew --prefix`/etc/bash_completion ]
 then

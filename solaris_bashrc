@@ -1,3 +1,4 @@
+# vim: set filetype=sh :
 export PATH='/usr/local/gnu/bin:/usr/local/bin:/usr/xpg4/bin:/usr/dt/bin:/usr/openwin/bin:/usr/ucb:/usr/bin:/opt/SUNWspro/bin:/usr/ccs/bin'
 
 #return if not running interactively

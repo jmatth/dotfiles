@@ -1,3 +1,4 @@
+# vim: set filetype=sh :
 export PATH='/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin:/usr/sbin:/sbin'
 
 #aliases for random ops
