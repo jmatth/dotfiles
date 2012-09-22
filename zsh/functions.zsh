@@ -1,5 +1,4 @@
 # functions.zsh: Custom functions, and function invocations.
-# P.C. Shyamshankar <sykora@lucentbeing.com>
 
 if (( C == 256 )); then
     autoload spectrum && spectrum # Set up 256 color support.
@@ -27,6 +26,28 @@ case $TERM in
             print -Pn "\e]2;[${2:q}]\a"
         }
 esac
+
+# move up n directories
+function up () {
+	if (( $# == 0 ))
+	then
+		cd ../
+	elif (( $# > 1 ))
+	then
+		echo "Usage: up [int]"
+		return 2
+	else
+		case $1 in
+			''|*[!0-9]*) echo "Usage: up [int]"; return 2 ;;
+		esac
+		numdirs=""
+		for i in `seq 1 $1`
+		do
+			numdirs="$numdirs../"
+		done
+		cd $numdirs
+	fi
+}
 
 # Swap esc and capslock
 function keyswap () {
