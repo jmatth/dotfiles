@@ -33,3 +33,9 @@ fi
 
 # Initialize the completion system.
 source $Z/completion.zsh
+
+# Load local configs if they exist
+if [[ -a $Z/local.zsh ]]
+then
+	source $Z/local.zsh
+fi
