@@ -50,6 +50,10 @@ fi
 # vim directories
 mkdir -p ~/.vim/backups
 mkdir -p ~/.vim/undo
+if ! [ -h ~/.vim/autoload ]
+then
+	rm -rf ~/.vim/autoload
+fi
 
 if ! grep 'source ~/.bashrc' ~/.bash_profile &> /dev/null
 then
