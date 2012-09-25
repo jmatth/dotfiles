@@ -2,6 +2,8 @@
 
 if (( C == 256 )); then
     autoload spectrum && spectrum # Set up 256 color support.
+else
+    autoload colors && colors # Set up simple color support
 fi
 
 # Autoload some useful utilities.
