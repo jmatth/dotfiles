@@ -37,6 +37,17 @@ function rpmsubmit () {
 		return 1
 	fi
 	echo "Most recent appears to be $vnum"
+	
+	#check for other breakout packages
+
+	OTHER=`grep "%package -n" SPECS/$1.spec | grep -v "#%package" | cut -d' ' -f3`
+	PKGS=""
+	
+	for i in $OTHER
+	do
+		PKGS="$PKGS RPMS/sparc64/$i-$vnum*rpm "
+	done
+
 
 	repo="testing"
 	if ! [ -z "$2" ]
@@ -44,6 +55,6 @@ function rpmsubmit () {
 		repo="$2"
 	fi
 
-	rpm --resign SRPMS/$1-$vnum.src.rpm RPMS/sparc64/$1*$vnum* && scp SRPMS/$1-$vnum.src.rpm RPMS/sparc64/$1*$vnum* rpm:/rpm/CHECK_PEND.$repo
+	rpm --resign SRPMS/$1-$vnum.src.rpm RPMS/sparc64/$1*$vnum* $PKGS && scp SRPMS/$1-$vnum.src.rpm RPMS/sparc64/$1*$vnum* $PKGS rpm:/rpm/CHECK_PEND.$repo
 	popd &> /dev/null
 }
