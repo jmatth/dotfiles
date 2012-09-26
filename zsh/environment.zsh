@@ -1,5 +1,4 @@
 # environment.zsh: Sets up a working shell environment.
-# P.C. Shyamshankar <sykora@lucentbeing.com>
 
 typeset -U fpath
 fpath=($Z/functions $fpath)

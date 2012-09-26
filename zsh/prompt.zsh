@@ -15,6 +15,18 @@ else
 	local host="%{$fg_bold[green]%}%m%{$reset_color%}"
 fi
 
-local dir="%{$fg_bold[cyan]%}%~%{$reset_color%}"
+local dir="%{$fg[cyan]%}%~%{$reset_color%}"
+local return="%(?.%{$fg[green]%}+%{$reset_color%}.%{$fg[red]%}-%?%{$reset_color%})"
 
-PROMPT="${name}@${host}:${dir}%# "
+# Use zshcontrib's vcs_info to get information about any current version control systems.
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' stagedstr "%{$fg[green]%}^%{$reset_color%}"
+zstyle ':vcs_info:*' unstagedstr "%{$fg[red]%}?%{$reset_color%}"
+zstyle ':vcs_info:*' formats "%{$fg[yellow]%}[%b%{$reset_color%}%u%c%{$fg[yellow]%}]%{$reset_color%}"
+#zstyle ':vcs_info:*' stagedstr "⚛"
+#zstyle ':vcs_info:*' unstagedstr "⚡"
+
+local vcsi="\${vcs_info_msg_0_}"
+
+PROMPT="${name}@${host}:${priv} "
+RPROMPT="${dir} ${return} ${vcsi}${time}"
