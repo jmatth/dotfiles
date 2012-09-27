@@ -1,10 +1,11 @@
 Host *
 	ServerAliveInterval 60
+	HashKnownHosts No
 	ControlMaster auto
 	ControlPath ~/.ssh/cm-%r@%h:%p
-	VisualHostKey yes
+	VisualHostKey Yes
 Host localhost
-	StrictHostKeyChecking no
+	StrictHostKeyChecking No
 	UserKnownHostsFile /dev/null
 Host *.rutgers.edu
 	user jmatth
