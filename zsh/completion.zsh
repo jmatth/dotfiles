@@ -1,7 +1,7 @@
 # completion.zsh: Directives for the Z-Shell completion system.
 # P.C. Shyamshankar <sykora@lucentbeing.com>
 
-autoload -Uz compinit && compinit
+autoload -Uz compinit && compinit -u
 
 #zstyle ':completion:*' menu select completer _expand _complete _correct _approximate # Completion modifiers.
 zstyle ':completion:*' completer _complete _match _approximate
