@@ -34,3 +34,6 @@
 [submodule "vim/pathogen"]
 	path = vim/pathogen
 	url = git://github.com/tpope/vim-pathogen.git
+[submodule "vim/bundle/colorscheme-vividchalk"]
+	path = vim/bundle/colorscheme-vividchalk
+	url = git://github.com/tpope/vim-vividchalk.git
