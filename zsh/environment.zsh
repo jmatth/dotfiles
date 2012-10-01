@@ -16,6 +16,9 @@ export BROWSER=google-chrome
 # if you set the editor in a separate file
 bindkey -v
 
+# Grep colors
+export GREP_OPTIONS="--color=auto"
+
 # History Settings
 export SAVEHIST=2000
 export HISTSIZE=2000
