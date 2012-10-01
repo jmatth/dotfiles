@@ -19,6 +19,11 @@ bindkey -v
 # Grep colors
 export GREP_OPTIONS="--color=auto"
 
+# Enable editing command in editor
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd v edit-command-line
+
 # History Settings
 export SAVEHIST=2000
 export HISTSIZE=2000
