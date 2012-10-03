@@ -40,3 +40,6 @@
 [submodule "vim/bundle/matchTag"]
 	path = vim/bundle/matchTag
 	url = git://github.com/gregsexton/MatchTag.git
+[submodule "vim/bundle/surround"]
+	path = vim/bundle/surround
+	url = git://github.com/tpope/vim-surround.git
