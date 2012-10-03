@@ -37,3 +37,6 @@
 [submodule "vim/bundle/colorscheme-vividchalk"]
 	path = vim/bundle/colorscheme-vividchalk
 	url = git://github.com/tpope/vim-vividchalk.git
+[submodule "vim/bundle/matchTag"]
+	path = vim/bundle/matchTag
+	url = git://github.com/gregsexton/MatchTag.git
