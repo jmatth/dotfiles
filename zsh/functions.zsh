@@ -52,7 +52,7 @@ function up () {
 }
 
 # Swap esc and capslock
-function esc_keyswap () {
+function keyswap () {
 	if (($+1))
 	then
 		xmodmap -e 'keycode 9 = Caps_Lock' \
@@ -68,3 +68,7 @@ function esc_keyswap () {
 		-e 'keycode 66 = Escape'
 	fi
 }
+
+# Try to swap
+
+keyswap &> /dev/null

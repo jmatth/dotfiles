@@ -1,9 +1,9 @@
 # vim: set filetype=zsh :
 # If not running interactively, don't do anything
-test -z "$PS1"  && return 
+#[ -z "$PS1" ] && return 
 
 #all the cool programs
-export PATH='/filer/tmp2/josh/.programs/bin:/usr/unsupported/bin:/filer/tmp2/contrib/bin:/usr/lib/qt-3.3/bin:/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin'
+export PATH='/usr/unsupported/bin:/filer/tmp2/contrib/bin:/usr/lib/qt-3.3/bin:/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin'
 
 #all the cool libs
 export LD_LIBRARY_PATH="/usr/unsupported/lib:/filer/tmp2/contrib/lib"
