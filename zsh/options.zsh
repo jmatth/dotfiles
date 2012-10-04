@@ -19,8 +19,6 @@ setopt RM_STAR_WAIT                 # Wait, and ask if the user is serious when 
 
 setopt EXTENDED_GLOB                # Give meaning to lots of crazy characters.
 
-setopt HASH_EXECUTABLES_ONLY        # Only hash executable files
-
 # Completion Options
 setopt AUTO_LIST                    # Always automatically show a list of ambiguous completions.
 setopt COMPLETE_IN_WORD             # Complete items from the beginning to the cursor.
