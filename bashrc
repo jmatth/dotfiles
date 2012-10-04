@@ -170,9 +170,6 @@ function ps1s () {
 	export PS1="$S_USERCOL\u$NC@$S_HOSTCOL\h$NC:$S_PATHCOL\W$S_RETURNCOL\`nonzero_return\`$S_BRANCHCOL\`parse_git_branch\`$S_PROMPTCOL\\$ $NC";
 }
 
-# keyswap if possible
-keyswap &> /dev/null
-
 # print archey if installed
 if ! which archey 2>&1 | grep -i "no archey" &> /dev/null && which archey &> /dev/null
 then
