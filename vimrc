@@ -5,6 +5,7 @@ let g:Powerline_symbols = 'fancy' " Fancy powerline symbols
 " set <Leader>
 "let mapleader = "\\"
 "
+
 set nocompatible    " Disable vi-compatibility
 set modeline        " File specific settings
 set laststatus=2    " Always show the statusline
@@ -55,6 +56,9 @@ nnoremap j gj
 nnoremap k gk
 vnoremap j gj
 vnoremap k gk
+
+" Clear highlighting
+map <Leader><Space> :nohl<CR>
 
 " Bring up NERDtree
 map  <Leader>n :NERDTreeToggle<CR>
