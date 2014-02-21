@@ -1,0 +1,32 @@
+[user]
+	email = josh@jmatthews.us
+	name = Josh Matthews
+[color]
+	ui = auto
+	diff = auto
+	status = auto
+	branch = auto
+	interactive = auto
+[alias]
+	co = checkout
+	ci = commit
+	st = status
+	br = branch
+	cob = checkout -b
+	cot = checkout -t
+	unstage = reset
+	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+	ctags = !.git/hooks/ctags
+[push]
+	default = tracking
+[core]
+	excludesfile = ~/.gitignore_global
+	pager = less -X -F
+[diff]
+	tool = vimdiff
+[merge]
+	tool = vimdiff
+[rerere]
+	enabled = true
+[init]
+	templatedir = ~/.git_template

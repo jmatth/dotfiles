@@ -1,0 +1,15 @@
+# vim: set filetype=sh :
+#autocomplete homebrew
+if [ -f `brew --prefix`/etc/bash_completion ]
+then
+    . `brew --prefix`/etc/bash_completion
+fi
+
+#additional software in path
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+
+#aliases for shitty mac ls
+alias ls="ls -G"
+alias la="ls -Alh"
+#alias ll="ls -lh"
+

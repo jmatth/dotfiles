@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+if which infocmp &> /dev/null && which tic &> /dev/null; then
+    for term in $(ls $dotfiles_dir/aux/terminfo); do
+        if ! infocmp $term &> /dev/null; then
+            echo "[33mTerminfo for $term not found. Compiling.[m"
+            tic $dotfiles_dir/aux/terminfo/$term
+        fi
+    done
+fi

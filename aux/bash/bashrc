@@ -1,0 +1,191 @@
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+export PATH=$PATH:$HOME/.dotfiles/bin
+
+#export statements
+export EDITOR=vim
+export CLICOLOR=true
+
+#ignore duplicate and leading whitespace commands in history
+HISTCONTROL=ignoreboth
+
+shopt -s histappend      # append to history file
+shopt -s checkwinsize    # ensure window size is correct
+set -o vi                #vi mode shortcuts
+bind "\C-l":clear-screen #still use control-l to clear screen.
+
+#program shortcuts
+alias bashsave="source ~/.bashrc"
+alias vmod="vim ~/.vimrc"
+alias sudo="sudo -E"
+
+#aliases for ls
+alias ls="ls --color=auto -F"
+alias la="ls -Alh"
+alias lsa="ls -A"
+
+#aliases for random ops
+alias hosts="vim /etc/hosts"
+alias cgrep="grep --color=always"
+alias ps1bw="export PS1='\[$NC\]\u@\h:\W\`nonzero_return\`\`parse_git_branch\`\\$ '"
+
+#aliases for directory navigation
+alias ..="cd .."
+alias me="cd ~;ls"
+alias dots="cd ~/.dotfiles && ls"
+alias gitroot='cd $(git rev-parse --show-toplevel)'
+
+#ssh aliases
+alias assembly="ssh assembly.rutgers.edu"
+alias sauron='ssh sauron.rutgers.edu'
+alias eden='ssh eden.rutgers.edu'
+
+#program settings variables
+export GREP_OPTIONS='--color=auto'
+
+#autocomplete commands
+complete -cf sudo
+complete -c which
+
+#256 color codes
+function EXT_COL () { echo -ne "\[\033[38;5;$1;01m\]"; }
+
+#16 color codes
+function SIMPLE_COL () {
+        echo -ne "\[\033[$1m\]"
+}
+
+#color code if root
+
+# reset colors
+NC='\[\e[m\]'
+
+RETURNCOL=`SIMPLE_COL 31`
+
+if [[ `tput colors` == "256" ]]
+then
+    if [ "$SSH_CONNECTION" == "" ]
+    then
+        HOSTCOL=`EXT_COL 034`
+        else
+        HOSTCOL=`EXT_COL 208`
+    fi
+
+    if [ "$UID" == "0" ]
+    then
+        USERCOL=`EXT_COL 001`
+    else
+        USERCOL=`EXT_COL 027`
+    fi
+
+    PATHCOL=`EXT_COL 045`
+    BRANCHCOL=`EXT_COL 220`
+else
+    if [ "$SSH_CONNECTION" == "" ]
+    then
+        HOSTCOL=`SIMPLE_COL 32`
+        else
+        HOSTCOL=`SIMPLE_COL 31`
+    fi
+
+    if [ "$UID" == "0" ]
+    then
+        USERCOL=`SIMPLE_COL 31`
+    else
+        USERCOL=`SIMPLE_COL 36`
+    fi
+
+    PATHCOL=`SIMPLE_COL 36`
+    BRANCHCOL=`SIMPLE_COL 33`
+fi
+
+# get current branch in git repo
+function parse_git_branch() {
+    BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
+    if [ ! "${BRANCH}" == "" ]
+    then
+        STAT=`parse_git_dirty`
+        echo "[${BRANCH}${STAT}]"
+    else
+        echo ""
+    fi
+}
+
+# get current status of git repo
+function parse_git_dirty {
+    status=`git status 2>&1 | tee`
+    dirty=`echo -n "${status}" 2> /dev/null | grep "modified:" &> /dev/null; echo "$?"`
+    untracked=`echo -n "${status}" 2> /dev/null | grep "Untracked files" &> /dev/null; echo "$?"`
+    ahead=`echo -n "${status}" 2> /dev/null | grep "Your branch is ahead of" &> /dev/null; echo "$?"`
+    newfile=`echo -n "${status}" 2> /dev/null | grep "new file:" &> /dev/null; echo "$?"`
+    renamed=`echo -n "${status}" 2> /dev/null | grep "renamed:" &> /dev/null; echo "$?"`
+    deleted=`echo -n "${status}" 1> /dev/null | grep "deleted:" &> /dev/null; echo "$?"`
+    bits=''
+    if [ "${deleted}" == "0" ]; then
+        bits="x${bits}"
+    fi
+    if [ "${renamed}" == "0" ]; then
+        bits="\$${bits}"
+    fi
+    if [ "${ahead}" == "0" ]; then
+        bits=">${bits}"
+    fi
+    if [ "${newfile}" == "0" ]; then
+        bits="+${bits}"
+    fi
+    if [ "${untracked}" == "0" ]; then
+        bits="?${bits}"
+    fi
+    if [ "${dirty}" == "0" ]; then
+        bits="*${bits}"
+    fi
+    echo "${bits}"
+}
+
+# print returned error codes
+function nonzero_return() {
+   RETVAL=$?
+   [ $RETVAL -ne 0 ] && echo " $RETVAL "
+}
+
+# don't use 256 colors if file exists
+export PS1="$USERCOL\u$NC@$HOSTCOL\h$NC:$PATHCOL\W$RETURNCOL\`nonzero_return\`$BRANCHCOL\`parse_git_branch\`$NC\\$ $NC"
+
+# print archey if installed
+if ! which archey 2>&1 | grep -i "no archey" &> /dev/null && which archey &> /dev/null
+then
+    archey
+fi
+
+# move up n directories
+function up () {
+    if [ "$#" -eq "0" ]
+    then
+        cd ../
+    elif [ "$#" -gt "1" ]
+    then
+        echo "Usage: up [int]"
+        return 2
+    else
+        case $1 in
+            ''|*[!0-9]*) echo "Usage: up [int]"; return 2 ;;
+        esac
+        numdirs=""
+        for i in `seq 1 $1`
+        do
+            numdirs="$numdirs../"
+        done
+        cd $numdirs
+    fi
+}
+
+# get nextbus info
+function bus () {
+    stop="$1$2$3"
+
+    if [ -z "$stop" ]; then
+        stop="hill"
+    fi
+
+    curl "http://vverma.net/nextbus/nextbus.php?android=1&s=$stop"
+}

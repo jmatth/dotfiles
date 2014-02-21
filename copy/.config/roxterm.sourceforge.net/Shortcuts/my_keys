@@ -1,0 +1,11 @@
+
+[roxterm shortcuts scheme]
+Edit/Copy=<Shift><Control>c
+Edit/Paste=<Shift><Control>v
+View/Normal Size=<Control>0
+File/New Window With Profile/Default=
+File/New Window With Profile/my_profile=
+File/New Tab=<Shift><Control>t
+File/Close Tab=<Shift><Control>w
+Tabs/Previous Tab=<Control>Page_Up
+Tabs/Next Tab=<Control>Page_Down

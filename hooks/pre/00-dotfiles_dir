@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+if ! [ -r ~/.dotfiles ]; then
+    echo "[36mCreating ~/.dotfiles symlink.[m"
+    rm -rf $HOME/.dotfiles
+    ln -s $dotfiles_dir $HOME/.dotfiles
+fi
+
+dotfiles_dir=$HOME/.dotfiles

@@ -1,0 +1,229 @@
+#---------------------------------------------------------------------
+# Configure plugins and load with antigen
+#---------------------------------------------------------------------
+# Minimum recommend version
+min_zsh_version='4.3.10'
+if ! autoload -Uz is-at-least || ! is-at-least $min_zsh_version; then
+    print "zshrc: old shell detected, minimum required:\
+        $min_zsh_version" >&2
+else
+    # Make sure we have antigen first
+    if [ ! -d $HOME/.antigen ] && ! which git &> /dev/null; then
+        echo "ERROR: Antigen not found and we don't have git. Plugins\
+            and themes will not be loaded."
+    else
+        if ! [ -d $HOME/.antigen ]; then
+            echo "[33mNo .antigen directory found. Installing antigen.[m"
+            rm -rf $HOME/.antigen &> /dev/null
+            git clone --recursive git://github.com/jmatth/antigen.git $HOME/.antigen
+        fi
+
+        # Load antigen
+        source ~/.antigen/antigen.zsh
+
+        # Set case-sensitivity for completion, history lookup, etc.
+        zstyle ':prezto:*:*' case-sensitive 'no'
+
+        # Color output (auto set to 'no' on dumb terminals).
+        zstyle ':prezto:*:*' color 'yes'
+
+        # Set the Zsh modules to load (man zshmodules).
+        # zstyle ':prezto:load' zmodule 'attr' 'stat'
+
+        # Set the Zsh functions to load (man zshcontrib).
+        zstyle ':prezto:load' zfunction 'zargs' 'zmv'
+
+        # Set the Prezto modules to load (browse modules).
+        # The order matters.
+        zstyle ':prezto:load' pmodule \
+        'environment' \
+        'terminal' \
+        'editor' \
+        'history' \
+        'directory' \
+        'spectrum' \
+        'utility' \
+        'completion' \
+        'prompt' \
+        'ssh' \
+        'python' \
+        'ruby' \
+        'git'
+
+        # Set the key mapping style to 'emacs' or 'vi'.
+        zstyle ':prezto:module:editor' keymap 'vi'
+
+        # Auto convert .... to ../..
+        # zstyle ':prezto:module:editor' dot-expansion 'yes'
+
+        # Indicate when waiting on completions
+        zstyle ':prezto:module:editor:info:completing' format '[1;31m...[m'
+
+        # Ignore submodules when they are 'dirty', 'untracked', 'all', or 'none'.
+        # zstyle ':prezto:module:git:status:ignore' submodules 'all'
+
+        # Set the command prefix on non-GNU systems.
+        # zstyle ':prezto:module:gnu-utility' prefix 'g'
+
+        # Set the Pacman frontend.
+        # zstyle ':prezto:module:pacman' frontend 'yaourt'
+
+        # Set the prompt theme to load.
+        # Setting it to 'random' loads a random theme.
+        # Auto set to 'off' on dumb terminals.
+        zstyle ':prezto:module:prompt' theme 'jmatth'
+
+        # Auto start a session when Zsh is launched.
+        # zstyle ':prezto:module:screen' auto-start 'yes'
+
+        # Set the SSH identities to load into the agent.
+        zstyle ':prezto:module:ssh:load' identities 'id_rsa'
+
+        # Auto set the tab and window titles.
+        zstyle ':prezto:module:terminal' auto-title 'no'
+
+        #Auto start a session when Zsh is launched.
+        zstyle ':prezto:module:tmux:auto-start' remote 'yes'
+
+        # Set virtualenv location
+        export WORKON_HOME="$HOME/.virtualenvs"
+
+        # Install and source my fork of prezto
+        antigen-bundle jmatth/prezto
+
+        # extra plugins
+        antigen-bundle zsh-users/zsh-syntax-highlighting
+        antigen-bundle zsh-users/zsh-completions --loc=src
+    fi
+fi
+unset min_zsh_version
+
+
+#---------------------------------------------------------------------
+# Set zsh options
+#---------------------------------------------------------------------
+# Expand expressions in prompt variables
+setopt promptsubst
+
+
+#---------------------------------------------------------------------
+# Exports
+#---------------------------------------------------------------------
+# Add dotfiles scripts to the path
+export PATH=$PATH:$HOME/.dotfiles/bin
+
+# Fix UTF-8 characters breaking the prompt
+export LANG="en_US.utf-8"
+
+# Set editor
+export EDITOR="vim"
+
+# Report runtime stats if something runs for more than 30 seconds
+export REPORTTIME=30
+
+
+#---------------------------------------------------------------------
+# Key bindings
+#---------------------------------------------------------------------
+# Same custom keybinding as in vim
+bindkey "kj" vi-cmd-mode
+bindkey "" history-incremental-search-backward
+
+
+#---------------------------------------------------------------------
+# Aliases
+#---------------------------------------------------------------------
+# Config mangement
+alias zmod="vim ~/.zsh"
+alias zsave="source ~/.zshrc"
+alias vmod="vim `readlink ~/.vimrc || echo ~/.vimrc`"
+alias vpmod="vim `readlink ~/.vim/vimrc_plugins || echo ~/.vim/vimrc_plugins`"
+alias hosts="vim /etc/hosts"
+
+# sudo
+alias sudo="sudo -E"
+
+# ls
+alias la="ls -Alh"
+alias lsa="ls -A"
+
+# grep
+alias cgrep="grep --color=always"
+
+# git
+alias grt='cd ${$(git rev-parse --show-cdup):-.}'
+
+# Directory navigation
+alias ..="cd .."
+alias dots="cd ~/.dotfiles && ls"
+
+# ssh
+alias flyweight="ssh flyweight.cs.rutgers.edu"
+alias sauron='ssh sauron.rutgers.edu'
+alias eden='ssh eden.rutgers.edu'
+
+# zmv
+alias zmv="zmv -wM"
+alias zcp="zmv -wC"
+alias zln="zmv -wL"
+
+# ag
+alias ag="ag --color-path 32 --color-match '37;45' --color-line-number 33"
+
+
+#---------------------------------------------------------------------
+# Shell functions.
+#---------------------------------------------------------------------
+# Move up n directories
+function up () {
+    if [[ $# > 1 || $# == 1 && $1 != <-> ]]; then
+        echo "Usage: up [int]"
+        return 2
+    else
+        cd $(builtin printf "../"%.0s {1..${1:-1}})
+    fi
+}
+
+function mkcd () {
+    mkdir -p $1 && cd $1
+}
+
+# Shorthand clone from github
+function hclone () {
+    local url
+    if [[ "$1" == "-p" ]]; then
+        url="git@github.com:$2.git"
+        shift
+    else
+        url="git://github.com/$1.git"
+    fi
+    git clone "$url" $2
+}
+
+# Get bus information using the rubus site
+function bus () {
+    typeset stop="$1$2$3"
+
+    if [ -z "$stop" ]; then
+        stop="hill"
+    fi
+
+    curl "http://vverma.net/nextbus/nextbus.php?android=1&s=$stop"
+}
+
+
+#---------------------------------------------------------------------
+# Fix variables
+#---------------------------------------------------------------------
+# Eliminate duplicates in PATH and fpath
+typeset -aU path
+typeset -aU fpath
+
+
+#---------------------------------------------------------------------
+# Misc
+#---------------------------------------------------------------------
+# Change the colorscheme if using a vconsole
+if [[ "$TERM" == "linux" ]] && which vconsole-color &> /dev/null; then
+    vconsole-color
+fi

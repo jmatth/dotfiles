@@ -1,0 +1,22 @@
+-- vim: set ft=haskell ts=2 sw=2 expandtab :
+
+Config { font = "xft:inconsolata-dz:size=12:antialias=true"
+       , bgColor = "#073642"
+       , fgColor = "#93a1a1"
+       -----defaults-------
+       , position = Top
+       , lowerOnStart = True
+       , sepChar = "%"
+       , alignSep = "}{"
+       ---end defaults-----
+       , commands = [
+                      -- Run Network "wlan0" ["-L","0","-H","32","--normal","#859900","--high","#dc322f"] 10
+                    , Run Cpu ["-L","3","-H","50","--normal","#859900","--high","#dc322f"] 10
+                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+                    , Run Date "<fc=#cb4b16>%a %b %_d %Y %H:%M</fc>" "date" 10
+                    , Run DiskIO [("/", "IO: <total>"), ("sda4", "<total>")] [] 10
+                    , Run StdinReader
+                    ]
+       -- , template = "%StdinReader% }{ %cpu% | %memory% | %wlan0% | %diskio% | %date%"
+       , template = "%StdinReader% }{ %cpu% | %memory% | %diskio% | %date%"
+       }

@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+echo "[36mCreating bash links.[m"
+
+shell_env=""
+for arg
+do
+    if [[ "$prev_arg" == "--shell-env" ]]
+    then
+        shell_env="$arg"
+        break
+    fi
+    prev_arg="$arg"
+done
+
+if ! [ -z $shell_env ]
+then
+    if ! [ -f "$dotfiles_dir/aux/bash/${shell_env}_bashrc" ]
+    then
+        echo "[31mThat bashrc doesn't exist...[m"
+        exit 1
+    fi
+fi
+unset prev_arg
+
+if ! grep "source $dotfiles_dir/aux/bash/bashrc" $HOME/.bashrc &> /dev/null
+then
+    echo "[32mAdding main bashrc...[m"
+    unlink $HOME/.bashrc &> /dev/null
+
+    echo "# If not running interactively, don't do anything" > $HOME/.bashrc
+    echo '[ -z "$PS1" ] && return' >> $HOME/.bashrc
+    echo "source $dotfiles_dir/aux/bash/bashrc" >> $HOME/.bashrc
+    echo "alias bashmod=\"vim -c 'set syn=sh' $dotfiles_dir/aux/bash/bashrc\"" >> $HOME/.bashrc
+
+    if [ "$shell_env" != "" ]
+    then
+        echo "[32mAdding $shell_env bashrc...[m"
+        echo "source $dotfiles_dir/aux/bash/$shell_env""_bashrc" >> $HOME/.bashrc
+        echo "alias lbashmod=\"vim -c 'set syn=sh' $dotfiles_dir/aux/bash/$shell_env""_bashrc\"" >> $HOME/.bashrc
+    fi
+fi
+
+if [ -h $HOME/.bash_profile ]
+then
+    unlink $HOME/.bash_profile
+fi
+
+if ! grep 'source $HOME/.bashrc' $HOME/.bash_profile &> /dev/null
+then
+    echo "[32mbash_profile doesn't seem to source bashrc. Adding.[m"
+    echo 'source $HOME/.bashrc' >> $HOME/.bash_profile
+fi

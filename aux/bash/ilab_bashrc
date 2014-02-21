@@ -1,0 +1,19 @@
+# vim: set filetype=sh :
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+if [ -f /etc/bash_completion.d/git ]
+then
+    source /etc/bash_completion.d/git
+fi
+
+#all the cool programs
+export PATH=/usr/unsupported/bin:$PATH/filer/tmp2/contrib/bin
+
+#all the cool directories
+alias filer="cd /filer/tmp2; ls"
+alias contrib="cd /filer/tmp2/contrib; ls"
+alias mine='cd /filer/tmp2/josh; ls'
+
+#my files
+umask 077

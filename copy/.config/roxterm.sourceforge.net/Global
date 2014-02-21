@@ -1,0 +1,7 @@
+
+[roxterm options]
+warn_close=1
+shortcut_scheme=my_keys
+profile=my_profile
+colour_scheme=00-solarized-dark-tweak
+encoding=UTF-8

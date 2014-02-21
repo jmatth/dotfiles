@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+shell_env=""
+for arg
+do
+    if [[ "$prev_arg" == "--shell-env" ]]
+    then
+        shell_env="$arg"
+        break
+    fi
+    prev_arg="$arg"
+done
+unset prev_arg
+
+echo "[36mCreating zsh links.[m"
+
+if ! grep "source $dotfiles_dir/aux/zsh/zshrc" $HOME/.zshrc &> /dev/null
+then
+    echo "[32mAdding main zshrc...[m"
+    unlink $HOME/.zshrc &> /dev/null
+    echo "# Return if not running interactively" > $HOME/.zshrc
+    echo '[ -z "$PS1" ] && return' >> $HOME/.zshrc
+    echo "source $dotfiles_dir/aux/zsh/zshrc" >> $HOME/.zshrc
+    echo "alias zmod=\"vim -c 'set syn=zsh' $dotfiles_dir/aux/zsh/zshrc\"" >> $HOME/.zshrc
+    echo "alias lzmod=\"vim -c 'set syn=zsh' ~/.zshrc\"" >> $HOME/.zshrc
+    if [ "$shell_env" != "" ]
+    then
+        echo "[32mAdding $shell_env zshrc...[m"
+        echo "source $dotfiles_dir/aux/zsh/$shell_env""_zshrc" >> $HOME/.zshrc
+        echo "alias szmod=\"vim -c 'set syn=zsh' $dotfiles_dir/aux/zsh/$shell_env""_zshrc\"" >> $HOME/.zshrc
+    fi
+fi
+
+if [ -h $HOME/.zprofile ]
+then
+    unlink $HOME/.zprofile
+fi
+
+if ! grep 'source $HOME/.zshrc' $HOME/.zprofile &> /dev/null
+then
+    echo "[32mzprofile doesn't seem to source bashrc. Adding.[m"
+    echo 'source $HOME/.zshrc' >> $HOME/.zprofile
+fi
+
+if [ -h $HOME/.zsh ]
+then
+    rm -rf $HOME/.zsh
+fi

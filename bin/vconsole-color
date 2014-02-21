@@ -1,0 +1,20 @@
+#!/bin/bash
+if [ "$TERM" = "linux" ]; then
+    if [ -n "$1" ]; then
+        if [ -r $1 ]; then
+            vconsole_colors_file=$1
+        else
+            echo "ERROR: file not found."
+            exit 1
+        fi
+    else
+        vconsole_colors_file="$HOME/.Xresources"
+    fi
+    _SEDCMD='s/.*\*color\([0-9]\{1,\}\).*#\([0-9a-fA-F]\{6\}\).*/\1 \2/p'
+    for i in $(sed -n "$_SEDCMD" $vconsole_colors_file | \
+            awk '$1 < 16 {printf "\\e]P%X%s", $1, $2}'); do
+        echo -en "$i"
+    done
+    clear
+    unset vconsole_colors_file
+fi

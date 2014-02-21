@@ -1,0 +1,15 @@
+# vim: set filetype=zsh :
+# If not running interactively, don't do anything
+#[ -z "$PS1" ] && return
+
+#all the cool programs
+path=($HOME/.bin(N-/) $path /usr/unsupported/bin(N-/) /filer/tmp2/contrib/bin(N-/))
+typeset -U PATH
+
+#all the cool directories
+alias filer="cd /filer/tmp2; ls"
+alias contrib="cd /filer/tmp2/contrib; ls"
+alias mine='cd /filer/tmp2/josh; ls'
+
+#my files
+umask 077

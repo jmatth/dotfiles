@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+if ! [ -d $HOME/.config/awesome/themes/awesome-solarized ]; then
+    echo "[33mInstalling awesome-solarized theme.[m"
+    git clone git://github.com/jmatth/awesome-solarized.git $HOME/.config/awesome/themes/awesome-solarized
+fi
+
+if ! [ -d $HOME/.config/awesome/vain ]; then
+    echo "[33mInstalling vain for awesome.[m"
+    git clone git://github.com/jmatth/vain-again.git $HOME/.config/awesome/vain
+fi

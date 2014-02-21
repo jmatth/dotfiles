@@ -1,0 +1,9 @@
+# vim: set filetype=zsh :
+# Add the osx prezto plugin
+antigen-bundle jmatth/prezto --loc=modules/osx
+
+# Put homebrew before system programs but keep rbenv before it if it exists
+path=($HOME/.rbenv/shims(N-/) $HOME/.rbenv/bin(N-/) /usr/local/bin $path)
+
+#change the mac version of ls to match my solarized dircolors
+export LSCOLORS=gxfxfeaeBxdehebxbxgxgx

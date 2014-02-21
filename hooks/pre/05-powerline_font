@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+if ! [ -r $HOME/.fonts/PowerlineSymbols.otf ] && ! [ -r $HOME/.config/fontconfig/conf.d/10-powerline-symbols.conf ]; then
+    echo "[33mPowerline symbols and fontconfig not found. Downloading.[m"
+    mkdir -p $HOME/.fonts
+    ( cd $HOME/.fonts && wget --no-check-certificate http://github.com/Lokaltog/powerline/raw/develop/font/PowerlineSymbols.otf )
+    mkdir -p $HOME/.config/fontconfig/conf.d
+    ( cd $HOME/.config/fontconfig/conf.d && wget --no-check-certificate http://github.com/Lokaltog/powerline/raw/develop/font/10-powerline-symbols.conf )
+fi
