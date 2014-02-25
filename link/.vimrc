@@ -14,6 +14,10 @@ if !empty(&viminfo)
     set viminfo^=!
 endif
 
+" Use space as leader
+let mapleader = "\<Space>"
+nnoremap <Space> <Nop>
+
 
 "-------------------------------------------------------------------------------
 " Source plugin config if it exists {1
