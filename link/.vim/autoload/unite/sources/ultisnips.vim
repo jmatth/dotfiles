@@ -25,14 +25,14 @@ let s:unite_source.action_table.expand = {
       \}
 function! s:unite_source.action_table.expand.func(candidate)
   exe "normal bcw" . a:candidate['trigger'] .
-              \ "\<C-R>=UltiSnips_ExpandSnippet()\<CR>"
+              \ "\<C-R>=UltiSnips#ExpandSnippet()\<CR>"
 endfunction
 
 function! s:unite_source.gather_candidates(args, context)
   let default_val = {'word': '', 'unite__abbr': '', 'is_dummy': 0, 'source':
         \  'ultisnips', 'unite__is_marked': 0, 'kind': 'command', 'is_matched': 1,
         \    'is_multiline': 0}
-  let snippet_list = UltiSnips_SnippetsInCurrentScope()
+  let snippet_list = UltiSnips#SnippetsInCurrentScope()
   let canditates = []
   for snip in items(snippet_list)
     let curr_val = copy(default_val)
