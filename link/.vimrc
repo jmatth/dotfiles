@@ -268,28 +268,6 @@ if has("autocmd")
         au InsertLeave * set hlsearch | call s:ShowTrailing()
     augroup end
 
-    augroup codingConventions
-        au!
-        " Make Python follow PEP8
-        au FileType python set sts=4 ts=4 sw=4 expandtab textwidth=79
-
-        " Ruby stuff
-        au FileType ruby set sts=2 ts=2 sw=2 expandtab
-
-        " C conventions
-        au FileType c,cpp set sts=4 ts=4 sw=4 expandtab textwidth=80
-
-        " .md is probably markdown
-        au BufRead,BufNewFile *.md set filetype=markdown
-    augroup end
-
-    " Set spell checking for certain filetypes
-    augroup writtenTextFiletypes
-        au!
-        au FileType gitcommit,tex,markdown set spell
-        au FileType tex,markdown set textwidth=80
-    augroup end
-
     " Crosshairs in current window
     augroup cursorCrosshairs
         au!
