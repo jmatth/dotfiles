@@ -173,6 +173,7 @@ if g:Python_System_Ver >= 260
         let g:UltiSnipsExpandTrigger="<c-j>"
         imap <C-l> <ESC>:Unite -start-insert ultisnips<CR>
     "}
+    NeoBundle 'honza/vim-snippets'
     NeoBundleLazy 'Rip-Rip/clang_complete', {'build':
                                         \ {
                                             \ 'unix': 'make',
