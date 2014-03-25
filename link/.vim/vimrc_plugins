@@ -75,7 +75,7 @@ NeoBundleLazy 'Shougo/unite.vim', {'autoload':{'commands':'Unite', 'insert': 1}}
     let g:unite_data_directory=expand('~/.vim/unite')
     let g:unite_split_rule='botright'
     let g:unite_winheight=10
-    nmap <Leader>u [unite]
+    nmap <Leader> [unite]
     nnoremap [unite] <nop>
     nnoremap <silent> [unite]f :Unite -start-insert -buffer-name=files
                 \ -toggle file_rec/async<CR>
