@@ -83,7 +83,6 @@ NeoBundleLazy 'Shougo/unite.vim', {'autoload':{'commands':'Unite', 'insert': 1}}
                 \ -toggle file_rec/async:!<CR>
     nnoremap <silent> [unite]b :Unite -buffer-name=buffers -toggle
                 \ buffer<CR>
-    nnoremap <silent> [unite]s :Unite -quick-match buffer<CR>
     nnoremap <silent> [unite]i :Unite -log -vertical -direction=topleft
                 \ neobundle/install<CR>
     nnoremap <silent> [unite]iu :Unite -log -vertical -direction=topleft
@@ -106,12 +105,13 @@ NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'tpope/vim-unimpaired'
 NeoBundle 'tpope/vim-speeddating'
-NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'justinmk/vim-sneak'  "{
-    nmap <Leader>f       <Plug>SneakForward
-    xmap <Leader>f       <Plug>VSneakForward
-    nmap <Leader>F       <Plug>SneakBackward
-    xmap <Leader>F       <Plug>VSneakBackward
+    nmap <Leader>s <Plug>Sneak_s
+    nmap <Leader>S <Plug>Sneak_S
+    xmap <Leader>s <Plug>Sneak_s
+    xmap <Leader>S <Plug>Sneak_S
+    omap <Leader>s <Plug>Sneak_s
+    omap <Leader>S <Plug>Sneak_S
     let g:sneak#streak = 1
 "}
 NeoBundle 'kris89/vim-multiple-cursors'
