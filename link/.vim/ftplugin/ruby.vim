@@ -1,6 +1,6 @@
 let s:tabs=2
 
-set tabstop=s:tabs
-set shiftwidth=s:tabs
-set softtabstop=s:tabs
+exec "set tabstop="     . s:tabs
+exec "set shiftwidth="  . s:tabs
+exec "set softtabstop=" . s:tabs
 set expandtab
