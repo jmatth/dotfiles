@@ -8,7 +8,7 @@ use List::Util qw(max sum);
 use Storable qw(lock_retrieve lock_store);
 
 ## no critic (ProhibitBacktickOperators ProhibitComplexRegexes ProhibitInteractiveTest)
-our $VERSION = q(1.0);
+our $VERSION = q(1.1);
 
 my %rgb = (
     black   => [qw[0 0 0]],
@@ -29,8 +29,8 @@ my $screen  = 0;
 my $tmux    = not -t \*STDOUT;
 my $rgb     = 0;
 
-my ($help, $show_battery, $remaining, $bolt, $chart_bg,
-    $chart_fg, $bright, $loadavg, $swap, $threshold, $width);
+my ($help, $show_battery, $remaining, $bolt, $chart_bg, $chart_fg,
+    $bright, $loadavg, $swap, $threshold, $width, $history);
 
 # parse the options file
 my $rcname = exists($ENV{RAINBARF})
@@ -65,12 +65,11 @@ if (@ARGV) {
         q(tmux!)        => \$tmux,
         q(rgb!)         => \$rgb,
         q(width=i)      => \$width,
+        q(datfile=s)    => \$history,
     ) or help(-verbose => 1);
 }
 
 defaults();
-
-my $history = qq($ENV{HOME}/.rainbarf.dat);
 
 my $chart = eval { lock_retrieve $history };
 $chart = [ (0) x $width ] unless defined $chart;
@@ -145,6 +144,9 @@ sub defaults {
     $remaining      = 0     unless defined $remaining;
     $bolt           = (defined $bolt and $bolt) ? chr 0x26a1 : q(|);
     require Term::ANSIColor if not $tmux and not $screen;
+
+    $history        = qq($ENV{HOME}/.rainbarf.dat)
+                            unless defined $history;
 
     return;
 }
@@ -301,7 +303,7 @@ sub usage {
 sub memory {
     my %m;
     my %n = (K => 1/2**10, M => 1, G => 2**10);
-    if (exists $top{physmem}) {
+    if (exists $top{physmem} and $top{physmem} !~ /\bunused\b/ix) {
         %m =
             map { lc $_->[2] => $_->[0] * $n{$_->[1]} }
             map { [(/(\d+)([KMG])\s+(\w)/x)] }
@@ -465,7 +467,7 @@ rainbarf - CPU/RAM/battery stats chart bar for tmux (and GNU screen)
 
 =head1 VERSION
 
-version 1.0
+version 1.1
 
 =head1 SYNOPSIS
 
@@ -570,14 +572,17 @@ This.
 =item C<--[no]battery>
 
 Display the battery charge indicator.
+Enabled by default.
 
 =item C<--[no]remaining>
 
 Display the time remaining until the battery is fully charged/empty. See L</CAVEAT>.
+Disabled by default.
 
 =item C<--[no]bolt>
 
 Display even fancier battery indicator.
+Disabled by default.
 
 =item C<--[no]bright>
 
@@ -600,11 +605,13 @@ Force chart background color.
 
 Use L<load average|https://en.wikipedia.org/wiki/Load_(computing)> metric instead of CPU utilization.
 You might want to set the C<--max> threshold since this is an absolute value and has varying ranges on different systems.
+Disabled by default.
 
 =item C<--[no]swap>
 
 Display the swap usage.
 Used swap amount is added to the total amount, but the free swap amount is not!
+Disabled by default.
 
 =item C<--max NUMBER>
 
@@ -628,6 +635,11 @@ L<screen(1)|http://manpages.ubuntu.com/manpages/hardy/man1/screen.1.html> colors
 
 Chart width. Default is 38, so both the chart and the battery indicator fit the C<tmux> status line.
 Higher values may require disabling the battery indicator or raising the C<status-right-length> value in F<~/.tmux.conf>.
+
+=item C<--datfile FILENAME>
+
+Specify the file to log CPU stats to.
+Default: F<$HOME/.rainbarf.dat>
 
 =back
 
@@ -730,6 +742,10 @@ L<Henrik Hodne|https://github.com/henrikhodne>
 =item *
 
 L<Joe Hassick|https://github.com/jh3>
+
+=item *
+
+L<Josh Matthews|https://github.com/jmatth>
 
 =item *
 
