@@ -18,7 +18,7 @@
 	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
 	ctags = !.git/hooks/ctags
 [push]
-	default = tracking
+	default = simple
 [core]
 	excludesfile = ~/.gitignore_global
 	pager = less -X -F
