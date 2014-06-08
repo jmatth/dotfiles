@@ -1,2 +1,5 @@
 # Use vi keybindings in all readline programs
 set editing-mode vi
+
+"kj":     vi-movement-mode
+"\C-l":   clear-screen
