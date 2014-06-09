@@ -5,5 +5,12 @@ antigen-bundle jmatth/prezto --loc=modules/osx
 # Put homebrew before system programs but keep rbenv before it if it exists
 path=($HOME/.rbenv/shims(N-/) $HOME/.rbenv/bin(N-/) /usr/local/bin $path)
 
-#change the mac version of ls to match my solarized dircolors
+# change the mac version of ls to match my solarized dircolors
 export LSCOLORS=gxfxfeaeBxdehebxbxgxgx
+
+# tmux color black magic
+if [[ `tput colors` -ge 256 ]]; then
+    alias tmux="TERM=screen-256color-bce tmux"
+elif [[ `tput colors` -ge 16 ]]; then
+    alias tmux="TERM=screen-16color-bce tmux"
+fi
