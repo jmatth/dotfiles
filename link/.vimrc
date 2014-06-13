@@ -85,9 +85,9 @@ endif
 set smarttab        " changes what value is used for tabs
 set shiftround      " Round indent to multiple of 'shiftwidth' for < & >
 set autoindent      " Auto indent when starting a new line
-set shiftwidth=4    " number of spaces used to represent autoindents
-set tabstop=4       " number of spaces a tab is represented by
-set softtabstop=4   " how tabs behave in editing operations
+set shiftwidth=2    " number of spaces used to represent autoindents
+set tabstop=2       " number of spaces a tab is represented by
+set softtabstop=2   " how tabs behave in editing operations
 set expandtab       " expand tabs to spaces
 
 
