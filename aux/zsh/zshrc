@@ -47,6 +47,7 @@ else
         'prompt' \
         'ssh' \
         'python' \
+        'archive' \
         'ruby' \
         'git'
 
