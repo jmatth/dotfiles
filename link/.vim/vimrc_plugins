@@ -165,6 +165,7 @@ NeoBundleLazy 'kien/rainbow_parentheses.vim',  "{
 " Support for extra filetypes {1
 NeoBundleLazy 'digitaltoad/vim-jade', {'autoload':{'filetypes':['jade']}}
 NeoBundleLazy 'saltstack/salt-vim', {'autoload':{'filetypes':['sls']}}
+NeoBundleLazy 'wavded/vim-stylus', {'autoload':{'filetypes':['stylus']}}
 
 " Python Dependent {1
 if g:Python_System_Ver >= 260
