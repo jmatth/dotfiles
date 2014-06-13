@@ -170,7 +170,7 @@ NeoBundleLazy 'wavded/vim-stylus', {'autoload':{'filetypes':['stylus']}}
 " Python Dependent {1
 if g:Python_System_Ver >= 260
     NeoBundle 'editorconfig/editorconfig-vim'
-    NeoBundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+    " NeoBundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
     NeoBundle 'SirVer/ultisnips'  "{
         " Name used by some snippets
         let g:snips_author = 'Josh Matthews'
@@ -189,8 +189,6 @@ if g:Python_System_Ver >= 260
                                         \ }
                                     \ }
 else
-    NeoBundle 'bling/vim-airline'
-    let g:airline_powerline_fonts = 1
     NeoBundle 'Shougo/neosnippet'  "{
         " Plugin key-mappings.
         imap <C-j>     <Plug>(neosnippet_expand_or_jump)
@@ -331,6 +329,9 @@ if has('lua')
 endif
 
 " Fun Extras {1
+NeoBundle 'bling/vim-airline'  "{
+    let g:airline_powerline_fonts = 1
+"}
 NeoBundleLazy 'Shougo/vimshell.vim', {'autoload':{'commands':'VimShell'}}
 NeoBundle 'Shougo/vimfiler.vim'  "{
     let g:vimfiler_as_default_explorer = 1
