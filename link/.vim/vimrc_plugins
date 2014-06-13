@@ -42,7 +42,10 @@ if has('vim_starting')
 endif
 let $GIT_SSL_NO_VERIFY = 'true'              " Don't use SSL
 let g:neobundle_default_git_protocol = 'git' " Use git:// over http://
-call neobundle#rc(expand('~/.vim/bundle/'))
+
+" Required
+call neobundle#begin(expand('~/.vim/bundle/'))
+
 NeoBundleFetch 'Shougo/neobundle.vim'  "}
 
 " Core {1
@@ -340,6 +343,8 @@ NeoBundle 'tpope/vim-vividchalk'
 NeoBundle 'w0ng/vim-hybrid'
 NeoBundle 'vim-scripts/corporation'
 NeoBundle 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
+
+call neobundle#end()
 
 " Install bundles if this is the first run {2
 if s:bundle_init
