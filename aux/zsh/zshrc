@@ -95,6 +95,7 @@ else
         # extra plugins
         antigen-bundle zsh-users/zsh-syntax-highlighting
         antigen-bundle zsh-users/zsh-completions --loc=src
+        antigen-bundle rupa/z
     fi
 fi
 unset min_zsh_version
