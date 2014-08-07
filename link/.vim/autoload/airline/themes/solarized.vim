@@ -35,12 +35,26 @@ function! airline#themes#solarized#refresh()
   " the specific gui and terminal colors from the base color dicts.
   """"""""""""""""""""""""""""""""""""""""""""""""
   " Normal mode
-  let s:N1 = [s:base3, s:blue, 'bold']
-  let s:N2 = [s:base2, s:base01, '']
-  let s:N3 = [s:base01, s:base02, '']
+  if s:background == 'dark'
+    let s:N1 = [s:base3, s:blue, 'bold']
+    "let s:N2 = [s:base2, (s:tty ? s:base01 : s:base00), '']
+    let s:N2 = [s:base2, s:base01, '']
+    let s:N3 = [s:base01, s:base02, '']
+  else
+    let s:N1 = [s:base2, s:blue, 'bold']
+    "let s:N2 = [(s:tty ? s:base01 : s:base2), s:base1, '']
+    let s:N2 = [s:base02, s:base1, '']
+    let s:N3 = [s:base1, s:base2, '']
+  endif
   let s:NF = [s:orange, s:N3[1], '']
   let s:NW = [s:base3, s:orange, '']
-  let s:NM = [s:base1, s:N3[1], '']
+  if s:background == 'dark'
+    let s:NM = [s:base1, s:N3[1], '']
+    let s:NMi = [s:base2, s:N3[1], '']
+  else
+    let s:NM = [s:base01, s:N3[1], '']
+    let s:NMi = [s:base02, s:N3[1], '']
+  endif
 
   " Insert mode
   let s:I1 = [s:N1[0], s:yellow, 'bold']
@@ -63,8 +77,13 @@ function! airline#themes#solarized#refresh()
   let s:RM = s:NM
   let s:RF = s:NF
 
-  " Inactive
-  let s:IA = [s:base00, s:base02, '']
+  " Inactive, according to VertSplit in (my customized) solarized
+  " (bg dark: base01; bg light: base1)
+  if s:background == 'dark'
+    let s:IA = [s:base02, s:base01, '']
+  else
+    let s:IA = [s:base2, s:base1, '']
+  endif
 
   """"""""""""""""""""""""""""""""""""""""""""""""
   " Actual mappings
@@ -84,7 +103,7 @@ function! airline#themes#solarized#refresh()
         \ [s:IA[0].g, s:IA[1].g, s:IA[0].t, s:IA[1].t, s:IA[2]],
         \ [s:IA[0].g, s:IA[1].g, s:IA[0].t, s:IA[1].t, s:IA[2]])
   let g:airline#themes#solarized#palette.inactive_modified = {
-        \ 'airline_c': [s:NM[0].g, '', s:NM[0].t, '', s:NM[2]]}
+        \ 'airline_c': [s:NMi[0].g, '', s:NMi[0].t, '', s:NMi[2]]}
 
   let g:airline#themes#solarized#palette.normal = airline#themes#generate_color_map(
         \ [s:N1[0].g, s:N1[1].g, s:N1[0].t, s:N1[1].t, s:N1[2]],
@@ -153,6 +172,17 @@ function! airline#themes#solarized#refresh()
 
   let g:airline#themes#solarized#palette.tabline.airline_tabtype = [
         \ s:N2[0].g, s:N2[1].g, s:N2[0].t, s:N2[1].t, s:N2[2]]
+
+  """""""""""""""""""""""""""""""""""""""""""
+  " Fix split and status highlight groups
+  """""""""""""""""""""""""""""""""""""""""""
+  function! s:guiOrTerm(dict)
+    return a:dict[has('gui_running') ? 'g' : 't']
+  endfunction
+  exec 'hi VertSplit ctermfg=' . s:guiOrTerm(s:base00) . ' ctermbg=' . s:guiOrTerm(s:base01) . ' gui=reverse'
+  exec 'hi StatusLine term=reverse cterm=reverse ctermfg=' . s:guiOrTerm(s:base01) . ' ctermbg=' . s:guiOrTerm(s:base03) . ' gui=bold,reverse'
+  exec 'hi StatusLineNC term=reverse cterm=reverse ctermfg=' . s:guiOrTerm(s:base01) . ' ctermbg=' . s:guiOrTerm(s:base02) . ' gui=bold,reverse'
+
 endfunction
 
 call airline#themes#solarized#refresh()

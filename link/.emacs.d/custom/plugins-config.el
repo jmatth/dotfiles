@@ -27,7 +27,20 @@
 (require-package 'yasnippet)
 (require-package 'auto-complete)
 (require-package 'flycheck)
+(require-package 'magit)
 (require-package 'go-mode)
+(require-package 'powerline)
+(require-package 'powerline-evil)
+(require-package 'smart-mode-line)
+
+(powerline-evil-vim-color-theme)
+
+(setq sml/mode-width 'full)
+(setq sml/name-width 40)
+(sml/setup)
+(sml/apply-theme 'dark)
+(add-to-list 'sml/replacer-regexp-list '("^~/.dotfiles/" ":Dots:") t)
+(add-to-list 'sml/replacer-regexp-list '("^~/projects/" ":Code:") t)
 
 ;;; monkey-patch solarized colors to fix brightblack and load the theme
 (require 'solarized-definitions)
@@ -69,7 +82,7 @@
     (let ((evt (read-event (format "Insert %c to exit insert state" ?j)
                            nil 0.25)))
       (cond
-       ((null evt) (message ""))
+
        ((and (integerp evt) (char-equal evt ?j))
         (delete-char -1)
         (set-buffer-modified-p modified)

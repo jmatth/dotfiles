@@ -125,17 +125,19 @@ NeoBundle 'tomtom/tcomment_vim'  "{
     xmap gcb :TCommentBlock<CR>
     xmap gcc :TComment<CR>
 "}
-NeoBundle 'Raimondi/delimitMate'  "{
-    " expand space and cr inside pairs
-    let g:delimitMate_expand_cr    = 1
-    let g:delimitMate_expand_space = 1
-    " fix triple quoted strings in python
-    au FileType python let b:delimitMate_nesting_quotes = ["'"]
-"}
+" NeoBundle 'Raimondi/delimitMate'  "{
+"     " expand space and cr inside pairs
+"     let g:delimitMate_expand_cr    = 1
+"     let g:delimitMate_expand_space = 1
+"     " fix triple quoted strings in python
+"     au FileType python let b:delimitMate_nesting_quotes = ["'"]
+" "}
 
 " Development {1
 NeoBundle 'tpope/vim-fugitive', { 'augroup' : 'fugitive'}
-NeoBundle 'scrooloose/syntastic'
+NeoBundle 'scrooloose/syntastic'  "{
+    let g:syntastic_python_checkers = ['flake8', 'python']
+"}
 NeoBundle 'majutsushi/tagbar'  "{
     nnoremap <silent> <Leader>t :TagbarOpenAutoClose<CR>
 "}
@@ -166,6 +168,10 @@ NeoBundleLazy 'kien/rainbow_parentheses.vim',  "{
 NeoBundleLazy 'digitaltoad/vim-jade', {'autoload':{'filetypes':['jade']}}
 NeoBundleLazy 'saltstack/salt-vim', {'autoload':{'filetypes':['sls']}}
 NeoBundleLazy 'wavded/vim-stylus', {'autoload':{'filetypes':['stylus']}}
+NeoBundleLazy 'fatih/vim-go', {'autoload':{'filetypes':['go']}}  "{
+    let g:go_disable_autoinstall = 1
+"}
+" NeoBundleLazy 'jnwhiteh/vim-golang', {'autoload':{'filetypes':['go']}}
 
 " Python Dependent {1
 if g:Python_System_Ver >= 260
@@ -188,6 +194,7 @@ if g:Python_System_Ver >= 260
                                             \ 'filetypes': ['c', 'cpp']
                                         \ }
                                     \ }
+    NeoBundleLazy 'davidhalter/jedi-vim', {'autoload':{'filetypes':['python']}}
 else
     NeoBundle 'Shougo/neosnippet'  "{
         " Plugin key-mappings.
@@ -224,6 +231,9 @@ if has('lua')
         " Set minimum syntax keyword length.
         let g:neocomplete#sources#syntax#min_keyword_length = 3
         let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+        " Don't autoclose preview window
+        let g:neocomplete#enable_auto_close_preview = 0
+        let g:jedi#auto_close_doc = 0
 
         " Define dictionaries.
         let g:neocomplete#sources#dictionary#dictionaries = {
@@ -244,12 +254,12 @@ if has('lua')
 
         " Recommended key-mappings.
         " <CR>: close popup and save indent.
-        " inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-        " function! s:my_cr_function()
-        "     " return neocomplete#close_popup() . "\<CR>"
-        "     " For no inserting <CR> key.
-        "     return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-        " endfunction
+        inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+        function! s:my_cr_function()
+            return neocomplete#close_popup() . "\<CR>"
+            " For no inserting <CR> key.
+            " return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+        endfunction
         " <TAB>: completion.
         inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
         " <C-h>, <BS>: close popup and delete backword char.
@@ -294,7 +304,7 @@ if has('lua')
             autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
             autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
             autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-            autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+            autocmd FileType python setlocal omnifunc=jedi#completions
             autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
         augroup end
 
@@ -322,9 +332,15 @@ if has('lua')
             \ '[^.[:digit:] *\t]\%(\.\|->\)\w*'
         let g:neocomplete#force_omni_input_patterns.objcpp =
             \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+        let g:neocomplete#force_omni_input_patterns.python =
+        \ '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
+
         let g:clang_complete_auto = 0
         let g:clang_auto_select = 0
         let g:clang_use_library = 1
+
+        let g:jedi#completions_enabled = 0
+        let g:jedi#auto_vim_configuration = 0
     "}
 endif
 

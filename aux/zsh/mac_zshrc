@@ -14,3 +14,5 @@ if [[ `tput colors` -ge 256 ]]; then
 elif [[ `tput colors` -ge 16 ]]; then
     alias tmux="TERM=screen-16color-bce tmux"
 fi
+
+export GOPATH=$HOME/projects/go

@@ -108,6 +108,7 @@ set incsearch       " Start searching while I type
 set backspace=2                  " backspace over everything
 set ofu=syntaxcomplete#Complete  " enable omnicomplete
 set nrformats-=octal             " Disable incrementing and decrementing octals
+set formatoptions+=or            " Automatically continue comments on new lines
 
 
 "-------------------------------------------------------------------------------

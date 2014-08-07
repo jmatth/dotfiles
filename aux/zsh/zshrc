@@ -112,7 +112,7 @@ setopt promptsubst
 # Exports
 #---------------------------------------------------------------------
 # Add dotfiles scripts to the path
-export PATH=$PATH:$HOME/.dotfiles/bin
+export PATH=$PATH:$HOME/.cabal/bin:$HOME/.dotfiles/bin
 
 # Fix UTF-8 characters breaking the prompt
 export LANG="en_US.utf-8"
@@ -140,6 +140,8 @@ alias zmod="vim ~/.zsh"
 alias zsave="source ~/.zshrc"
 alias vmod="vim `readlink ~/.vimrc || echo ~/.vimrc`"
 alias vpmod="vim `readlink ~/.vim/vimrc_plugins || echo ~/.vim/vimrc_plugins`"
+alias emod="emacs ~/.emacs.d/init.el"
+alias epmod="emacs ~/.emacs.d/custom/plugins-config.el"
 alias hosts="vim /etc/hosts"
 
 # sudo
