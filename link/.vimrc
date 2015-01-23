@@ -233,13 +233,18 @@ function! s:ShowTrailing()
 endfunction
 
 " Handle setting up crosshairs in the current buffer
-function! s:HandleCrosshairs()
+function! s:HandleCrosshairs(leaving)
     if !exists('g:CROSSHAIRS')
         let g:CROSSHAIRS = 1
     endif
 
-    if g:CROSSHAIRS
-        setlocal cursorline cursorcolumn
+    if a:leaving
+        let g:CROSSHAIRS = &cursorcolumn && &cursorline
+        setlocal nocursorline nocursorcolumn
+    else
+        if g:CROSSHAIRS
+            setlocal cursorline cursorcolumn
+        endif
     endif
 endfunction
 
@@ -272,8 +277,8 @@ if has("autocmd")
     " Crosshairs in current window
     augroup cursorCrosshairs
         au!
-        au VimEnter,WinEnter,BufWinEnter * call s:HandleCrosshairs()
-        au WinLeave * setlocal nocursorcolumn nocursorline
+        au VimEnter,WinEnter,BufWinEnter * call s:HandleCrosshairs(0)
+        au WinLeave * call s:HandleCrosshairs(1)
     augroup end
 
     " Cut trailing whitespace when writing a file
