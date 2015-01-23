@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+if ! test -d $HOME/.nvm/.git; then
+    echo "[36mInstalling nvm[m"
+    git clone git://github.com/creationix/nvm.git $HOME/.nvm
+    pushd $HOME/.nvm > /dev/null
+    git checkout --quiet $(git tag | sort -V | tail -n1)
+    popd > /dev/null
+fi
