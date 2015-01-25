@@ -141,6 +141,10 @@ NeoBundle 'haya14busa/incsearch.vim'  "{
 " Development {1
 NeoBundle 'tpope/vim-fugitive', { 'augroup' : 'fugitive'}
 NeoBundle 'scrooloose/syntastic'  "{
+    let g:syntastic_mode_map = { "mode": "passive",
+                               \ "active_filetypes": [],
+                               \ "passive_filetypes": [] }
+
     let g:syntastic_python_checkers = ['flake8', 'python']
 "}
 NeoBundle 'majutsushi/tagbar'  "{
