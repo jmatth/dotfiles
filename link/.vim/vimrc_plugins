@@ -369,6 +369,7 @@ NeoBundle 'tomasr/molokai'
 NeoBundle 'tpope/vim-vividchalk'
 NeoBundle 'w0ng/vim-hybrid'
 NeoBundle 'vim-scripts/corporation'
+NeoBundle 'whatyouhide/vim-gotham'
 NeoBundle 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
 
 call neobundle#end()
