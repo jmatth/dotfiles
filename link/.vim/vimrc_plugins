@@ -125,6 +125,11 @@ NeoBundle 'tomtom/tcomment_vim'  "{
     xmap gcb :TCommentBlock<CR>
     xmap gcc :TComment<CR>
 "}
+NeoBundle 'haya14busa/incsearch.vim'  "{
+    map /  <Plug>(incsearch-forward)
+    map ?  <Plug>(incsearch-backward)
+    map g/ <Plug>(incsearch-stay)
+"}
 " NeoBundle 'Raimondi/delimitMate'  "{
 "     " expand space and cr inside pairs
 "     let g:delimitMate_expand_cr    = 1
