@@ -118,7 +118,7 @@ NeoBundle 'justinmk/vim-sneak'  "{
     let g:sneak#streak = 1
 "}
 NeoBundle 'kris89/vim-multiple-cursors'
-NeoBundleLazy 'godlygeek/tabular', {'autoload':{'commands':'Tabularize'}}
+NeoBundle 'junegunn/vim-easy-align'
 NeoBundleLazy 'mbbill/undotree', {'autoload':{'commands':'UndotreeToggle'}}
 NeoBundle 'gregsexton/MatchTag'
 NeoBundle 'tomtom/tcomment_vim'  "{
