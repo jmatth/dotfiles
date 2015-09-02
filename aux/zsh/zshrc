@@ -153,10 +153,11 @@ alias la="ls -Alh"
 alias lsa="ls -A"
 
 # grep
-alias cgrep="grep --color=always"
+alias grepc="grep --color=always"
+alias grepi="grep i"
 
 # git
-alias grt='cd ${$(git rev-parse --show-cdup):-.}'
+alias gwt='cd ${$(git rev-parse --show-cdup):-.}'
 
 # Directory navigation
 alias ..="cd .."
@@ -164,6 +165,7 @@ alias dots="cd ~/.dotfiles && ls"
 
 # ssh
 alias flyweight="ssh flyweight.cs.rutgers.edu"
+alias atlas="ssh atlas.cs.rutgers.edu"
 alias sauron='ssh sauron.rutgers.edu'
 alias eden='ssh eden.rutgers.edu'
 
