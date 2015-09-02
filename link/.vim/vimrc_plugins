@@ -143,6 +143,9 @@ NeoBundle 'haya14busa/incsearch.vim'  "{
 
 " Development {1
 NeoBundle 'tpope/vim-fugitive', { 'augroup' : 'fugitive'}
+if has('signs')
+    NeoBundle 'airblade/vim-gitgutter'
+endif
 NeoBundle 'scrooloose/syntastic'  "{
     let g:syntastic_mode_map = { "mode": "passive",
                                \ "active_filetypes": [],
@@ -180,9 +183,11 @@ NeoBundleLazy 'kien/rainbow_parentheses.vim',  "{
 NeoBundleLazy 'digitaltoad/vim-jade', {'autoload':{'filetypes':['jade']}}
 NeoBundleLazy 'saltstack/salt-vim', {'autoload':{'filetypes':['sls']}}
 NeoBundleLazy 'wavded/vim-stylus', {'autoload':{'filetypes':['stylus']}}
+NeoBundleLazy 'cespare/vim-toml', {'autoload':{'filetypes':['toml']}}
 NeoBundleLazy 'fatih/vim-go', {'autoload':{'filetypes':['go']}}  "{
     let g:go_disable_autoinstall = 1
 "}
+NeoBundle 'rust-lang/rust.vim'
 " NeoBundleLazy 'jnwhiteh/vim-golang', {'autoload':{'filetypes':['go']}}
 
 " Python Dependent {1
