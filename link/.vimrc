@@ -57,7 +57,9 @@ endif
 "-------------------------------------------------------------------------------
 syn on                    " Use syntax highlighting
 set number                " Show Line Numbers
-set nowrap                " Don't wrap lines
+set wrap                  " Wrap lines
+set linebreak             " Break on words
+set breakindent           " Indent wrapped lines
 set showmatch             " Show matching brackets
 set showcmd               " Show (partial) command in status line
 set ttyfast               " Faster updates
@@ -65,7 +67,7 @@ set hidden                " Hide buffellumrs when they are abandoned
 set laststatus=2          " Always show the statusline
 set ruler                 " Show line and column number
 set wildmenu              " Show a menu for completing commands
-set scrolloff=5           " Show 5 lines of context
+set scrolloff=3           " Show 5 lines of context
 set sidescrolloff=5       " Show 5 lines of horizontal context
 set tabpagemax=50         " Max number of tabs to be opened with -p or :tab all
 set shortmess=filnxtToOI  " Default shortmess += I. Removes vim intro message
@@ -295,6 +297,7 @@ if &t_Co == 8 && $TERM !~# '^linux'
     set t_Co=16
 endif
 
+" set t_ut=
 set background=dark
 let g:solarized_termtrans = 1
 colorscheme solarized
