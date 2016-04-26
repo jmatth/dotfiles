@@ -129,8 +129,14 @@ export REPORTTIME=30
 # Key bindings
 #---------------------------------------------------------------------
 # Same custom keybinding as in vim
-bindkey "kj" vi-cmd-mode
+# bindkey "tn" vi-cmd-mode
+bindkey "" vi-cmd-mode
 bindkey "" history-incremental-search-backward
+
+# Colemak
+bindkey -M vicmd "h" up-line-or-history
+bindkey -M vicmd "k" down-line-or-history
+bindkey -M vicmd "j" vi-backward-char
 
 
 #---------------------------------------------------------------------

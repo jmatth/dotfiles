@@ -31,14 +31,17 @@ endif
 "-------------------------------------------------------------------------------
 " Movement {1
 "-------------------------------------------------------------------------------
+" Make colemak a bit easier
+set langmap=hk,jh,kj
+
 " Quick escape
-inoremap kj <Esc>
+" inoremap tn <Esc>
 
 " Easier navigation on wrapped lines
 " nnoremap j gj
 " nnoremap k gk
-vnoremap j gj
-vnoremap k gk
+" vnoremap j gj
+" vnoremap k gk
 
 " Time in milliseconds to wait for next key press
 set timeout

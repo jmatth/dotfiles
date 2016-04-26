@@ -1,5 +1,13 @@
 # Use vi keybindings in all readline programs
 set editing-mode vi
 
-"kj":     vi-movement-mode
+set keymap vi
+# "kj":     vi-movement-mode
 "\C-l":   clear-screen
+
+# Colemak mappings
+set keymap vi-move
+"h": previous-history
+"k": next-history
+"j": backward-char
+"l": forward-char
