@@ -35,8 +35,11 @@ endif
 set langmap=hk,jh,kj
 set langnoremap
 
+" Mouse support in normal mode
+set mouse=n
+
 " Quick escape
-" inoremap tn <Esc>
+inoremap tn <Esc>
 
 " Easier navigation on wrapped lines
 " nnoremap j gj
@@ -194,7 +197,7 @@ xnoremap & :&&<CR>
 noremap <Leader><Space> :nohl<CR>
 
 " Gain root privs if needed to write
-command Wsudo !sudo tee % > /dev/null %
+command! Wsudo !sudo tee % > /dev/null %
 
 " Hex mode
 nnoremap <Leader>hon :%!xxd<CR>
