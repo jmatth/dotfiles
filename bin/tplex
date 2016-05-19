@@ -1,0 +1,41 @@
+#!/bin/bash
+set -e
+
+session="0"
+window=$(( $(tmux list-windows -t $session | cut -d: -f1 | sort | tail -n1) + 1 ))
+
+while true; do
+    case $1 in
+        -s)
+            session=$1
+            shift
+            ;;
+        -w)
+            window=$1
+            shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+if test $# -lt 2; then
+    echo Need at least 2 arguments
+    exit 1
+fi
+
+basecmd=$1
+shift
+
+pane=0
+tmux new-window -t "$session:$window" -n 'tplex' -d
+for cmd in "$@"; do
+    [ "$pane" -ge "1" ] && tmux split-window -d -t "$window.$(( pane - 1 ))" -h
+    tmux select-pane -t "$window.$pane"
+    tmux send-keys -t "$window.$pane" "$basecmd $cmd" C-m
+    tmux select-layout -t "$session:$window" tiled
+    pane=$(( pane + 1 ))
+done
+
+tmux set -t "$session:$window" synchronize-panes
