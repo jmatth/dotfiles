@@ -1,31 +1,31 @@
 [user]
-	email = josh@jmatthews.us
-	name = Josh Matthews
+    email = josh@jmatthews.us
+    name = Josh Matthews
 [color]
-	ui = auto
-	diff = auto
-	status = auto
-	branch = auto
-	interactive = auto
+    ui = auto
+    diff = auto
+    status = auto
+    branch = auto
+    interactive = auto
 [alias]
-	co = checkout
-	ci = commit
-	st = status
-	br = branch
-	cob = checkout -b
-	cot = checkout -t
-	unstage = reset
-	graph = log --topo-order --branches --graph '--pretty=format:%C(green)%h%C(reset) %s%C(red)%d%C(reset)%n'
-	graphall = log --topo-order --all --graph '--pretty=format:%C(green)%h%C(reset) %s%C(red)%d%C(reset)%n'
-	ctags = !.git/hooks/ctags
+    co = checkout
+    ci = commit
+    st = status
+    br = branch
+    cob = checkout -b
+    cot = checkout -t
+    unstage = reset
+    graph = log --topo-order --branches --graph '--pretty=format:%C(green)%h%C(reset) %s%C(red)%d%C(reset)%n'
+    graphall = log --topo-order --all --graph '--pretty=format:%C(green)%h%C(reset) %s%C(red)%d%C(reset)%n'
+    ctags = !.git/hooks/ctags
 [core]
-	excludesfile = ~/.gitignore_global
-	pager = less -X -F
+    excludesfile = ~/.gitignore_global
+    pager = less -X -F
 [diff]
-	tool = vimdiff
+    tool = vimdiff
 [merge]
-	tool = vimdiff
+    tool = vimdiff
 [rerere]
-	enabled = true
+    enabled = true
 [init]
-	templatedir = ~/.git_template
+    templatedir = ~/.git_template
