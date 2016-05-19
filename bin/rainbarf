@@ -8,7 +8,7 @@ use List::Util qw(max sum);
 use Storable qw(lock_retrieve lock_store);
 
 ## no critic (ProhibitBacktickOperators ProhibitComplexRegexes ProhibitInteractiveTest)
-our $VERSION = q(1.1);
+our $VERSION = q(1.3);
 
 my %rgb = (
     black   => [qw[0 0 0]],
@@ -28,24 +28,13 @@ my $order   = '';
 my $screen  = 0;
 my $tmux    = not -t \*STDOUT;
 my $rgb     = 0;
+my $skip    = 0;
 
 my ($help, $show_battery, $remaining, $bolt, $chart_bg, $chart_fg,
     $bright, $loadavg, $swap, $threshold, $width, $history);
 
 # parse the options file
-my $rcname = exists($ENV{RAINBARF})
-    ? $ENV{RAINBARF}
-    : qq($ENV{HOME}/.rainbarf.conf);
-if (open(my $rcfile, q(<), $rcname)) {
-    while (<$rcfile>) {
-        s/\#.*$//x;
-        s/\s+//gx;
-        if (/^(?:\-{2})?(\w+(?:=\w+)?)$/x) {
-            unshift @ARGV => q(--) . $1;
-        }
-    }
-    close $rcfile;
-}
+parse_config();
 
 if (@ARGV) {
     require Getopt::Long;
@@ -66,6 +55,7 @@ if (@ARGV) {
         q(rgb!)         => \$rgb,
         q(width=i)      => \$width,
         q(datfile=s)    => \$history,
+        q(skip=i)       => \$skip,
     ) or help(-verbose => 1);
 }
 
@@ -79,7 +69,8 @@ my $cpu = $loadavg ? load() : usage();
 
 push @$chart => $cpu;
 splice @$chart => 0, @$chart - $width if @$chart > $width;
-lock_store $chart => $history;
+lock_store $chart => $history
+    if time - ((stat $history)[9] || 0) >= $skip;
 
 unshift @$chart => (0) x ($width - @$chart);
 
@@ -126,6 +117,24 @@ my_reset(1);
 
 # For dependencies linting
 #printf qq(%-20s\t%s\n), $_ => $INC{$_} for sort keys %INC;
+
+sub parse_config {
+    my $rcname = exists($ENV{RAINBARF})
+        ? $ENV{RAINBARF}
+        : qq($ENV{HOME}/.rainbarf.conf);
+    if (open(my $rcfile, q(<), $rcname)) {
+        while (<$rcfile>) {
+            s/\#.*$//x;
+            s/\s+//gx;
+            if (/^(?:\-{2})?(\w+(?:=\w+)?)$/x) {
+                unshift @ARGV => q(--) . $1;
+            }
+        }
+        close $rcfile;
+    }
+
+    return;
+}
 
 sub help {
     my (@args) = @_;
@@ -318,7 +327,7 @@ sub memory {
                 ) : ();
         } <$meminfo>;
         close $meminfo;
-        $m{c} -= delete $m{sc};
+        $m{c} -= delete $m{sc} || 0;
         delete $m{c} if $m{c} < 0;
         my $x = delete($m{st}) - delete($m{sf});
         $m{w} = delete($m{t}) - sum values %m;
@@ -338,83 +347,100 @@ sub memory {
     return %m;
 }
 
-sub battery {
-    my ($battery, $charging, $time);
-    if (-x q{/usr/sbin/ioreg}) {
-        my %battery = map {
-            /"(TimeRemaining|(?:Max|Current)Capacity|FullyCharged|ExternalConnected)"\s*=\s*(\d+|Yes|No)/ix
-                ? (lc chr ord $1 => $2)
-                : ()
-        } qx{/usr/sbin/ioreg -n AppleSmartBattery -r};
+sub battery_osx {
+    my %battery = map {
+        /"(TimeRemaining|(?:Max|Current)Capacity|FullyCharged|ExternalConnected)"\s*=\s*(\d+|Yes|No)/ix
+            ? (lc chr ord $1 => $2)
+            : ()
+    } qx{/usr/sbin/ioreg -n AppleSmartBattery -r};
 
-        if ($battery{f} eq q(No)
-            || ($battery{f} eq q(No) && $battery{e} eq q(Yes))
-            || ($battery{f} eq q(Yes) && $battery{e} eq q(No))) {
-            $time = $battery{t};
-        }
-        $charging = ($battery{e} =~ /^y/ix);
-        $battery = eval { $battery{c} / $battery{m} };
-    } elsif (-d q(/proc/acpi/battery)) {
-        my ($acpi_info, $acpi_state, %battery) = ('') x 2;
-        if (grep {
-                -d $_
-                and -e ($acpi_info  = qq($_/info))
-                and -e ($acpi_state = qq($_/state))
-            } sort glob q(/proc/acpi/battery/BAT[0-9])
-        ) {
-            for my $file ($acpi_info, $acpi_state) {
-                my $fh;
-                if (open $fh, q(<), $file) {
-                    while (<$fh>) {
-                        my ($key, $value) = /^([\w\s]+)\s*:\s*(\w+)/x;
-                        next unless defined $key;
-                        $key =~ y/A-Z /a-z_/;
-                        $battery{$key} = $value;
-                    }
-                }
-                close $fh;
-            }
+    my $time;
+    if ($battery{f} eq q(No)
+        || ($battery{f} eq q(No) && $battery{e} eq q(Yes))
+        || ($battery{f} eq q(Yes) && $battery{e} eq q(No))) {
+        $time = $battery{t};
+    }
+    my $charging = ($battery{e} =~ /^y/ix);
+    my $battery = eval { $battery{c} / $battery{m} };
 
-            $charging = $battery{charging_state} ne q(discharging);
-            $time = eval { ($battery{remaining_capacity} / $battery{present_rate}) * 60 }
-                if not $charging
-                and defined $battery{present_rate}
-                and $battery{present_rate} =~ /^\d+$/x;
-            $battery = eval { $battery{remaining_capacity} / $battery{last_full_capacity} };
-        }
-    } elsif (-d q(/sys/class/power_supply)) {
-        my ($uevent, %battery) = ('');
-        if (grep {
-                -d $_
-                and ( ( -e qq($_/energy_full) and -e qq($_/energy_now) ) or
-                      ( -e qq($_/charge_now) and -e qq($_/current_now) ) )
-                and -e ($uevent = qq($_/uevent))
-            } sort glob q(/sys/class/power_supply/BAT[0-9])
-        ) {
-            my $fh;
-            if (open $fh, q(<), $uevent) {
-                while (<$fh>) {
-                    my ($key, $value) = /^POWER_SUPPLY_([^=]+)=(.*)$/x;
-                    next unless defined $key;
-                    $key =~ y/A-Z/a-z/;
-                    $battery{$key} = $value;
-                }
-            }
-            close $fh;
+    return ($battery, $charging, $time);
+}
 
-            $charging = $battery{status} ne q(Discharging);
-            if (not $charging) {
-                if (defined $battery{power_now} and $battery{power_now} =~ /^\d+$/x) {
-                    $time = eval { ($battery{energy_now} * 60 / $battery{power_now}) }
-                } elsif (defined $battery{charge_now} and $battery{charge_now} =~ /^\d+$/x) {
-                    $time = eval { (60 * ($battery{charge_now} / 1000) / ($battery{current_now} / 1000)) }
-                }
+sub battery_acpi {
+    my ($acpi_info, $acpi_state, %battery) = ('') x 2;
+    return () unless grep {
+        -d $_
+        and -e ($acpi_info  ||= qq($_/info))
+        and -e ($acpi_state ||= qq($_/state))
+    } sort glob q(/proc/acpi/battery/{BAT,CMB}[0-9]);
+
+    for my $file ($acpi_info, $acpi_state) {
+        my $fh;
+        if (open $fh, q(<), $file) {
+            while (<$fh>) {
+                my ($key, $value) = /^([\w\s]+)\s*:\s*(\w+)/x;
+                next unless defined $key;
+                $key =~ y/A-Z /a-z_/;
+                $battery{$key} = $value;
             }
-            $battery = $battery{capacity} / 100;
         }
+        close $fh;
     }
 
-    battery_print($battery, $charging, $time);
+    my $charging = $battery{charging_state} ne q(discharging);
+    my $time;
+    $time = eval { ($battery{remaining_capacity} / $battery{present_rate}) * 60 }
+        if not $charging
+        and defined $battery{present_rate}
+        and $battery{present_rate} =~ /^\d+$/x;
+    my $battery = eval { $battery{remaining_capacity} / $battery{last_full_capacity} };
+    return ($battery, $charging, $time);
+}
+
+sub battery_sys {
+    my ($uevent, %battery) = ('');
+    return () unless grep {
+        -d $_
+        and ( ( -e qq($_/energy_full) and -e qq($_/energy_now) ) or
+              ( -e qq($_/charge_now) and -e qq($_/current_now) ) )
+        and -e ($uevent ||= qq($_/uevent))
+    } sort glob q(/sys/class/power_supply/{BAT,CMB}[0-9]);
+
+    my $fh;
+    if (open $fh, q(<), $uevent) {
+        while (<$fh>) {
+            my ($key, $value) = /^POWER_SUPPLY_([^=]+)=(.*)$/x;
+            next unless defined $key;
+            $key =~ y/A-Z/a-z/;
+            $battery{$key} = $value;
+        }
+    }
+    close $fh;
+
+    my $charging = $battery{status} ne q(Discharging);
+    my $time;
+    if (not $charging) {
+        if (defined $battery{power_now} and $battery{power_now} =~ /^\d+$/x) {
+            $time = eval { ($battery{energy_now} * 60 / $battery{power_now}) }
+        } elsif (defined $battery{charge_now} and $battery{charge_now} =~ /^\d+$/x) {
+            $time = eval { (60 * ($battery{charge_now} / 1000) / ($battery{current_now} / 1000)) }
+        }
+    }
+    my $battery = $battery{capacity} / 100;
+    return ($battery, $charging, $time);
+}
+
+sub battery {
+    my @battery;
+    if (-x q{/usr/sbin/ioreg}) {
+        @battery = battery_osx();
+    } elsif (-d q(/proc/acpi/battery)) {
+        @battery = battery_acpi();
+    } elsif (-d q(/sys/class/power_supply)) {
+        @battery = battery_sys();
+    }
+
+    battery_print(@battery);
     return;
 }
 
@@ -467,7 +493,7 @@ rainbarf - CPU/RAM/battery stats chart bar for tmux (and GNU screen)
 
 =head1 VERSION
 
-version 1.1
+version 1.3
 
 =head1 SYNOPSIS
 
@@ -511,6 +537,12 @@ Traditional way:
  perl Build.PL
  ./Build test
  ./Build install
+
+=item *
+
+L<Homebrew|http://brew.sh/> way:
+
+ brew install rainbarf
 
 =item *
 
@@ -641,6 +673,11 @@ Higher values may require disabling the battery indicator or raising the C<statu
 Specify the file to log CPU stats to.
 Default: F<$HOME/.rainbarf.dat>
 
+=item C<--skip NUMBER>
+
+Do not write CPU stats if file already exists and is newer than this many seconds.
+Useful if you refresh C<tmux> status quite frequently.
+
 =back
 
 =head1 CAVEAT
@@ -733,7 +770,15 @@ L<Chris Knadler|https://github.com/cknadler>
 
 =item *
 
+L<cinaeco|https://github.com/cinaeco>
+
+=item *
+
 L<Clemens Hammacher|https://github.com/hammacher>
+
+=item *
+
+L<H.Merijn Brand|https://github.com/Tux>
 
 =item *
 
@@ -763,7 +808,7 @@ L<Tuomas Jormola|https://github.com/tjormola>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Stanislaw Pusep <stas@sysd.org>.
+This software is copyright (c) 2016 by Stanislaw Pusep <stas@sysd.org>.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
