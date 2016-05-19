@@ -15,7 +15,8 @@
 	cob = checkout -b
 	cot = checkout -t
 	unstage = reset
-	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+	graph = log --topo-order --branches --graph '--pretty=format:%C(green)%h%C(reset) %s%C(red)%d%C(reset)%n'
+	graphall = log --topo-order --all --graph '--pretty=format:%C(green)%h%C(reset) %s%C(red)%d%C(reset)%n'
 	ctags = !.git/hooks/ctags
 [core]
 	excludesfile = ~/.gitignore_global
