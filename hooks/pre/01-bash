@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 echo "[36mCreating bash links.[m"
 
+bashdir=$miscdir/bash
+
 shell_env=""
 for arg
 do
@@ -14,7 +16,7 @@ done
 
 if ! [ -z $shell_env ]
 then
-    if ! [ -f "$dotfiles_dir/aux/bash/${shell_env}_bashrc" ]
+    if ! [ -f "$bashdir/${shell_env}_bashrc" ]
     then
         echo "[31mThat bashrc doesn't exist...[m"
         exit 1
@@ -22,21 +24,21 @@ then
 fi
 unset prev_arg
 
-if ! grep "source $dotfiles_dir/aux/bash/bashrc" $HOME/.bashrc &> /dev/null
+if ! grep "source $bashdir/bashrc" $HOME/.bashrc &> /dev/null
 then
     echo "[32mAdding main bashrc...[m"
     unlink $HOME/.bashrc &> /dev/null
 
     echo "# If not running interactively, don't do anything" > $HOME/.bashrc
     echo '[ -z "$PS1" ] && return' >> $HOME/.bashrc
-    echo "source $dotfiles_dir/aux/bash/bashrc" >> $HOME/.bashrc
-    echo "alias bashmod=\"vim -c 'set syn=sh' $dotfiles_dir/aux/bash/bashrc\"" >> $HOME/.bashrc
+    echo "source $bashdir/bashrc" >> $HOME/.bashrc
+    echo "alias bashmod=\"vim -c 'set syn=sh' $bashdir/bashrc\"" >> $HOME/.bashrc
 
     if [ "$shell_env" != "" ]
     then
         echo "[32mAdding $shell_env bashrc...[m"
-        echo "source $dotfiles_dir/aux/bash/$shell_env""_bashrc" >> $HOME/.bashrc
-        echo "alias lbashmod=\"vim -c 'set syn=sh' $dotfiles_dir/aux/bash/$shell_env""_bashrc\"" >> $HOME/.bashrc
+        echo "source $bashdir/$shell_env""_bashrc" >> $HOME/.bashrc
+        echo "alias lbashmod=\"vim -c 'set syn=sh' $bashdir/$shell_env""_bashrc\"" >> $HOME/.bashrc
     fi
 fi
 

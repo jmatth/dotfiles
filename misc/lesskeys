@@ -1,0 +1,5 @@
+k         forw-line
+h         back-line
+K         forw-line-force
+H         back-line-force
+:h        help

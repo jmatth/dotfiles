@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+zshdir=$miscdir/zsh
+
 shell_env=""
 for arg
 do
@@ -13,20 +16,20 @@ unset prev_arg
 
 echo "[36mCreating zsh links.[m"
 
-if ! grep "source $dotfiles_dir/aux/zsh/zshrc" $HOME/.zshrc &> /dev/null
+if ! grep "source $zshdir/zshrc" $HOME/.zshrc &> /dev/null
 then
     echo "[32mAdding main zshrc...[m"
     unlink $HOME/.zshrc &> /dev/null
     echo "# Return if not running interactively" > $HOME/.zshrc
     echo '[ -z "$PS1" ] && return' >> $HOME/.zshrc
-    echo "source $dotfiles_dir/aux/zsh/zshrc" >> $HOME/.zshrc
-    echo "alias zmod=\"vim -c 'set syn=zsh' $dotfiles_dir/aux/zsh/zshrc\"" >> $HOME/.zshrc
+    echo "source $zshdir/zshrc" >> $HOME/.zshrc
+    echo "alias zmod=\"vim -c 'set syn=zsh' $zshdir/zshrc\"" >> $HOME/.zshrc
     echo "alias lzmod=\"vim -c 'set syn=zsh' ~/.zshrc\"" >> $HOME/.zshrc
     if [ "$shell_env" != "" ]
     then
         echo "[32mAdding $shell_env zshrc...[m"
-        echo "source $dotfiles_dir/aux/zsh/$shell_env""_zshrc" >> $HOME/.zshrc
-        echo "alias szmod=\"vim -c 'set syn=zsh' $dotfiles_dir/aux/zsh/$shell_env""_zshrc\"" >> $HOME/.zshrc
+        echo "source $zshdir/$shell_env""_zshrc" >> $HOME/.zshrc
+        echo "alias szmod=\"vim -c 'set syn=zsh' $zshdir/$shell_env""_zshrc\"" >> $HOME/.zshrc
     fi
 fi
 

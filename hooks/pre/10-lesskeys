@@ -1,0 +1,12 @@
+#!/bin/sh
+
+lesskey_file="$HOME/.less"
+lesskey_command=lesskey
+if echo "$OSTYPE" | grep darwin &> /dev/null; then
+    lesskey_command=jlesskey
+fi
+
+if ! test -f $lesskey_file; then
+    echo "[36mInstalling less keybindings[m"
+    $lesskey_command -o $lesskey_file $miscdir/lesskeys
+fi
