@@ -33,6 +33,7 @@ endif
 "-------------------------------------------------------------------------------
 " Make colemak a bit easier
 set langmap=hk,jh,kj
+set langnoremap
 
 " Quick escape
 " inoremap tn <Esc>
