@@ -1,0 +1,23 @@
+source ~/.vimrc
+
+" Colemak
+nnoremap h k
+nnoremap j h
+nnoremap k j
+
+vnoremap h k
+vnoremap j h
+vnoremap k j
+
+
+" Not sure what the defaults do but it sucks
+nnoremap <C-o> :action Back<CR>
+nnoremap <C-i> :action Forward<CR>
+
+nnoremap <Space>t :action ActivateStructureToolWindow<CR>
+nnoremap <Space>d :action ActivateProjectToolWindow<CR>
+nnoremap <Space>h :action HideSideWindows<CR>
+
+
+" Supposedly this should do something
+set surround
