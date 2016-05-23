@@ -40,8 +40,9 @@ filetype off
 if has('vim_starting')
     set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
-let $GIT_SSL_NO_VERIFY = 'true'              " Don't use SSL
-let g:neobundle_default_git_protocol = 'git' " Use git:// over http://
+" let $GIT_SSL_NO_VERIFY = 'true'                " Don't use SSL
+" let g:neobundle_default_git_protocol = 'git'   " Use git:// over http://
+let g:neobundle#types#git#clone_depth = 1      " Shallow clone
 
 " Required
 call neobundle#begin(expand('~/.vim/bundle/'))
@@ -71,7 +72,10 @@ NeoBundleLazy 'Shougo/unite.vim', {'autoload':{'commands':'Unite', 'insert': 1}}
         let g:unite_source_grep_command='ag'
         let g:unite_source_grep_default_opts=
           \ '--line-numbers --nocolor --nogroup --hidden --ignore ' .
-          \ '".hg" --ignore ".svn" --ignore ".git" --ignore ".bzr"'
+          \ '".hg" --ignore ".svn" --ignore ".git" --ignore ".bzr" ' .
+          \ '--ignore ".npm" --ignore "bower_components" ' .
+          \ '--ignore "node_modules" --ignore "dist"' .
+          \ '--ignore "blib" --ignore ".idea"'
         let g:unite_source_grep_recursive_opt=''
     elseif executable('ack')
         let g:unite_source_grep_command='ack'
@@ -87,6 +91,10 @@ NeoBundleLazy 'Shougo/unite.vim', {'autoload':{'commands':'Unite', 'insert': 1}}
                 \ -toggle file_rec/async<CR>
     nnoremap <silent> [unite]F :Unite -start-insert -buffer-name=files
                 \ -toggle file_rec/async:!<CR>
+    nnoremap <silent> [unite]a :Unite -buffer-name=greps -toggle
+                \ grep:.<CR>
+    nnoremap <silent> [unite]al :Unite -buffer-name=greps -toggle
+                \ grep:.:-l<CR>
     nnoremap <silent> [unite]b :Unite -buffer-name=buffers -toggle
                 \ buffer<CR>
     nnoremap <silent> [unite]i :Unite -log -vertical -direction=topleft
@@ -377,6 +385,8 @@ if has('lua')
             \ '[^.[:digit:] *\t]\%(\.\|->\)\w*'
         let g:neocomplete#force_omni_input_patterns.objcpp =
             \ '[^.[:digit:] *\t]\%(\.\|->\)\w*\|\h\w*::\w*'
+        " let g:neocomplete#force_omni_input_patterns.go =
+        "     \ '[^.[:digit:] *\t]\.'
         let g:neocomplete#force_omni_input_patterns.python =
         \ '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
 
