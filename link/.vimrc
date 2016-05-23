@@ -63,7 +63,8 @@ endif
 " Display and messages {1
 "-------------------------------------------------------------------------------
 syn on                    " Use syntax highlighting
-set number                " Show Line Numbers
+set number                " Show line numbers
+set relativenumber        " Show relative line numbers
 set wrap                  " Wrap lines
 set linebreak             " Break on words
 set breakindent           " Indent wrapped lines
