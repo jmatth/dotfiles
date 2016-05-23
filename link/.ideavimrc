@@ -14,10 +14,13 @@ vnoremap k j
 nnoremap <C-o> :action Back<CR>
 nnoremap <C-i> :action Forward<CR>
 
-nnoremap <Space>t :action ActivateStructureToolWindow<CR>
-nnoremap <Space>d :action ActivateProjectToolWindow<CR>
-nnoremap <Space>h :action HideSideWindows<CR>
+" Ideavim doesn't understand "\<Space>"
+let mapleader=" "
+nnoremap <Leader>t :action ActivateStructureToolWindow<CR>
+nnoremap <Leader>d :action ActivateProjectToolWindow<CR>
+nnoremap <Leader>h :action HideSideWindows<CR>
+" nnoremap <Leader>o :action OptimizeImports<CR>
+nnoremap <Leader><Leader> :nohl<CR>
 
-
-" Supposedly this should do something
+" Emulate vim-surround
 set surround
