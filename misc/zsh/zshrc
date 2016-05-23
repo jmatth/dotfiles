@@ -94,7 +94,7 @@ else
         antigen-bundle jmatth/prezto
 
         # extra plugins
-        antigen-bundle zsh-users/zsh-syntax-highlighting
+        # antigen-bundle zsh-users/zsh-syntax-highlighting
         antigen-bundle zsh-users/zsh-completions --loc=src
         antigen-bundle rupa/z
     fi
@@ -112,8 +112,11 @@ setopt promptsubst
 #---------------------------------------------------------------------
 # Exports
 #---------------------------------------------------------------------
-# Add dotfiles scripts to the path
-export PATH=$PATH:$HOME/.cabal/bin:$HOME/.dotfiles/bin
+# Add extra executables to the path
+export PATH=$PATH:$HOME/.local/bin:$HOME/projects/go/bin:$HOME/.cabal/bin:$HOME/.dotfiles/bin
+
+# Add extra libraries
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.local/lib
 
 # Fix UTF-8 characters breaking the prompt
 export LANG="en_US.utf-8"
@@ -129,9 +132,11 @@ export REPORTTIME=30
 # Key bindings
 #---------------------------------------------------------------------
 # Same custom keybinding as in vim
-# bindkey "tn" vi-cmd-mode
+bindkey "tn" vi-cmd-mode
 bindkey "" vi-cmd-mode
 bindkey "" history-incremental-search-backward
+# Clear all escape-prefixed bindings
+# bindkey -rpM viins '^['; bindkey -rp '^['
 
 # Colemak
 bindkey -M vicmd "h" up-line-or-history
@@ -155,12 +160,13 @@ alias hosts="vim /etc/hosts"
 alias sudo="sudo -E"
 
 # ls
-alias la="ls -Alh"
+alias la="ls -AlhF"
 alias lsa="ls -A"
 
 # grep
 alias grepc="grep --color=always"
 alias grepi="grep i"
+alias grepp="ps aux | grep "
 
 # git
 alias gwt='cd ${$(git rev-parse --show-cdup):-.}'
