@@ -15,4 +15,10 @@ elif [[ `tput colors` -ge 16 ]]; then
     alias tmux="TERM=screen-16color-bce tmux"
 fi
 
-export GOPATH=$HOME/projects/go
+# Fix weird behaviors
+alias file="file -h"
+
+# Can remove if Apple ever fixes their version of less
+if test -f /usr/local/bin/less; then
+    export PAGER="/usr/local/bin/less -is"
+fi
