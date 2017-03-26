@@ -1,0 +1,304 @@
+"-------------------------------------------------------------------------------
+" Load plugins and set up mappings and options
+"-------------------------------------------------------------------------------
+" Minimum requirements for plugins
+if version < 702 || !has('autocmd')
+    echoerr 'This vim is to old for plugins :(.'
+    :xa
+
+
+    finish
+endif
+
+" Check if we need to install vim-plug {2
+let s:plug_file=expand(g:configdir . 'autoload/plug.vim')
+if !filereadable(s:plug_file)
+    echo "Installing vim-plug..\n"
+    exec('silent !curl -fLo ' . g:configdir . '/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim')
+endif
+
+" Required
+call plug#begin(g:configdir . '/plugged')
+
+
+" Core {1
+Plug 'chrisbra/SudoEdit.vim'
+Plug 'Shougo/denite.nvim'  "{
+    autocmd User PlugDone call s:denite_on_source()
+    function! s:denite_on_source()
+        " call denite#filters#matcher_default#use(['matcher_fuzzy'])
+        " call denite#filters#sorter_default#use(['sorter_rank'])
+        " Change mappings.
+        call denite#custom#map('insert', '<C-p>', '<denite:move_to_previous_line>')
+        call denite#custom#map('insert', '<C-n>', '<denite:move_to_next_line>')
+        call denite#custom#map('normal', 'h',     '<denite:move_to_previous_line>')
+        call denite#custom#map('normal', 'k',     '<denite:move_to_next_line>')
+        call denite#custom#map('insert', '<Esc>', '<denite:enter_mode:normal>')
+        call denite#custom#map('normal', '<Esc>', '<denite:quit>')
+        " call denite#set_profile('files', 'smartcase', 1)
+        " call denite#custom#profile('files', 'context.smartcase', 1)
+    endfunction
+    if executable('ag')
+        let g:denite_source_grep_command='ag'
+        let g:denite_source_grep_default_opts=
+          \ '--line-numbers --nocolor --nogroup --hidden --ignore ' .
+          \ '".hg" --ignore ".svn" --ignore ".git" --ignore ".bzr" ' .
+          \ '--ignore ".npm" --ignore "bower_components" ' .
+          \ '--ignore "node_modules" --ignore "dist"' .
+          \ '--ignore "blib"'
+        let g:denite_source_grep_recursive_opt=''
+    elseif executable('ack')
+        let g:denite_source_grep_command='ack'
+        let g:denite_source_grep_default_opts='--no-heading --no-color -a'
+        let g:denite_source_grep_recursive_opt=''
+    endif
+    let g:denite_data_directory=expand(g:configdir . 'denite')
+    let g:denite_split_rule='botright'
+    let g:denite_winheight=10
+    nmap <Leader> [denite]
+    nnoremap [denite] <nop>
+    nnoremap <silent> [denite]f :Denite -buffer-name=files file_rec<CR>
+    nnoremap <silent> [denite]ff :exec 'Denite -buffer-name=files file_rec -input=' . tolower(split(expand('%:t'), '\.')[0])<CR>
+    nnoremap <silent> [denite]F :Denite -buffer-name=files file_rec:!<CR>
+    nnoremap <silent> [denite]a :Denite -buffer-name=greps grep:.<CR>
+    nnoremap <silent> [denite]al :Denite -buffer-name=greps grep:.:-l<CR>
+    nnoremap <silent> [denite]b :Denite -buffer-name=buffers buffer<CR>
+    " nnoremap <silent> [denite]i :Denite -log -vertical -direction=topleft
+    "             \ neobundle/install<CR>
+    " nnoremap <silent> [denite]iu :Denite -log -vertical -direction=topleft
+    "             \ neobundle/update<CR>
+    autocmd FileType denite call s:denite_my_settings()
+    function! s:denite_my_settings()
+        nmap <buffer> <C-C> <Plug>(denite_exit)
+        imap <buffer> <C-C> <Plug>(denite_exit)
+        nmap <silent><buffer><expr> <C-H> denite#do_action('split')
+        imap <silent><buffer><expr> <C-H> denite#do_action('split')
+        nmap <silent><buffer><expr> <C-V> denite#do_action('vsplit')
+        imap <silent><buffer><expr> <C-V> denite#do_action('vsplit')
+        let b:hideTrailing = 1
+    endfunction
+"}
+
+" Movement / Editing {1
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-speeddating'
+Plug 'justinmk/vim-sneak'  "{
+    nmap <Leader>s <Plug>Sneak_s
+    nmap <Leader>S <Plug>Sneak_S
+    xmap <Leader>s <Plug>Sneak_s
+    xmap <Leader>S <Plug>Sneak_S
+    omap <Leader>s <Plug>Sneak_s
+    omap <Leader>S <Plug>Sneak_S
+    let g:sneak#streak = 1
+"}
+Plug 'kris89/vim-multiple-cursors'
+Plug 'junegunn/vim-easy-align'
+Plug 'mbbill/undotree', {'on':'UndotreeToggle'}
+Plug 'gregsexton/MatchTag'
+Plug 'tomtom/tcomment_vim'  "{
+    xmap gcb :TCommentBlock<CR>
+    xmap gcc :TComment<CR>
+"}
+" Plug 'haya14busa/incsearch.vim'  "{
+"     map /  <Plug>(incsearch-forward)
+"     map ?  <Plug>(incsearch-backward)
+"     map g/ <Plug>(incsearch-stay)
+" "}
+Plug 'Raimondi/delimitMate'  "{
+    " expand space and cr inside pairs
+    let g:delimitMate_expand_cr    = 1
+    let g:delimitMate_expand_space = 1
+    " fix triple quoted strings in python
+    au FileType python let b:delimitMate_nesting_quotes = ["'"]
+"}
+
+" Development {1
+Plug 'tpope/vim-fugitive', { 'augroup' : 'fugitive'}  "{
+    nnoremap <Leader>gd :Gdiff<CR>
+    nnoremap <Leader>gs :Gstatus<CR>
+"}
+if has('signs')
+    Plug 'airblade/vim-gitgutter'
+endif
+Plug 'scrooloose/syntastic'  "{
+    let g:syntastic_mode_map = { "mode": "passive",
+                               \ "active_filetypes": [],
+                               \ "passive_filetypes": [] }
+
+    let g:syntastic_python_checkers = ['flake8', 'python']
+    let g:syntastic_perl_checkers = ['perl', 'perlcritic']
+    let g:syntastic_javascript_checkers = ['eslint']
+    let g:syntastic_typescript_checkers = ['tslint']
+    let g:syntastic_enable_perl_checker = 1
+"}
+Plug 'majutsushi/tagbar'  "{
+    nnoremap <silent> <Leader>t :TagbarOpenAutoClose<CR>
+"}
+Plug 'kien/rainbow_parentheses.vim',  "{
+            \ {'for':['lisp', 'scheme']}
+    " Set custom rainbow paren colors
+    let g:rbpt_colorpairs = [
+        \ ['brown',       'RoyalBlue3'],
+        \ ['Darkblue',    'SeaGreen3'],
+        \ ['darkgray',    'DarkOrchid3'],
+        \ ['darkgreen',   'firebrick3'],
+        \ ['darkred',     'SeaGreen3'],
+        \ ['darkcyan',    'RoyalBlue3'],
+        \ ['darkmagenta', 'DarkOrchid3'],
+        \ ['grey',        'RoyalBlue3'],
+        \ ['brown',       'firebrick3'],
+        \ ['darkgray',    'SeaGreen3'],
+        \ ['darkmagenta', 'DarkOrchid3'],
+        \ ['Darkblue',    'firebrick3'],
+        \ ['darkgreen',   'RoyalBlue3'],
+        \ ['darkred',     'DarkOrchid3'],
+        \ ['darkcyan',    'SeaGreen3'],
+        \ ['red',         'firebrick3'],
+        \ ]
+"}
+
+" Support for extra filetypes {1
+Plug 'jceb/vim-orgmode', {'for':['org']}
+Plug 'digitaltoad/vim-jade', {'for':['jade']}
+Plug 'saltstack/salt-vim', {'for':['sls']}
+Plug 'wavded/vim-stylus', {'for':['stylus']}
+Plug 'cespare/vim-toml', {'for':['toml']}
+Plug 'mustache/vim-mustache-handlebars', {'for':['html']}
+Plug 'chaquotay/ftl-vim-syntax', {'for':['ftl']}
+Plug 'fatih/vim-go', {'for':['go'], 'do': ':GoInstallBinaries'}  "{
+    let g:go_disable_autoinstall = 1
+
+    let g:go_fmt_fail_silently = 1
+
+    " Show a list of interfaces which is implemented by the type under your cursor
+    " au FileType go nmap <Leader>s <Plug>(go-implements)
+
+    " Show type info for the word under your cursor
+    " au FileType go nmap <Leader>i <Plug>(go-info)
+
+    " Open the relevant Godoc for the word under the cursor
+    " au FileType go nmap <Leader>gd <Plug>(go-doc)
+    " au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
+
+    " Open the Godoc in browser
+    " au FileType go nmap <Leader>gb <Plug>(go-doc-browser)
+
+    " Run/build/test/coverage
+    " au FileType go nmap <leader>r <Plug>(go-run)
+    " au FileType go nmap <leader>b <Plug>(go-build)
+    " au FileType go nmap <leader>t <Plug>(go-test)
+    " au FileType go nmap <leader>c <Plug>(go-coverage)
+
+    " By default syntax-highlighting for Functions, Methods and Structs is disabled.
+    " Let's enable them!
+    let g:go_highlight_functions = 1
+    let g:go_highlight_methods = 1
+    let g:go_highlight_structs = 1
+"}
+Plug 'rust-lang/rust.vim'
+Plug 'suan/vim-instant-markdown'  "{
+    let g:instant_markdown_autostart = 0
+"}
+" NeoBundleLazy 'jnwhiteh/vim-golang', {'autoload':{'filetypes':['go']}}
+
+Plug 'editorconfig/editorconfig-vim'
+" NeoBundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+Plug 'SirVer/ultisnips'  "{
+    " Name used by some snippets
+    let g:snips_author = 'Josh Matthews'
+    let g:UltiSnipsExpandTrigger="<c-j>"
+    imap <C-l> <ESC>:Denite -start-insert ultisnips<CR>
+"}
+Plug 'honza/vim-snippets'
+Plug 'Rip-Rip/clang_complete', {'do': 'make', 'for': ['c', 'cpp']}
+let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/'
+" Plug 'davidhalter/jedi-vim', {'for':['python']}
+Plug 'zchee/deoplete-jedi', {'for':['python']}
+Plug 'zchee/deoplete-go', {'for':['go'], 'do': 'make'}
+Plug 'fishbullet/deoplete-ruby', {'for':['ruby']}
+Plug 'Shougo/neco-vim', {'for':['vim']}
+Plug 'Shougo/neco-syntax'
+Plug 'Shougo/neoinclude.vim'
+Plug 'Shougo/neopairs.vim'
+Plug 'leafgarland/typescript-vim'
+Plug 'Quramy/tsuquyomi'
+" Plug 'flowtype/vim-flow', {'for':['javascript']}
+
+Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}  "{2
+  let g:deoplete#enable_at_startup = 1
+  autocmd User PlugDone call s:deoplete_on_source()
+  function! s:deoplete_on_source()
+      call deoplete#custom#set('_', 'converters', ['converter_remove_overlap', 'converter_truncate_abbr', 'converter_truncate_menu', 'converter_auto_paren'])
+  endfunction
+
+  let g:clang_complete_auto = 0
+  let g:clang_auto_select = 0
+  let g:clang_omnicppcomplete_compliance = 0
+  let g:clang_make_default_keymappings = 0
+
+  " let g:jedi#completions_enabled = 0
+  " let g:jedi#auto_vim_configuration = 0
+"}
+
+
+" Fun Extras {1
+Plug 'bling/vim-airline'  "{
+    let g:airline_powerline_fonts = 1
+"}
+" Plug 'Shougo/vimfiler.vim'  "{
+"     let g:vimfiler_as_default_explorer = 1
+"     " let g:vimfiler_no_default_key_mappings = 1
+"     nnoremap [denite]d :VimFilerExplorer<CR>
+" "}
+Plug 'junegunn/limelight.vim', {'on': 'Limelight'}  "{
+  let g:limelight_conceal_ctermfg = 10
+"}
+Plug 'junegunn/goyo.vim', {'on': 'Goyo'}  "{
+  let g:goyo_width = 120
+  nnoremap <Leader>gy :GitGutterToggle<CR> :Goyo<CR>
+  function! s:goyo_enter()
+    " silent !tmux set status off
+    " silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
+    set noshowmode
+    set noshowcmd
+    set scrolloff=999
+    Limelight
+    GitGutterDisable
+  endfunction
+
+  function! s:goyo_leave()
+    " silent !tmux set status on
+    " silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+    set showmode
+    set showcmd
+    set scrolloff=5
+    Limelight!
+    GitGutterEnable
+  endfunction
+
+  autocmd! User GoyoEnter nested call <SID>goyo_enter()
+  autocmd! User GoyoLeave nested call <SID>goyo_leave()
+"}
+Plug 'lukaszkorecki/workflowish'
+
+" Colorscheme bundles {1
+Plug 'ciaranm/inkpot'
+Plug 'tomasr/molokai'
+Plug 'tpope/vim-vividchalk'
+Plug 'w0ng/vim-hybrid'
+Plug 'vim-scripts/corporation'
+Plug 'whatyouhide/vim-gotham'
+Plug 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
+
+call plug#end()
+
+" Turn filetype back on
+filetype plugin indent on
+
+" Trigger any remaining setup
+doautocmd User PlugDone
+
+" vim: set tw=78 foldlevel=1 foldmarker={,} foldminlines=2 foldmethod=marker:
