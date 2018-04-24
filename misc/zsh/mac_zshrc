@@ -22,3 +22,7 @@ alias file="file -h"
 if test -f /usr/local/bin/less; then
     export PAGER="/usr/local/bin/less -is"
 fi
+
+notify() {
+    osascript -e "display notification \"$1\" with title \"$2\" subtitle \"$3\""
+}

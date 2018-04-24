@@ -160,6 +160,7 @@ NeoBundle 'scrooloose/syntastic'  "{
                                \ "passive_filetypes": [] }
 
     let g:syntastic_python_checkers = ['flake8', 'python']
+    let g:syntastic_javascript_checkers = ['eslint']
     let g:syntastic_perl_checkers = ['perl', 'perlcritic']
     let g:syntastic_enable_perl_checker = 1
 "}
@@ -167,7 +168,7 @@ NeoBundle 'majutsushi/tagbar'  "{
     nnoremap <silent> <Leader>t :TagbarOpenAutoClose<CR>
 "}
 NeoBundleLazy 'kien/rainbow_parentheses.vim',  "{
-            \ {'autoload':{'filetypes':['lisp', 'scheme']}}
+            \ {'autoload':{'filetypes':['lisp', 'scheme', 'json']}}
     " Set custom rainbow paren colors
     let g:rbpt_colorpairs = [
         \ ['brown',       'RoyalBlue3'],
@@ -229,6 +230,9 @@ NeoBundleLazy 'fatih/vim-go', {'autoload':{'filetypes':['go']}}  "{
     let g:go_highlight_structs = 1
 "}
 NeoBundle 'rust-lang/rust.vim'
+NeoBundle 'suan/vim-instant-markdown'  "{
+    let g:instant_markdown_autostart = 0
+"}
 NeoBundle 'racer-rust/vim-racer'  "{
     set hidden
     let g:racer_cmd = expand("~/.cargo/bin/racer")
@@ -257,6 +261,7 @@ if g:Python_System_Ver >= 260
                                             \ 'filetypes': ['c', 'cpp']
                                         \ }
                                     \ }
+    let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/'
     NeoBundleLazy 'davidhalter/jedi-vim', {'autoload':{'filetypes':['python']}}
 else
     NeoBundle 'Shougo/neosnippet'  "{
@@ -412,11 +417,12 @@ endif
 
 " Fun Extras {1
 NeoBundle 'bling/vim-airline'  "{
-    let g:airline_powerline_fonts = 1
+    let g:airline_powerline_fonts = 0
 "}
 NeoBundleLazy 'Shougo/vimshell.vim', {'autoload':{'commands':'VimShell'}}
 NeoBundle 'Shougo/vimfiler.vim'  "{
-    let g:vimfiler_as_default_explorer = 1
+    " let g:vimfiler_as_default_explorer = 1
+    let g:vimfiler_no_default_key_mappings = 1
     nnoremap [unite]d :VimFilerExplorer<CR>
 "}
 

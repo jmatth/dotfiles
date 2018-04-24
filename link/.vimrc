@@ -18,11 +18,13 @@ endif
 let mapleader = "\<Space>"
 nnoremap <Space> <Nop>
 
+let g:configdir = expand("~/.vim/")
+
 
 "-------------------------------------------------------------------------------
 " Source plugin config if it exists {1
 "-------------------------------------------------------------------------------
-let s:plugin_file = expand('~/.vim/vimrc_plugins')
+let s:plugin_file = expand(g:configdir . 'vimrc_plugins')
 if filereadable(s:plugin_file) && &loadplugins
     exec 'source ' . s:plugin_file
 endif
@@ -135,22 +137,22 @@ set fileformats+=mac  " Recognize mac line endings when reading a file
 " Backup and undo {1
 "-------------------------------------------------------------------------------
 " Make backup dir if it doesn't exist
-if !isdirectory(expand('~/.vim/backups'))
-    call mkdir(expand('~/.vim/backups'), 'p')
+if !isdirectory(expand(g:configdir . 'backups'))
+    call mkdir(expand(g:configdir . 'backups'), 'p')
 endif
 
-set backup                   " Automatic backups
-set backupdir=~/.vim/backups " Where to save the automatic backups
+set backup
+exec 'set backupdir=' . g:configdir . 'backups'
 
 " Older versions don't have this
 if has('persistent_undo')
     " Make undo dir if it doesn't exist
-    if !isdirectory(expand('~/.vim/undo'))
-        call mkdir(expand('~/.vim/undo'), 'p')
+    if !isdirectory(expand(g:configdir . 'undo'))
+        call mkdir(expand(g:configdir . 'undo'), 'p')
     endif
 
     set undofile            " Enable persistent undo history
-    set undodir=~/.vim/undo " Directory to save undo history in
+    exec 'set undodir=~' . g:configdir . 'undo'
     set undolevels=1000     " Max number of undos that can be done
     set undoreload=10000    " Max number of lines to save for undo
 endif
@@ -200,14 +202,23 @@ noremap <Leader><Space> :nohl<CR>
 " Gain root privs if needed to write
 command! Wsudo !sudo tee % > /dev/null %
 
-" Hex mode
-nnoremap <Leader>hon :%!xxd<CR>
-nnoremap <Leader>hof :%!xxd -r<CR>
-
 " Trim all trailing whitespace
 nnoremap <Leader>ws :s/\s\+$//g<CR>
 cnoremap <Leader>ws s/\s\+$//g<CR>
 vnoremap <Leader>ws :s/\s\+$//g<CR>
+
+
+
+"-------------------------------------------------------------------------------
+" Misc. Mappings {1
+"-------------------------------------------------------------------------------
+" Hex mode
+command  Hon %!xxd
+command  Hoff %!xxd -r
+
+" Format JSON
+command  Jq %!jq .
+command  Jqc %!jq -c .
 
 
 "-------------------------------------------------------------------------------

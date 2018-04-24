@@ -1,31 +1,36 @@
 [user]
-    email = josh@jmatthews.us
-    name = Josh Matthews
+	email = jmatth@pm.me
+	name = Josh Matthews
 [color]
-    ui = auto
-    diff = auto
-    status = auto
-    branch = auto
-    interactive = auto
+	ui = auto
+	diff = auto
+	status = auto
+	branch = auto
+	interactive = auto
 [alias]
-    co = checkout
-    ci = commit
-    st = status
-    br = branch
-    cob = checkout -b
-    cot = checkout -t
-    unstage = reset
-    graph = log --topo-order --branches --graph '--pretty=format:%C(green)%h%C(reset) %s%C(red)%d%C(reset)%n'
-    graphall = log --topo-order --all --graph '--pretty=format:%C(green)%h%C(reset) %s%C(red)%d%C(reset)%n'
-    ctags = !.git/hooks/ctags
+	co = checkout
+	ci = commit
+	st = status
+	br = branch
+	cob = checkout -b
+	cot = checkout -t
+	unstage = reset
+	uncommit = reset --soft HEAD^
+	graph = log --topo-order --branches --graph '--pretty=format:%C(green)%h%C(reset) %s%C(red)%d%C(reset)%n'
+	graphall = log --topo-order --all --graph '--pretty=format:%C(green)%h%C(reset) %s%C(red)%d%C(reset)%n'
+	ctags = !.git/hooks/ctags
+	ticket = !sh -c 'git fetch && git checkout -b $(echo $0 | cut -d\" \" -f1) origin/master && git commit --allow-empty -m \"$0\"'
 [core]
-    excludesfile = ~/.gitignore_global
-    pager = less -X -F
+	excludesfile = ~/.gitignore_global
+	pager = less -isXF
 [diff]
-    tool = vimdiff
+	tool = vimdiff
 [merge]
-    tool = vimdiff
+	tool = vimdiff
 [rerere]
-    enabled = true
+	enabled = true
 [init]
-    templatedir = ~/.git_template
+	templatedir = ~/.git_template
+[push]
+	default = current
+# vim: set noexpandtab:

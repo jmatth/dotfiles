@@ -14,13 +14,23 @@ vnoremap k j
 nnoremap <C-o> :action Back<CR>
 nnoremap <C-i> :action Forward<CR>
 
+" Jump between compile errors
+nnoremap ]l :action GotoNextError<CR>
+nnoremap [l :action GotoPreviousError<CR>
+
 " Ideavim doesn't understand "\<Space>"
 let mapleader=" "
 nnoremap <Leader>t :action ActivateStructureToolWindow<CR>
 nnoremap <Leader>d :action ActivateProjectToolWindow<CR>
 nnoremap <Leader>h :action HideSideWindows<CR>
+nnoremap <Leader>m :action ToggleBookmarkWithMnemonic<CR>
 " nnoremap <Leader>o :action OptimizeImports<CR>
 nnoremap <Leader><Leader> :nohl<CR>
+
+nnoremap yr :action CopyReference<CR>
+
+" More or less emulate the multiple cursor plugin
+nnoremap <C-n> :action RenameElement<CR>
 
 " Emulate vim-surround
 set surround

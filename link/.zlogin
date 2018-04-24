@@ -6,9 +6,3 @@
         zcompile "$zcompdump"
     fi
 } &!
-
-# Print a random, hopefully interesting, adage.
-if (( $+commands[fortune] && $+commands[cowsay] )); then
-    cowsay `fortune -a -s`
-    print
-fi

@@ -18,6 +18,7 @@ if !filereadable(s:plug_file)
 endif
 
 " Required
+"let g:python3_host_prog = '/usr/local/bin/python3'
 call plug#begin(g:configdir . '/plugged')
 
 
@@ -37,6 +38,23 @@ Plug 'Shougo/denite.nvim'  "{
         call denite#custom#map('normal', '<Esc>', '<denite:quit>')
         " call denite#set_profile('files', 'smartcase', 1)
         " call denite#custom#profile('files', 'context.smartcase', 1)
+        call denite#custom#var('file_rec', 'command',
+            \ [ 'ag',
+            \   '--follow', '--nocolor', '--nogroup',
+            \   '--ignore', '.hg', '--ignore', '.svn', '--ignore', '.git', '--ignore', '.bzr',
+            \   '--ignore', '.npm', '--ignore', 'bower_components', '--ignore', 'node_modules', '--ignore', 'dist', 'font',
+            \   '--ignore', 'blib', '--ignore', 'build',
+            \   '-g', '',
+            \ ])
+        " call denite#custom#source('file_rec', 'matchers', ['matcher_fuzzy', 'matcher_ignore_globs'])
+        " call denite#custom#filter('matcher_ignore_globs', 'ignore_globs',
+        "     \ [ '*~', '*.o', '*.exe', '*.bak',
+        "     \   '.DS_Store', '*.pyc', '*.sw[po]', '*.class',
+        "     \   '.hg/', '.git/', '.bzr/', '.svn/',
+        "     \   'tags', 'tags-*',
+        "     \   '__pycache__/', 'venv/',
+        "     \   'node_modules/', '.npm/', '*.min.*'
+        "     \ ])
     endfunction
     if executable('ag')
         let g:denite_source_grep_command='ag'
@@ -123,16 +141,23 @@ Plug 'tpope/vim-fugitive', { 'augroup' : 'fugitive'}  "{
 if has('signs')
     Plug 'airblade/vim-gitgutter'
 endif
-Plug 'scrooloose/syntastic'  "{
-    let g:syntastic_mode_map = { "mode": "passive",
-                               \ "active_filetypes": [],
-                               \ "passive_filetypes": [] }
-
-    let g:syntastic_python_checkers = ['flake8', 'python']
-    let g:syntastic_perl_checkers = ['perl', 'perlcritic']
-    let g:syntastic_javascript_checkers = ['eslint']
-    let g:syntastic_typescript_checkers = ['tslint']
-    let g:syntastic_enable_perl_checker = 1
+" Plug 'scrooloose/syntastic'  "{
+"     let g:syntastic_mode_map = { "mode": "passive",
+"                                \ "active_filetypes": [],
+"                                \ "passive_filetypes": [] }
+"
+"     let g:syntastic_python_checkers = ['flake8', 'python']
+"     let g:syntastic_perl_checkers = ['perl', 'perlcritic']
+"     let g:syntastic_javascript_checkers = ['eslint']
+"     let g:syntastic_typescript_checkers = ['tslint']
+"     let g:syntastic_enable_perl_checker = 1
+" "}
+" Plug 'mtscout6/syntastic-local-eslint.vim'
+Plug 'w0rp/ale'  "{
+    let g:ale_fixers = {
+        \ 'javascript': 'prettier_eslint',
+    \ }
+    let g:ale_fix_on_save = 1
 "}
 Plug 'majutsushi/tagbar'  "{
     nnoremap <silent> <Leader>t :TagbarOpenAutoClose<CR>
@@ -203,6 +228,8 @@ Plug 'suan/vim-instant-markdown'  "{
     let g:instant_markdown_autostart = 0
 "}
 " NeoBundleLazy 'jnwhiteh/vim-golang', {'autoload':{'filetypes':['go']}}
+Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
+Plug 'mxw/vim-jsx'
 
 Plug 'editorconfig/editorconfig-vim'
 " NeoBundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
@@ -213,8 +240,8 @@ Plug 'SirVer/ultisnips'  "{
     imap <C-l> <ESC>:Denite -start-insert ultisnips<CR>
 "}
 Plug 'honza/vim-snippets'
-Plug 'Rip-Rip/clang_complete', {'do': 'make', 'for': ['c', 'cpp']}
-let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/'
+" Plug 'Rip-Rip/clang_complete', {'do': 'make', 'for': ['c', 'cpp']}
+" let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/'
 " Plug 'davidhalter/jedi-vim', {'for':['python']}
 Plug 'zchee/deoplete-jedi', {'for':['python']}
 Plug 'zchee/deoplete-go', {'for':['go'], 'do': 'make'}
@@ -231,7 +258,7 @@ Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}  "{2
   let g:deoplete#enable_at_startup = 1
   autocmd User PlugDone call s:deoplete_on_source()
   function! s:deoplete_on_source()
-      call deoplete#custom#set('_', 'converters', ['converter_remove_overlap', 'converter_truncate_abbr', 'converter_truncate_menu', 'converter_auto_paren'])
+      call deoplete#custom#source('_', 'converters', ['converter_remove_overlap', 'converter_truncate_abbr', 'converter_truncate_menu', 'converter_auto_paren'])
   endfunction
 
   let g:clang_complete_auto = 0
@@ -245,8 +272,12 @@ Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}  "{2
 
 
 " Fun Extras {1
-Plug 'bling/vim-airline'  "{
+Plug 'vim-airline/vim-airline'  "{
     let g:airline_powerline_fonts = 1
+"}
+Plug 'vim-airline/vim-airline-themes'  "{
+    let g:airline_solarized_normal_green = 1
+    let g:airline_solarized_dark_inactive_border = 1
 "}
 " Plug 'Shougo/vimfiler.vim'  "{
 "     let g:vimfiler_as_default_explorer = 1

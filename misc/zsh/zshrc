@@ -7,19 +7,21 @@ if ! autoload -Uz is-at-least || ! is-at-least $min_zsh_version; then
     print "zshrc: old shell detected, minimum required:\
         $min_zsh_version" >&2
 else
+    export ADOTDIR=$HOME/.antigen
     # Make sure we have antigen first
-    if [ ! -d $HOME/.antigen ] && ! which git &> /dev/null; then
-        echo "ERROR: Antigen not found and we don't have git. Plugins\
+    if [ ! -d $ADOTDIR ] && ! which curl &> /dev/null; then
+        echo "ERROR: Antigen not found and we don't have curl. Plugins\
             and themes will not be loaded."
     else
-        if ! [ -d $HOME/.antigen ]; then
-            echo "[33mNo .antigen directory found. Installing antigen.[m"
-            rm -rf $HOME/.antigen &> /dev/null
-            git clone --recursive git://github.com/jmatth/antigen.git $HOME/.antigen
+        if ! [ -d $ADOTDIR ]; then
+            echo "[33mNo ~/.antigen directory found. Installing antigen.[m"
+            rm -rf $ADOTDIR &> /dev/null
+            mkdir -p $ADOTDIR
+            curl -L git.io/antigen > $ADOTDIR/antigen.zsh
         fi
 
         # Load antigen
-        source ~/.antigen/antigen.zsh
+        source $ADOTDIR/antigen.zsh
 
         # Set case-sensitivity for completion, history lookup, etc.
         zstyle ':prezto:*:*' case-sensitive 'no'
@@ -32,6 +34,9 @@ else
 
         # Set the Zsh functions to load (man zshcontrib).
         zstyle ':prezto:load' zfunction 'zargs' 'zmv'
+
+        # Don't alias normal commands to interactive versions
+        zstyle ':prezto:module:utility' safe-ops 'no'
 
         # Set the Prezto modules to load (browse modules).
         # The order matters.
@@ -91,12 +96,13 @@ else
         export WORKON_HOME="$HOME/.virtualenvs"
 
         # Install and source my fork of prezto
-        antigen-bundle jmatth/prezto
+        antigen bundle jmatth/prezto
 
         # extra plugins
         # antigen-bundle zsh-users/zsh-syntax-highlighting
-        antigen-bundle zsh-users/zsh-completions --loc=src
-        antigen-bundle rupa/z
+        antigen bundle zsh-users/zsh-completions --loc=src
+        antigen bundle rupa/z
+        antigen apply
     fi
 fi
 unset min_zsh_version
@@ -152,8 +158,11 @@ alias zmod="vim ~/.zsh"
 alias zsave="source ~/.zshrc"
 alias vmod="vim `readlink ~/.vimrc || echo ~/.vimrc`"
 alias vpmod="vim `readlink ~/.vim/vimrc_plugins || echo ~/.vim/vimrc_plugins`"
+alias nvmod="vim `readlink ~/.config/nvim/init.vim || echo ~/.config/nvim/init.vim`"
+alias nvpmod="vim `readlink ~/.config/nvim/vimrc_plugins || echo ~/.config/nvim/vimrc_plugins`"
 alias emod="emacs ~/.emacs.d/init.el"
 alias epmod="emacs ~/.emacs.d/custom/plugins-config.el"
+alias smod="vim ~/.ssh/config"
 alias hosts="vim /etc/hosts"
 
 # sudo
@@ -165,11 +174,13 @@ alias lsa="ls -A"
 
 # grep
 alias grepc="grep --color=always"
-alias grepi="grep i"
+alias grepi="grep -i"
 alias grepp="ps aux | grep "
 
 # git
 alias gwt='cd ${$(git rev-parse --show-cdup):-.}'
+# unalias gws || true
+alias gws="git status"
 
 # Directory navigation
 alias ..="cd .."
@@ -188,6 +199,9 @@ alias zln="zmv -wL"
 
 # ag
 alias ag="ag --color-path 32 --color-match '37;45' --color-line-number 33"
+
+alias vim=nvim
+alias vimdiff='nvim -d'
 
 
 #---------------------------------------------------------------------

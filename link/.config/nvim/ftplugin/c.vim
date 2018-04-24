@@ -1,8 +1,7 @@
-let s:tabs=2
+let s:tabs=4
 
 exec "set tabstop="     . s:tabs
 exec "set shiftwidth="  . s:tabs
 exec "set softtabstop=" . s:tabs
 set expandtab
-
-iabbrev ,, =>
+set textwidth=80
