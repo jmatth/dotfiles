@@ -92,6 +92,9 @@ else
         # Auto start a session when Zsh is launched.
         zstyle ':prezto:module:tmux:auto-start' remote 'yes'
 
+        # Override some git formatting
+        zstyle ':prezto:module:git:log:medium' format '%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%C(bold)PGP:%C(reset)    %C(magenta)%G? %GK %GS%C(reset)%n%+B'
+
         # Set virtualenv location
         export WORKON_HOME="$HOME/.virtualenvs"
 
