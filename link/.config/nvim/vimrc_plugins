@@ -230,6 +230,7 @@ Plug 'suan/vim-instant-markdown'  "{
 " NeoBundleLazy 'jnwhiteh/vim-golang', {'autoload':{'filetypes':['go']}}
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'mxw/vim-jsx'
+Plug 'posva/vim-vue'
 
 Plug 'editorconfig/editorconfig-vim'
 " NeoBundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
