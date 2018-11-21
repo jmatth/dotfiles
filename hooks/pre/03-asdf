@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+if ! test -d $HOME/.asdf/.git; then
+    echo "[36mInstalling asdf[m"
+    git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch v0.6.1
+    grep 'source $HOME/.asdf/asdf.sh' $HOME/.zshrc &> /dev/null || echo 'source $HOME/.asdf/asdf.sh' >> $HOME/.zshrc
+fi

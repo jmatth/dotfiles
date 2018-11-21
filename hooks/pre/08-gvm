@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-if ! test -d $HOME/.gvm/.git; then
-    echo "[36mInstalling gvm[m"
-    git clone --depth 1 git://github.com/moovweb/gvm.git $HOME/.gvm
-    echo "export GVM_ROOT=$HOME/.gvm" > "$HOME/.gvm/scripts/gvm"
-    echo ". \$GVM_ROOT/scripts/gvm-default" >> "$HOME/.gvm/scripts/gvm"
-fi
