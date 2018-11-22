@@ -7,21 +7,20 @@ if ! autoload -Uz is-at-least || ! is-at-least $min_zsh_version; then
     print "zshrc: old shell detected, minimum required:\
         $min_zsh_version" >&2
 else
-    export ADOTDIR=$HOME/.antigen
+    export ZPLUG_HOME=$HOME/.zplug
     # Make sure we have antigen first
-    if [ ! -d $ADOTDIR ] && ! which curl &> /dev/null; then
-        echo "ERROR: Antigen not found and we don't have curl. Plugins\
+    if [ ! -d $ZPLUG_HOME ] && ! which git &> /dev/null; then
+        echo "ERROR: zplug not found and we don't have git. Plugins\
             and themes will not be loaded."
     else
-        if ! [ -d $ADOTDIR ]; then
-            echo "[33mNo ~/.antigen directory found. Installing antigen.[m"
-            rm -rf $ADOTDIR &> /dev/null
-            mkdir -p $ADOTDIR
-            curl -L git.io/antigen > $ADOTDIR/antigen.zsh
+        if ! [ -d $ZPLUG_HOME ]; then
+            echo "[33mNo ~/.zplug directory found. Installing zplug.[m"
+            rm -rf $ZPLUG_HOME &> /dev/null
+            git clone https://github.com/zplug/zplug $ZPLUG_HOME
         fi
 
         # Load antigen
-        source $ADOTDIR/antigen.zsh
+        source $ZPLUG_HOME/init.zsh
 
         # Set case-sensitivity for completion, history lookup, etc.
         zstyle ':prezto:*:*' case-sensitive 'no'
@@ -99,13 +98,15 @@ else
         export WORKON_HOME="$HOME/.virtualenvs"
 
         # Install and source my fork of prezto
-        antigen bundle jmatth/prezto
+        zplug jmatth/prezto
 
         # extra plugins
         # antigen-bundle zsh-users/zsh-syntax-highlighting
-        antigen bundle zsh-users/zsh-completions --loc=src
-        antigen bundle rupa/z
-        antigen apply
+        zplug zsh-users/zsh-completions
+        zplug rupa/z
+        zplug load
+
+        zplug check || echo 'zsh plugins missing, run zplug install'
     fi
 fi
 unset min_zsh_version
