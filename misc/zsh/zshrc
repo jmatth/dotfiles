@@ -103,7 +103,7 @@ else
         # extra plugins
         # antigen-bundle zsh-users/zsh-syntax-highlighting
         zplug zsh-users/zsh-completions
-        zplug rupa/z
+        zplug rupa/z, use:"z.sh"
         zplug load
 
         zplug check || echo 'zsh plugins missing, run zplug install'
