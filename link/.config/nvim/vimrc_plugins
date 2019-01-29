@@ -132,6 +132,22 @@ Plug 'Raimondi/delimitMate'  "{
     " fix triple quoted strings in python
     au FileType python let b:delimitMate_nesting_quotes = ["'"]
 "}
+Plug 'autozimu/LanguageClient-neovim', {
+        \ 'branch': 'next',
+        \ 'do': 'bash install.sh',
+        \ }  "{
+    let g:LanguageClient_serverCommands = {
+        \ 'rust': ['~/.asdf/shims/rustup', 'run', 'stable', 'rls'],
+    \ }
+    for lscLang in keys(g:LanguageClient_serverCommands)
+        exec 'au FileType ' . lscLang . ' nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>'
+        exec 'au FileType ' . lscLang . ' nnoremap <silent> <C-p> :call LanguageClient#textDocument_hover()<CR>'
+        exec 'au FileType ' . lscLang . ' nnoremap <silent> <F5> :call LanguageClient_contextMenu()<CR>'
+        " exec 'nnoremap <F5> :call LanguageClient_contextMenu()<CR>'
+    endfor
+    let g:LanguageClient_loggingLevel = 'DEBUG'
+"}
+Plug 'junegunn/fzf'
 
 " Development {1
 Plug 'tpope/vim-fugitive', { 'augroup' : 'fugitive'}  "{
@@ -238,7 +254,8 @@ Plug 'SirVer/ultisnips'  "{
     " Name used by some snippets
     let g:snips_author = 'Josh Matthews'
     let g:UltiSnipsExpandTrigger="<c-j>"
-    imap <C-l> <ESC>:Denite -start-insert ultisnips<CR>
+    let g:UltiSnipsListSnippets="<c-l>"
+    " imap <C-l> <ESC>:Denite -start-insert ultisnips<CR>
 "}
 Plug 'honza/vim-snippets'
 " Plug 'Rip-Rip/clang_complete', {'do': 'make', 'for': ['c', 'cpp']}
