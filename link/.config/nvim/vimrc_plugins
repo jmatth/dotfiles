@@ -143,6 +143,7 @@ Plug 'autozimu/LanguageClient-neovim', {
         exec 'au FileType ' . lscLang . ' nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>'
         exec 'au FileType ' . lscLang . ' nnoremap <silent> <C-p> :call LanguageClient#textDocument_hover()<CR>'
         exec 'au FileType ' . lscLang . ' nnoremap <silent> <F5> :call LanguageClient_contextMenu()<CR>'
+        exec 'au FileType ' . lscLang . ' nnoremap <silent> <C-N> :call LanguageClient#textDocument_rename()<CR>'
         " exec 'nnoremap <F5> :call LanguageClient_contextMenu()<CR>'
     endfor
     let g:LanguageClient_loggingLevel = 'DEBUG'
