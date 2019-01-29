@@ -152,7 +152,7 @@ if has('persistent_undo')
     endif
 
     set undofile            " Enable persistent undo history
-    exec 'set undodir=~' . g:configdir . 'undo'
+    exec 'set undodir=' . g:configdir . 'undo'
     set undolevels=1000     " Max number of undos that can be done
     set undoreload=10000    " Max number of lines to save for undo
 endif
