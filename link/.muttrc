@@ -1,0 +1,33 @@
+## Info that can change per system
+source ~/.muttinfo.rc
+
+## Display
+set sort = "reverse-date"
+set charset = "utf-8"
+set use_from = yes
+set envelope_from = yes
+
+## Composing
+set editor = "nvim"
+set record = ''
+
+## Keybindings
+# Colemak life is hard
+bind generic K bottom-page
+bind generic L noop
+
+bind index h previous-undeleted
+bind index H previous-entry
+bind index k next-undeleted
+bind index K next-entry
+bind index j display-toggle-weed
+
+bind pager h previous-entry
+bind pager h previous-entry
+bind pager k next-entry
+bind pager j noop
+
+## Source external configs
+source ~/.muttcolors.rc
+source ~/.muttgpg.rc
+source ~/.muttimap.rc
