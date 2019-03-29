@@ -2,7 +2,7 @@
 source ~/.config/mutt/info.rc
 
 ## Display
-# set sort = "reverse-date"
+set sort = "threads"
 set charset = "utf-8"
 set use_from = yes
 set envelope_from = yes
@@ -31,6 +31,10 @@ bind index j display-toggle-weed
 bind pager h previous-line
 bind pager k next-line
 bind pager j noop
+
+# Pager binds
+bind pager i noop
+bind pager q exit
 
 ## MIME nonsense
 # Prefer plaintext

@@ -6,12 +6,14 @@ set sidebar_visible
 set sidebar_format = "%B%?F? [%F]?%* %?N?%N/?%S"
 set mail_check_stats
 set sidebar_new_mail_only
+sidebar_whitelist =INBOX
 color sidebar_highlight magenta default
 
-## Movement
-# Ctrl-Shift-P – Previous Mailbox
+# Bindings
+# Ctrl-P – Previous Mailbox
 bind index,pager \CP sidebar-prev
-# Ctrl-Shift-N – Next Mailbox
+# Ctrl-N – Next Mailbox
 bind index,pager \CN sidebar-next
-# Ctrl-Shift-O – Open Highlighted Mailbox
+# Ctrl-O – Open Highlighted Mailbox
 bind index,pager \CO sidebar-open
+bind index,pager \CL sidebar-toggle-visible
