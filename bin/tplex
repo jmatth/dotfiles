@@ -2,8 +2,9 @@
 set -e
 
 session="0"
-window=$(( $(tmux list-windows -t $session | cut -d: -f1 | sort | tail -n1) + 1 ))
-
+if test -n "$TMUX"; then
+    session=$(tmux display-message -p '#S')
+fi
 while true; do
     case $1 in
         -s)
@@ -19,6 +20,10 @@ while true; do
             ;;
     esac
 done
+
+if test -z "$window"; then
+    window=$(( $(tmux list-windows -t $session | cut -d: -f1 | sort | tail -n1) + 1 ))
+fi
 
 if test $# -lt 2; then
     echo Need at least 2 arguments
