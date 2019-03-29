@@ -1,0 +1,15 @@
+set smtp_url = "smtps://<user@gapps_domain>@smtp.gmail.com:465/"
+set smtp_pass = "<app password>"
+set imap_user = "<user@gapps_domain>"
+set imap_pass = "<app password>"
+set ssl_force_tls = yes
+set imap_check_subscribed = yes
+set folder = "imaps://imap.gmail.com:993"
+set spoolfile = "+INBOX"
+set record = "+[Gmail]/Sent Mail"
+set postponed = "+[Gmail]/Drafts"
+
+# G to get mail
+bind index G imap-fetch-mail
+
+# vim: set ft=muttrc :

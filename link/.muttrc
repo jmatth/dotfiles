@@ -1,8 +1,8 @@
 ## Info that can change per system
-source ~/.muttinfo.rc
+source ~/.config/mutt/info.rc
 
 ## Display
-set sort = "reverse-date"
+# set sort = "reverse-date"
 set charset = "utf-8"
 set use_from = yes
 set envelope_from = yes
@@ -15,6 +15,12 @@ set record = ''
 # Colemak life is hard
 bind generic K bottom-page
 bind generic L noop
+bind generic k next-entry
+bind generic h previous-entry
+bind generic j noop
+
+bind attach j display-toggle-weed
+bind attach h previous-entry
 
 bind index h previous-undeleted
 bind index H previous-entry
@@ -22,12 +28,17 @@ bind index k next-undeleted
 bind index K next-entry
 bind index j display-toggle-weed
 
-bind pager h previous-entry
-bind pager h previous-entry
-bind pager k next-entry
+bind pager h previous-line
+bind pager k next-line
 bind pager j noop
 
+## MIME nonsense
+# Prefer plaintext
+alternative_order text/plain text/html
+# Try to display text/html inline
+auto_view text/html
+
 ## Source external configs
-source ~/.muttcolors.rc
-source ~/.muttgpg.rc
-source ~/.muttimap.rc
+source ~/.config/mutt/colors.rc
+source ~/.config/mutt/gpg.rc
+source ~/.config/mutt/imap.rc
