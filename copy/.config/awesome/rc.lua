@@ -41,11 +41,26 @@ do
         in_error = false
     end)
 end
+
+-- -- Make notifications stay around forever
+-- naughty.config.defaults.timeout = 0
+-- -- Make notifications from google calendar via firefox absurdly large
+-- naughty.config.notify_callback=function(args)
+--     if string.match(args.appname, '^Firefox') and string.match(args.text, '^%d%d?:?%d?%d?%am.-.%d%d?:?%d?%d?%am') then
+--         args.position='bottom_middle'
+--         args.margin=300
+--         args.ontop=true
+--         args.ignore_suspend=true
+--         args.border_width=5
+--         args.border_color=beautiful.border_focus
+--     end
+--     return args
+-- end
 -- }}}
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+beautiful.init(gears.filesystem.get_themes_dir() .. "xresources/theme.lua")
 -- beautiful.init(os.getenv("HOME") .. "/.config/awesome/themes/awesome-solarized/dark/theme.lua")
 -- beautiful.wallpaper = os.getenv("HOME") .. "/Pictures/Wallpapers/wallpaper.jpg"
 
@@ -70,32 +85,16 @@ awful.layout.layouts = {
     awful.layout.suit.fair,
     awful.layout.suit.fair.horizontal,
     awful.layout.suit.max,
-    awful.layout.suit.floating,
-    -- awful.layout.suit.spiral,
-    -- awful.layout.suit.spiral.dwindle,
     awful.layout.suit.max.fullscreen,
     awful.layout.suit.magnifier,
     awful.layout.suit.corner.nw,
+    awful.layout.suit.floating,
+    -- awful.layout.suit.spiral,
+    -- awful.layout.suit.spiral.dwindle,
     -- awful.layout.suit.corner.ne,
     -- awful.layout.suit.corner.sw,
     -- awful.layout.suit.corner.se,
 }
--- local layouts =
--- {
---     vain.layout.uselesstile,
---     vain.layout.uselesstile.bottom,
---     -- awful.layout.suit.tile.top,
---     vain.layout.uselessfair,
---     vain.layout.uselessfair.horizontal,
---     vain.layout.centerwork,
---     vain.layout.termfair,
---     -- awful.layout.suit.spiral,
---     -- awful.layout.suit.spiral.dwindle,
---     awful.layout.suit.max,
---     awful.layout.suit.max.fullscreen,
---     awful.layout.suit.magnifier,
---     awful.layout.suit.floating
--- }
 -- }}}
 
 -- {{{ Helper functions
@@ -173,8 +172,8 @@ local taglist_buttons = gears.table.join(
                                                   client.focus:toggle_tag(t)
                                               end
                                           end),
-                    awful.button({ }, 4, function(t) awful.tag.viewnext(t.screen) end),
-                    awful.button({ }, 5, function(t) awful.tag.viewprev(t.screen) end)
+                    awful.button({ }, 4, function(t) awful.tag.viewprev(t.screen) end),
+                    awful.button({ }, 5, function(t) awful.tag.viewnext(t.screen) end)
                 )
 
 local tasklist_buttons = gears.table.join(
@@ -267,8 +266,8 @@ end)
 -- {{{ Mouse bindings
 root.buttons(gears.table.join(
     awful.button({ }, 3, function () mymainmenu:toggle() end),
-    awful.button({ }, 4, awful.tag.viewnext),
-    awful.button({ }, 5, awful.tag.viewprev)
+    awful.button({ }, 4, awful.tag.viewprev),
+    awful.button({ }, 5, awful.tag.viewnext)
 ))
 -- }}}
 
@@ -325,6 +324,10 @@ globalkeys = gears.table.join(
               {description = "reload awesome", group = "awesome"}),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit,
               {description = "quit awesome", group = "awesome"}),
+    awful.key({ modkey, "Control"   }, "l", function () os.execute("xlock -mode life3d &") end,
+              {description = "lock screensaver", group = "awesome"}),
+    awful.key({ modkey, "Control"   }, "s", function () os.execute("flameshot gui") end,
+              {description = "take screenshot", group = "awesome"}),
 
     awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)          end,
               {description = "increase master width factor", group = "layout"}),
@@ -384,12 +387,16 @@ clientkeys = gears.table.join(
               {description = "close", group = "client"}),
     awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ,
               {description = "toggle floating", group = "client"}),
+    awful.key({ modkey, "Mod1"    }, "space",  function (c) c.sticky = not c.sticky          end,
+              {description = "toggle sticky", group = "client"}),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
               {description = "move to master", group = "client"}),
     awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
               {description = "move to screen", group = "client"}),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
               {description = "toggle keep on top", group = "client"}),
+    awful.key({ modkey, "Control" }, "t",      function (c) awful.titlebar.toggle(c)         end,
+              {description = "toggle titlebar", group = "client"}),
     awful.key({ modkey,           }, "n",
         function (c)
             -- The client currently has the input focus, so it cannot be
@@ -584,6 +591,12 @@ client.connect_signal("request::titlebars", function(c)
         },
         layout = wibox.layout.align.horizontal
     }
+
+    -- Hide the titlebar if not floating
+    local l = awful.layout.get(c.screen)
+    if not (l.name == "floating" or c.floating) then
+        awful.titlebar.hide(c)
+    end
 end)
 
 -- Enable sloppy focus, so that focus follows mouse.
@@ -603,6 +616,7 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 -- os.execute("pgrep nm-applet || nm-applet &")
 -- os.execute("pgrep volumeicon || volumeicon &")
 -- os.execute("pgrep xcape || xcape -e 'Caps_Lock=Escape;Control_L=Escape'")
+os.execute("xautolock -time 5 -locker 'xlock -mode scooter' &")
 -- }}}
 
 -- vim: set ts=4 sw=4 sts=4 expandtab foldmethod=marker :
