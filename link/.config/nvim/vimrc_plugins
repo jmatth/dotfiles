@@ -158,18 +158,6 @@ Plug 'tpope/vim-fugitive', { 'augroup' : 'fugitive'}  "{
 if has('signs')
     Plug 'airblade/vim-gitgutter'
 endif
-" Plug 'scrooloose/syntastic'  "{
-"     let g:syntastic_mode_map = { "mode": "passive",
-"                                \ "active_filetypes": [],
-"                                \ "passive_filetypes": [] }
-"
-"     let g:syntastic_python_checkers = ['flake8', 'python']
-"     let g:syntastic_perl_checkers = ['perl', 'perlcritic']
-"     let g:syntastic_javascript_checkers = ['eslint']
-"     let g:syntastic_typescript_checkers = ['tslint']
-"     let g:syntastic_enable_perl_checker = 1
-" "}
-" Plug 'mtscout6/syntastic-local-eslint.vim'
 Plug 'w0rp/ale'  "{
     let g:ale_fixers = {
         \ 'javascript': 'prettier_eslint',
@@ -244,7 +232,6 @@ Plug 'rust-lang/rust.vim'
 Plug 'suan/vim-instant-markdown'  "{
     let g:instant_markdown_autostart = 0
 "}
-" NeoBundleLazy 'jnwhiteh/vim-golang', {'autoload':{'filetypes':['go']}}
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'mxw/vim-jsx'
 Plug 'posva/vim-vue'
@@ -259,35 +246,12 @@ Plug 'SirVer/ultisnips'  "{
     " imap <C-l> <ESC>:Denite -start-insert ultisnips<CR>
 "}
 Plug 'honza/vim-snippets'
-" Plug 'Rip-Rip/clang_complete', {'do': 'make', 'for': ['c', 'cpp']}
-" let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/'
-" Plug 'davidhalter/jedi-vim', {'for':['python']}
-Plug 'zchee/deoplete-jedi', {'for':['python']}
-Plug 'zchee/deoplete-go', {'for':['go'], 'do': 'make'}
-Plug 'fishbullet/deoplete-ruby', {'for':['ruby']}
 Plug 'Shougo/neco-vim', {'for':['vim']}
 Plug 'Shougo/neco-syntax'
 Plug 'Shougo/neoinclude.vim'
 Plug 'Shougo/neopairs.vim'
 Plug 'leafgarland/typescript-vim'
 Plug 'Quramy/tsuquyomi'
-" Plug 'flowtype/vim-flow', {'for':['javascript']}
-
-Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}  "{2
-  let g:deoplete#enable_at_startup = 1
-  autocmd User PlugDone call s:deoplete_on_source()
-  function! s:deoplete_on_source()
-      call deoplete#custom#source('_', 'converters', ['converter_remove_overlap', 'converter_truncate_abbr', 'converter_truncate_menu', 'converter_auto_paren'])
-  endfunction
-
-  let g:clang_complete_auto = 0
-  let g:clang_auto_select = 0
-  let g:clang_omnicppcomplete_compliance = 0
-  let g:clang_make_default_keymappings = 0
-
-  " let g:jedi#completions_enabled = 0
-  " let g:jedi#auto_vim_configuration = 0
-"}
 
 
 " Fun Extras {1
