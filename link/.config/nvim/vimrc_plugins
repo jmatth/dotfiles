@@ -158,6 +158,19 @@ Plug 'tpope/vim-fugitive', { 'augroup' : 'fugitive'}  "{
 if has('signs')
     Plug 'airblade/vim-gitgutter'
 endif
+Plug 'ncm2/ncm2'  "{2
+    autocmd BufEnter * call ncm2#enable_for_buffer()
+    set completeopt=noinsert,menuone,noselect
+    Plug 'roxma/nvim-yarp'
+    Plug 'ncm2/ncm2-bufword'
+    Plug 'ncm2/ncm2-path'
+    Plug 'ncm2/ncm2-go'  "{3
+        au FileType go call ncm2#override_source('LanguageClient_go',{'enable':0})
+    "}
+    Plug 'ncm2/ncm2-ultisnips'  "{3
+        inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
+    "}
+"}
 Plug 'w0rp/ale'  "{
     let g:ale_fixers = {
         \ 'javascript': 'prettier_eslint',
@@ -241,15 +254,14 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'SirVer/ultisnips'  "{
     " Name used by some snippets
     let g:snips_author = 'Josh Matthews'
+    let g:UltiSnipsRemoveSelectModeMappings=0
+    let g:UltiSnipsJumpForwardTrigger="<c-k>"
+    let g:UltiSnipsJumpBackwardTrigger="<c-h>"
     let g:UltiSnipsExpandTrigger="<c-j>"
     let g:UltiSnipsListSnippets="<c-l>"
     " imap <C-l> <ESC>:Denite -start-insert ultisnips<CR>
 "}
 Plug 'honza/vim-snippets'
-Plug 'Shougo/neco-vim', {'for':['vim']}
-Plug 'Shougo/neco-syntax'
-Plug 'Shougo/neoinclude.vim'
-Plug 'Shougo/neopairs.vim'
 Plug 'leafgarland/typescript-vim'
 Plug 'Quramy/tsuquyomi'
 
