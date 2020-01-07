@@ -137,7 +137,7 @@ Plug 'autozimu/LanguageClient-neovim', {
         \ 'do': 'bash install.sh',
         \ }  "{
     let g:LanguageClient_serverCommands = {
-        \ 'rust': ['~/.asdf/shims/rustup', 'run', 'stable', 'rls'],
+        \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
     \ }
     for lscLang in keys(g:LanguageClient_serverCommands)
         exec 'au FileType ' . lscLang . ' nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>'
@@ -167,6 +167,7 @@ Plug 'ncm2/ncm2'  "{2
     Plug 'ncm2/ncm2-go'  "{3
         au FileType go call ncm2#override_source('LanguageClient_go',{'enable':0})
     "}
+    Plug 'ncm2/ncm2-racer'
     Plug 'ncm2/ncm2-ultisnips'  "{3
         inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
     "}
@@ -241,7 +242,10 @@ Plug 'fatih/vim-go', {'for':['go'], 'do': ':GoInstallBinaries'}  "{
     let g:go_highlight_methods = 1
     let g:go_highlight_structs = 1
 "}
-Plug 'rust-lang/rust.vim'
+Plug 'rust-lang/rust.vim'  "{
+    let g:rust_recommended_style = 0
+    let g:rustfmt_autosave = 1
+"}
 Plug 'suan/vim-instant-markdown'  "{
     let g:instant_markdown_autostart = 0
 "}
