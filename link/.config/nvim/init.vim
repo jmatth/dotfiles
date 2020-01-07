@@ -18,7 +18,7 @@ endif
 let mapleader = "\<Space>"
 nnoremap <Space> <Nop>
 
-let g:configdir = expand("~/.config/nvim/")
+let g:configdir = expand("$HOME/.config/nvim/")
 
 
 "-------------------------------------------------------------------------------
@@ -190,9 +190,6 @@ set pastetoggle=<F3>
 " Toggle list
 map <F4> :set list!<CR>
 
-" Toggle crosshairs
-map <F5> :let g:CROSSHAIRS = !g:CROSSHAIRS\| set cursorcolumn! cursorline!<CR>
-
 " Toggle warn when going over 80 columns
 map <F6> :call ToggleRightWarn()<CR>
 
@@ -282,22 +279,6 @@ function! s:ShowTrailing()
     endif
 endfunction
 
-" Handle setting up crosshairs in the current buffer
-function! s:HandleCrosshairs(leaving)
-    if !exists('g:CROSSHAIRS')
-        let g:CROSSHAIRS = 1
-    endif
-
-    if a:leaving
-        let g:CROSSHAIRS = &cursorcolumn && &cursorline
-        setlocal nocursorline nocursorcolumn
-    else
-        if g:CROSSHAIRS
-            setlocal cursorline cursorcolumn
-        endif
-    endif
-endfunction
-
 " Show all highlight groups
 command! ColorTest so $VIMRUNTIME/syntax/hitest.vim
 function! s:DoShowHiGroup()
@@ -332,17 +313,6 @@ if has("autocmd")
         au InsertEnter * set nohlsearch | call s:HideTrailing()
         au InsertLeave * set hlsearch | call s:ShowTrailing()
     augroup end
-
-    " Crosshairs in current window
-    augroup cursorCrosshairs
-        au!
-        au VimEnter,WinEnter,BufWinEnter * call s:HandleCrosshairs(0)
-        au WinLeave * call s:HandleCrosshairs(1)
-    augroup end
-
-    " Cut trailing whitespace when writing a file
-    " autocmd BufWritePre * :%s/\s\+$//e
-
 endif
 
 
@@ -353,11 +323,12 @@ endif
 if &t_Co == 8 && $TERM !~# '^linux'
     set t_Co=16
 endif
+set termguicolors
 
 " set t_ut=
 set background=dark
-let g:solarized_termtrans = 1
-colorscheme solarized
+let g:solarized_termtrans = 0
+colorscheme NeoSolarized
 
 " Show trailing whitespace
 highlight TrailingWhitespace ctermfg=1 ctermbg=NONE cterm=reverse
