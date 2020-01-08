@@ -1,0 +1,257 @@
+# vim: set ft=zsh ts=4 sw=4 expandtab :
+
+function theme_precmd
+{
+    local TERMWIDTH
+    (( TERMWIDTH = ${COLUMNS} - 2 ))
+
+    # Populate info variables
+    if (( $+functions[git-info] )); then
+        git-info
+    fi
+
+    if (( $+functions[python-info] )); then
+        python-info
+    fi
+
+    if (( $+functions[node-info] )); then
+        node-info
+    fi
+
+    ###
+    # Fit as much info in the top line as possible
+
+    PR_FILLBAR=""
+    PR_PWDLEN=""
+
+    local promptsize=${#${(%):---(%n@%m:%l)----}}
+
+    local pwdsize=${#${(%):-%~}}
+
+    export ZSH_RUBYPROMPT_INFO=`rbenv_prompt_info`
+    local rubypromptsize=${#${ZSH_RUBYPROMPT_INFO}}
+    if [[ -n "$ZSH_RUBYPROMPT_INFO" ]]; then
+        (( rubypromptsize = rubypromptsize + 3 ))
+        ZSH_RUBYPROMPT_INFO="$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT${PR_BRACKET_COLOR}[${PR_RED}${ZSH_RUBYPROMPT_INFO}${PR_BRACKET_COLOR}]"
+    else
+        ZSH_RUBYPROMPT_INFO=""
+    fi
+
+    export ZSH_NODEPROMPT_INFO=$node_info[version]
+    if [[ "$ZSH_NODEPROMPT_INFO" == "system" ]]; then
+        ZSH_NODEPROMPT_INFO=""
+    fi
+    local nodepromptsize=${#${ZSH_NODEPROMPT_INFO}}
+    if [[ -n "$ZSH_NODEPROMPT_INFO" ]]; then
+        (( nodepromptsize = nodepromptsize + 3 ))
+        ZSH_NODEPROMPT_INFO="$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT${PR_BRACKET_COLOR}[${PR_MAGENTA}${ZSH_NODEPROMPT_INFO}${PR_BRACKET_COLOR}]"
+    else
+        ZSH_NODEPROMPT_INFO=""
+    fi
+
+    export ZSH_VIRTUALENVPROMPT_INFO=$python_info[virtualenv]
+    local virtualenvpromptsize=${#${ZSH_VIRTUALENVPROMPT_INFO}}
+    if [[ -n "$ZSH_VIRTUALENVPROMPT_INFO" ]]; then
+        (( virtualenvpromptsize = virtualenvpromptsize + 3 ))
+        ZSH_VIRTUALENVPROMPT_INFO="$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT${PR_BRACKET_COLOR}[${PR_YELLOW}${ZSH_VIRTUALENVPROMPT_INFO}${PR_BRACKET_COLOR}]"
+    else
+        ZSH_VIRTUALENVPROMPT_INFO=""
+    fi
+
+    local tmpsize="$promptsize"
+    if [[ "$tmpsize + $pwdsize" -le $TERMWIDTH ]]; then
+        ((tmpsize += $pwdsize))
+    else
+        ZSH_RUBYPROMPT_INFO=""
+        ZSH_VIRTUALENVPROMPT_INFO=""
+        ZSH_NODEPROMPT_INFO=""
+        ((PR_PWDLEN=$TERMWIDTH - $promptsize))
+        return
+    fi
+    if [[ "$tmpsize + $virtualenvpromptsize" -le $TERMWIDTH ]]; then
+        ((tmpsize += $virtualenvpromptsize))
+    else
+        ZSH_VIRTUALENVPROMPT_INFO=""
+    fi
+    if [[ "$tmpsize + $nodepromptsize" -le $TERMWIDTH ]]; then
+        ((tmpsize += $nodepromptsize))
+    else
+        ZSH_NODEPROMPT_INFO=""
+    fi
+    if [[ "$tmpsize + $rubypromptsize" -le $TERMWIDTH ]]; then
+        ((tmpsize += $rubypromptsize))
+    else
+        ZSH_RUBYPROMPT_INFO=""
+    fi
+    PR_FILLBAR="\${(l.(($TERMWIDTH - ($tmpsize)))..${PR_HBAR}.)}"
+}
+
+function rbenv_prompt_info() {
+    if ! (( $+commands[rbenv] )); then
+        return
+    fi
+
+    local gemset
+    local version=$(rbenv version-name)
+    if [[ "$version" != (system|) ]]; then
+        gemset=$(rbenv gemset active 2&>/dev/null | cut -d' ' -f1)
+        if [[ -n "$gemset" ]]; then
+            echo "$(rbenv version-name)@${gemset}"
+        else
+            echo "$(rbenv version-name)"
+        fi
+    fi
+}
+
+function vi_mode_prompt_info_left()
+{
+  echo "${${KEYMAP/vicmd/$MODE_INDICATOR_LEFT}/(main|viins)/}"
+}
+
+function vi_mode_prompt_info_right()
+{
+  echo "${${KEYMAP/vicmd/$MODE_INDICATOR_RIGHT}/(main|viins)/}"
+}
+
+setprompt ()
+{
+    ###
+    # Need this so the prompt will work.
+
+    setopt promptsubst
+
+
+    ###
+    # See if we can use colors.
+
+    autoload colors zsh/terminfo
+    if [[ "$terminfo[colors]" -ge 8 ]]; then
+        colors
+    fi
+    for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE GREY; do
+        eval PR_$color='%{$fg[${(L)color}]%}'
+        eval PR_BOLD_$color='%{$terminfo[bold]$fg[${(L)color}]%}'
+        (( count = $count + 1 ))
+    done
+    PR_NO_COLOR="%{$terminfo[sgr0]%}"
+
+    ###
+    # Central location for colors of repeated elements
+    PR_BRACKET_COLOR=$PR_BLUE
+    PR_BAR_COLOR=$PR_BLUE
+
+    ###
+    # Modify Git prompt
+    zstyle ':prezto:module:git:info' verbose 'yes'
+    zstyle ':prezto:module:git:info:action' format ':%F{yellow}%s%f'
+    zstyle ':prezto:module:git:info:added' format ' %F{green}+%f'
+    zstyle ':prezto:module:git:info:ahead' format ' %F{yellow}>%f'
+    zstyle ':prezto:module:git:info:behind' format ' %F{yellow}<%f'
+    zstyle ':prezto:module:git:info:branch' format '%F{yellow}%b%f'
+    zstyle ':prezto:module:git:info:commit' format '%F{yellow}%.7c%f'
+    zstyle ':prezto:module:git:info:deleted' format ' %F{red}x%f'
+    zstyle ':prezto:module:git:info:modified' format ' %F{red}*%f'
+    zstyle ':prezto:module:git:info:position' format ':%F{red}%p%f'
+    zstyle ':prezto:module:git:info:renamed' format ' %F{magenta}$%f'
+    zstyle ':prezto:module:git:info:stashed' format ' %F{magenta}&%f'
+    zstyle ':prezto:module:git:info:unmerged' format ' %F{yellow}!%f'
+    zstyle ':prezto:module:git:info:untracked' format ' %F{red}?%f'
+    zstyle ':prezto:module:git:info:keys' format \
+        'prompt' '${PR_BRACKET_COLOR}[$(coalesce "%b" "%c")%a%r%m%d%A%B%U%u%S$PR_BRACKET_COLOR]$PR_NO_COLOR'
+
+    ###
+    # Modify pyton, node, and ruby prompts
+    zstyle ':prezto:module:python:info:virtualenv' format '%v'
+    zstyle ':prezto:module:node:info:version' format '%v'
+    zstyle ':prezto:module:ruby:info:version' format '%v'
+
+    ###
+    # Define characters to indicate vi mode
+    MODE_INDICATOR_LEFT="${PR_BOLD_RED}[$PR_NO_COLOR"
+    MODE_INDICATOR_RIGHT="$PR_BOLD_RED]$PR_NO_COLOR"
+
+    ###
+    # See if we can use extended characters to look nicer.
+
+    typeset -A altchar
+    set -A altchar ${(s..)terminfo[acsc]}
+    PR_SET_CHARSET="%{$terminfo[enacs]%}"
+    PR_SHIFT_IN="%{$terminfo[smacs]%}"
+    PR_SHIFT_OUT="%{$terminfo[rmacs]%}"
+    PR_HBAR=${altchar[q]:--}
+    PR_ULCORNER=${altchar[l]:--}
+    PR_LLCORNER=${altchar[m]:--}
+    PR_LRCORNER=${altchar[j]:--}
+    PR_URCORNER=${altchar[k]:--}
+
+    # Some stuff is broken on the linux vt.
+    if [[ "$TERM" == "linux" ]]; then
+        PR_HBAR="-"
+        PR_LRCORNER="${PR_LRCORNER} "
+    fi
+
+    ###
+    # Decide if we need to set titlebar text.
+
+    case $TERM in
+    xterm*)
+        PR_TITLEBAR=$'%{\e]0;%(!.-=*[ROOT]*=- | .)%n@%m:%~ | ${COLUMNS}x${LINES} | %y\a%}'
+        ;;
+    screen)
+        PR_TITLEBAR=$'%{\e_screen \005 (\005t) | %(!.-=[ROOT]=- | .)%n@%m:%~ | ${COLUMNS}x${LINES} | %y\e\\%}'
+        ;;
+    *)
+        PR_TITLEBAR=''
+        ;;
+    esac
+
+    ###
+    # Decide whether to set a screen title
+    # if [[ "$TERM" == "screen" ]]; then
+    # PR_STITLE=$'%{\ekzsh\e\\%}'
+    # else
+    # PR_STITLE=''
+    # fi
+
+    ###
+    # Use different color for hostname over ssh
+    if (($+SSH_CONNECTION)); then
+        PR_HOST_COLOR=$PR_YELLOW
+    else
+        PR_HOST_COLOR=$PR_GREEN
+    fi
+
+    ###
+    # Finally, the prompt.
+
+    PROMPT='$PR_SET_CHARSET${(e)PR_TITLEBAR}\
+$PR_BAR_COLOR$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT\
+${PR_BRACKET_COLOR}[$PR_GREEN%$PR_PWDLEN<...<%~%<<$PR_BRACKET_COLOR]\
+$PR_BAR_COLOR$PR_SHIFT_IN${(e)PR_FILLBAR}$PR_SHIFT_OUT\
+$ZSH_VIRTUALENVPROMPT_INFO\
+$ZSH_NODEPROMPT_INFO\
+$ZSH_RUBYPROMPT_INFO\
+$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
+${PR_BRACKET_COLOR}[%(!.%S${PR_RED}ROOT%s.$PR_CYAN%n)$PR_NO_COLOR@$PR_HOST_COLOR%m:%l$PR_BRACKET_COLOR]\
+$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_URCORNER$PR_SHIFT_OUT\
+
+$PR_BAR_COLOR$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT\
+${git_info:+${(e)git_info[prompt]}}\
+$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_HBAR$PR_SHIFT_OUT\
+$PR_NO_COLOR%#$PR_BAR_COLOR${$(vi_mode_prompt_info_left):-">"}$PR_NO_COLOR '
+
+    # display exitcode on the right when >0
+    return_code="%(?..%{$fg[red]%}%?! $PR_NO_COLOR)"
+    RPROMPT=' $return_code$PR_BAR_COLOR${$(vi_mode_prompt_info_right):-"<"}$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_HBAR$PR_SHIFT_OUT\
+${PR_BRACKET_COLOR}[$PR_MAGENTA%!$PR_BRACKET_COLOR]$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_LRCORNER$PR_SHIFT_OUT$PR_NO_COLOR'
+    PS2='$PR_NO_COLOR$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
+$PR_BLUE$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT(\
+$PR_BOLD_GREEN%_$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
+$PR_NO_COLOR$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT$PR_NO_COLOR '
+}
+
+setprompt
+
+autoload -U add-zsh-hook
+add-zsh-hook precmd  theme_precmd
+#add-zsh-hook preexec theme_preexec

@@ -1,6 +1,12 @@
 #---------------------------------------------------------------------
 # Configure plugins and load with antigen
 #---------------------------------------------------------------------
+# Add custom functions to path
+export fpath=( $HOME/.config/zsh/functions $fpath )
+
+#---------------------------------------------------------------------
+# Configure plugins and load with antigen
+#---------------------------------------------------------------------
 # Minimum recommend version
 min_zsh_version='4.3.10'
 if ! autoload -Uz is-at-least || ! is-at-least $min_zsh_version; then
@@ -98,7 +104,7 @@ else
         export WORKON_HOME="$HOME/.virtualenvs"
 
         # Install and source my fork of prezto
-        zplug jmatth/prezto
+        zplug sorin-ionescu/prezto
 
         # extra plugins
         # antigen-bundle zsh-users/zsh-syntax-highlighting
