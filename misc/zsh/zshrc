@@ -46,6 +46,7 @@ else
         # Set the Prezto modules to load (browse modules).
         # The order matters.
         zstyle ':prezto:load' pmodule \
+        'osx' \
         'environment' \
         'terminal' \
         'editor' \
@@ -212,6 +213,22 @@ alias ag="ag --color-path 32 --color-match '37;45' --color-line-number 33"
 
 alias vim=nvim
 alias vimdiff='nvim -d'
+
+
+#---------------------------------------------------------------------
+# More aliases, but specifically for coreutils replacements
+#---------------------------------------------------------------------
+if (( $+commands[exa] )); then
+    alias ls="exa"
+    alias sl="exa"
+    alias la="exa -alF"
+    alias ll="exa -lF"
+    alias l="exa -1a"
+fi
+if (( $+commands[cat] )); then
+    compdef _gnu_generic bat
+    alias cat="bat"
+fi
 
 
 #---------------------------------------------------------------------
