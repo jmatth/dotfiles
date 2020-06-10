@@ -225,7 +225,7 @@ if (( $+commands[exa] )); then
     alias ll="exa -lF"
     alias l="exa -1a"
 fi
-if (( $+commands[cat] )); then
+if (( $+commands[bat] )); then
     compdef _gnu_generic bat
     alias cat="bat"
 fi
