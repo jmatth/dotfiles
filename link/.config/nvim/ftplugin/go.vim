@@ -1,0 +1,2 @@
+abbreviate ,, <-
+abbreviate ;; :=
