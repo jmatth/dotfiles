@@ -5,8 +5,6 @@
 if version < 702 || !has('autocmd')
     echoerr 'This vim is to old for plugins :(.'
     :xa
-
-
     finish
 endif
 
@@ -24,78 +22,8 @@ call plug#begin(g:configdir . '/plugged')
 
 " Core {1
 Plug 'chrisbra/SudoEdit.vim'
-Plug 'Shougo/denite.nvim'  "{
-    autocmd User PlugDone call s:denite_on_source()
-    function! s:denite_on_source()
-        " call denite#filters#matcher_default#use(['matcher_fuzzy'])
-        " call denite#filters#sorter_default#use(['sorter_rank'])
-        " Change mappings.
-        call denite#custom#map('insert', '<C-p>', '<denite:move_to_previous_line>')
-        call denite#custom#map('insert', '<C-n>', '<denite:move_to_next_line>')
-        call denite#custom#map('normal', 'h',     '<denite:move_to_previous_line>')
-        call denite#custom#map('normal', 'k',     '<denite:move_to_next_line>')
-        call denite#custom#map('insert', '<Esc>', '<denite:enter_mode:normal>')
-        call denite#custom#map('normal', '<Esc>', '<denite:quit>')
-        " call denite#set_profile('files', 'smartcase', 1)
-        " call denite#custom#profile('files', 'context.smartcase', 1)
-        call denite#custom#var('file_rec', 'command',
-            \ [ 'ag',
-            \   '--follow', '--nocolor', '--nogroup',
-            \   '--ignore', '.hg', '--ignore', '.svn', '--ignore', '.git', '--ignore', '.bzr',
-            \   '--ignore', '.npm', '--ignore', 'bower_components', '--ignore', 'node_modules', '--ignore', 'dist', 'font',
-            \   '--ignore', 'blib', '--ignore', 'build',
-            \   '-g', '',
-            \ ])
-        " call denite#custom#source('file_rec', 'matchers', ['matcher_fuzzy', 'matcher_ignore_globs'])
-        " call denite#custom#filter('matcher_ignore_globs', 'ignore_globs',
-        "     \ [ '*~', '*.o', '*.exe', '*.bak',
-        "     \   '.DS_Store', '*.pyc', '*.sw[po]', '*.class',
-        "     \   '.hg/', '.git/', '.bzr/', '.svn/',
-        "     \   'tags', 'tags-*',
-        "     \   '__pycache__/', 'venv/',
-        "     \   'node_modules/', '.npm/', '*.min.*'
-        "     \ ])
-    endfunction
-    if executable('ag')
-        let g:denite_source_grep_command='ag'
-        let g:denite_source_grep_default_opts=
-          \ '--line-numbers --nocolor --nogroup --hidden --ignore ' .
-          \ '".hg" --ignore ".svn" --ignore ".git" --ignore ".bzr" ' .
-          \ '--ignore ".npm" --ignore "bower_components" ' .
-          \ '--ignore "node_modules" --ignore "dist"' .
-          \ '--ignore "blib"'
-        let g:denite_source_grep_recursive_opt=''
-    elseif executable('ack')
-        let g:denite_source_grep_command='ack'
-        let g:denite_source_grep_default_opts='--no-heading --no-color -a'
-        let g:denite_source_grep_recursive_opt=''
-    endif
-    let g:denite_data_directory=expand(g:configdir . 'denite')
-    let g:denite_split_rule='botright'
-    let g:denite_winheight=10
-    nmap <Leader> [denite]
-    nnoremap [denite] <nop>
-    nnoremap <silent> [denite]f :Denite -buffer-name=files file_rec<CR>
-    nnoremap <silent> [denite]ff :exec 'Denite -buffer-name=files file_rec -input=' . tolower(split(expand('%:t'), '\.')[0])<CR>
-    nnoremap <silent> [denite]F :Denite -buffer-name=files file_rec:!<CR>
-    nnoremap <silent> [denite]a :Denite -buffer-name=greps grep:.<CR>
-    nnoremap <silent> [denite]al :Denite -buffer-name=greps grep:.:-l<CR>
-    nnoremap <silent> [denite]b :Denite -buffer-name=buffers buffer<CR>
-    " nnoremap <silent> [denite]i :Denite -log -vertical -direction=topleft
-    "             \ neobundle/install<CR>
-    " nnoremap <silent> [denite]iu :Denite -log -vertical -direction=topleft
-    "             \ neobundle/update<CR>
-    autocmd FileType denite call s:denite_my_settings()
-    function! s:denite_my_settings()
-        nmap <buffer> <C-C> <Plug>(denite_exit)
-        imap <buffer> <C-C> <Plug>(denite_exit)
-        nmap <silent><buffer><expr> <C-H> denite#do_action('split')
-        imap <silent><buffer><expr> <C-H> denite#do_action('split')
-        nmap <silent><buffer><expr> <C-V> denite#do_action('vsplit')
-        imap <silent><buffer><expr> <C-V> denite#do_action('vsplit')
-        let b:hideTrailing = 1
-    endfunction
-"}
+Plug 'tpope/vim-vinegar'
+Plug 'editorconfig/editorconfig-vim'
 
 " Movement / Editing {1
 Plug 'tpope/vim-surround'
@@ -103,7 +31,8 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-speeddating'
-Plug 'justinmk/vim-sneak'  "{
+Plug 'justinmk/vim-sneak'
+"{
     nmap <Leader>s <Plug>Sneak_s
     nmap <Leader>S <Plug>Sneak_S
     xmap <Leader>s <Plug>Sneak_s
@@ -112,77 +41,52 @@ Plug 'justinmk/vim-sneak'  "{
     omap <Leader>S <Plug>Sneak_S
     let g:sneak#streak = 1
 "}
-Plug 'kris89/vim-multiple-cursors'
+Plug 'mg979/vim-visual-multi'
 Plug 'junegunn/vim-easy-align'
 Plug 'mbbill/undotree', {'on':'UndotreeToggle'}
 Plug 'gregsexton/MatchTag'
-Plug 'tomtom/tcomment_vim'  "{
+Plug 'tomtom/tcomment_vim'
+"{
     xmap gcb :TCommentBlock<CR>
     xmap gcc :TComment<CR>
 "}
-" Plug 'haya14busa/incsearch.vim'  "{
-"     map /  <Plug>(incsearch-forward)
-"     map ?  <Plug>(incsearch-backward)
-"     map g/ <Plug>(incsearch-stay)
-" "}
-Plug 'Raimondi/delimitMate'  "{
+Plug 'Raimondi/delimitMate'
+"{
     " expand space and cr inside pairs
-    let g:delimitMate_expand_cr    = 1
+    let g:delimitMate_expand_cr = 2
     let g:delimitMate_expand_space = 1
+    let g:delimitMate_jump_expansion = 1
     " fix triple quoted strings in python
     au FileType python let b:delimitMate_nesting_quotes = ["'"]
 "}
-Plug 'autozimu/LanguageClient-neovim', {
-        \ 'branch': 'next',
-        \ 'do': 'bash install.sh',
-        \ }  "{
-    let g:LanguageClient_serverCommands = {
-        \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-    \ }
-    for lscLang in keys(g:LanguageClient_serverCommands)
-        exec 'au FileType ' . lscLang . ' nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>'
-        exec 'au FileType ' . lscLang . ' nnoremap <silent> <C-p> :call LanguageClient#textDocument_hover()<CR>'
-        exec 'au FileType ' . lscLang . ' nnoremap <silent> <F5> :call LanguageClient_contextMenu()<CR>'
-        exec 'au FileType ' . lscLang . ' nnoremap <silent> <C-N> :call LanguageClient#textDocument_rename()<CR>'
-        " exec 'nnoremap <F5> :call LanguageClient_contextMenu()<CR>'
-    endfor
-    let g:LanguageClient_loggingLevel = 'DEBUG'
+Plug 'SirVer/ultisnips'
+"{
+    " Name used by some snippets
+    let g:snips_author = 'Josh Matthews'
+    let g:UltiSnipsRemoveSelectModeMappings=0
+    let g:UltiSnipsExpandTrigger="<c-k>"
+    let g:UltiSnipsJumpForwardTrigger="<c-k>"
+    let g:UltiSnipsJumpBackwardTrigger="<c-h>"
+    let g:UltiSnipsListSnippets="<c-l>"
+    " imap <C-l> <ESC>:Denite -start-insert ultisnips<CR>
 "}
-Plug 'junegunn/fzf'
+Plug 'honza/vim-snippets'
 
 " Development {1
-Plug 'tpope/vim-fugitive', { 'augroup' : 'fugitive'}  "{
+Plug 'tpope/vim-fugitive', { 'augroup' : 'fugitive'}
+"{
     nnoremap <Leader>gd :Gdiff<CR>
     nnoremap <Leader>gs :Gstatus<CR>
 "}
 if has('signs')
     Plug 'airblade/vim-gitgutter'
 endif
-Plug 'ncm2/ncm2'  "{2
-    autocmd BufEnter * call ncm2#enable_for_buffer()
-    set completeopt=noinsert,menuone,noselect
-    Plug 'roxma/nvim-yarp'
-    Plug 'ncm2/ncm2-bufword'
-    Plug 'ncm2/ncm2-path'
-    Plug 'ncm2/ncm2-go'  "{3
-        au FileType go call ncm2#override_source('LanguageClient_go',{'enable':0})
-    "}
-    Plug 'ncm2/ncm2-racer'
-    Plug 'ncm2/ncm2-ultisnips'  "{3
-        inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
-    "}
-"}
-Plug 'w0rp/ale'  "{
-    let g:ale_fixers = {
-        \ 'javascript': 'prettier_eslint',
-    \ }
-    let g:ale_fix_on_save = 1
-"}
 Plug 'majutsushi/tagbar'  "{
     nnoremap <silent> <Leader>t :TagbarOpenAutoClose<CR>
 "}
-Plug 'kien/rainbow_parentheses.vim',  "{
-            \ {'for':['lisp', 'scheme']}
+Plug 'kien/rainbow_parentheses.vim',
+"{
+    \ {'for':['lisp', 'scheme']}
     " Set custom rainbow paren colors
     let g:rbpt_colorpairs = [
         \ ['brown',       'RoyalBlue3'],
@@ -203,6 +107,26 @@ Plug 'kien/rainbow_parentheses.vim',  "{
         \ ['red',         'firebrick3'],
         \ ]
 "}
+" Plug 'autozimu/LanguageClient-neovim',
+" "{
+"     \ {
+"         \ 'branch': 'next',
+"         \ 'do': 'bash install.sh',
+"     \ }
+"     let g:LanguageClient_serverCommands = {
+"         \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+"         \ 'go': ['gopls'],
+"     \ }
+"     for lscLang in keys(g:LanguageClient_serverCommands)
+"         exec 'au FileType ' . lscLang . ' nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>'
+"         exec 'au FileType ' . lscLang . ' nnoremap <silent> <C-p> :call LanguageClient#textDocument_hover()<CR>'
+"         exec 'au FileType ' . lscLang . ' nnoremap <silent> <F5> :call LanguageClient_contextMenu()<CR>'
+"         exec 'au FileType ' . lscLang . ' nnoremap <silent> <C-N> :call LanguageClient#textDocument_rename()<CR>'
+"         exec 'au FileType ' . lscLang . ' nnoremap <silent> <Leader>i :call LanguageClient_textDocument_hover()<CR>'
+"         " exec 'nnoremap <F5> :call LanguageClient_contextMenu()<CR>'
+"     endfor
+"     let g:LanguageClient_loggingLevel = 'DEBUG'
+" "}
 
 " Support for extra filetypes {1
 Plug 'jceb/vim-orgmode', {'for':['org']}
@@ -212,7 +136,8 @@ Plug 'wavded/vim-stylus', {'for':['stylus']}
 Plug 'cespare/vim-toml', {'for':['toml']}
 Plug 'mustache/vim-mustache-handlebars', {'for':['html']}
 Plug 'chaquotay/ftl-vim-syntax', {'for':['ftl']}
-Plug 'fatih/vim-go', {'for':['go'], 'do': ':GoInstallBinaries'}  "{
+Plug 'fatih/vim-go', {'for':['go'], 'do': ':GoInstallBinaries'}
+"{
     let g:go_disable_autoinstall = 1
 
     let g:go_fmt_fail_silently = 1
@@ -241,52 +166,41 @@ Plug 'fatih/vim-go', {'for':['go'], 'do': ':GoInstallBinaries'}  "{
     let g:go_highlight_functions = 1
     let g:go_highlight_methods = 1
     let g:go_highlight_structs = 1
+
+    let g:go_def_mode='gopls'
+    let g:go_info_mode='gopls'
 "}
-Plug 'rust-lang/rust.vim'  "{
+Plug 'rust-lang/rust.vim'
+"{
     let g:rust_recommended_style = 0
     let g:rustfmt_autosave = 1
 "}
-Plug 'suan/vim-instant-markdown'  "{
+Plug 'suan/vim-instant-markdown'
+"{
     let g:instant_markdown_autostart = 0
 "}
-Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'mxw/vim-jsx'
 Plug 'posva/vim-vue'
-
-Plug 'editorconfig/editorconfig-vim'
-" NeoBundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
-Plug 'SirVer/ultisnips'  "{
-    " Name used by some snippets
-    let g:snips_author = 'Josh Matthews'
-    let g:UltiSnipsRemoveSelectModeMappings=0
-    let g:UltiSnipsJumpForwardTrigger="<c-k>"
-    let g:UltiSnipsJumpBackwardTrigger="<c-h>"
-    let g:UltiSnipsExpandTrigger="<c-j>"
-    let g:UltiSnipsListSnippets="<c-l>"
-    " imap <C-l> <ESC>:Denite -start-insert ultisnips<CR>
-"}
-Plug 'honza/vim-snippets'
 Plug 'leafgarland/typescript-vim'
 Plug 'Quramy/tsuquyomi'
 
 
 " Fun Extras {1
-Plug 'vim-airline/vim-airline'  "{
+Plug 'vim-airline/vim-airline'
+"{
     let g:airline_powerline_fonts = 1
 "}
-Plug 'vim-airline/vim-airline-themes'  "{
+Plug 'vim-airline/vim-airline-themes'
+"{
     let g:airline_solarized_normal_green = 1
     let g:airline_solarized_dark_inactive_border = 1
 "}
-" Plug 'Shougo/vimfiler.vim'  "{
-"     let g:vimfiler_as_default_explorer = 1
-"     " let g:vimfiler_no_default_key_mappings = 1
-"     nnoremap [denite]d :VimFilerExplorer<CR>
-" "}
-Plug 'junegunn/limelight.vim', {'on': 'Limelight'}  "{
+Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
+"{
   let g:limelight_conceal_ctermfg = 10
 "}
-Plug 'junegunn/goyo.vim', {'on': 'Goyo'}  "{
+Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
+"{
   let g:goyo_width = 120
   nnoremap <Leader>gy :GitGutterToggle<CR> :Goyo<CR>
   function! s:goyo_enter()
@@ -312,7 +226,6 @@ Plug 'junegunn/goyo.vim', {'on': 'Goyo'}  "{
   autocmd! User GoyoEnter nested call <SID>goyo_enter()
   autocmd! User GoyoLeave nested call <SID>goyo_leave()
 "}
-Plug 'lukaszkorecki/workflowish'
 
 " Colorscheme bundles {1
 Plug 'ciaranm/inkpot'
