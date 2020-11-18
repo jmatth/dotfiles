@@ -24,6 +24,8 @@ call plug#begin(g:configdir . '/plugged')
 Plug 'chrisbra/SudoEdit.vim'
 Plug 'tpope/vim-vinegar'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'roxma/nvim-yarp'
+
 
 " Movement / Editing {1
 Plug 'tpope/vim-surround'
@@ -62,15 +64,35 @@ Plug 'Raimondi/delimitMate'
 Plug 'SirVer/ultisnips'
 "{
     " Name used by some snippets
-    let g:snips_author = 'Josh Matthews'
-    let g:UltiSnipsRemoveSelectModeMappings=0
-    let g:UltiSnipsExpandTrigger="<c-k>"
-    let g:UltiSnipsJumpForwardTrigger="<c-k>"
-    let g:UltiSnipsJumpBackwardTrigger="<c-h>"
-    let g:UltiSnipsListSnippets="<c-l>"
+    let g:snips_author = 'Joshua Matthews'
+    " let g:UltiSnipsExpandTrigger="<c-k>"
+    " inoremap <silent> <expr> <CR> ((pumvisible() && empty(v:completed_item)) ?  "\<c-y>\<cr>" : (!empty(v:completed_item) ? ncm2_ultisnips#expand_or("", 'n') : "\<CR>" ))
+    inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
+    imap <expr> <c-u> ncm2_ultisnips#expand_or("\<Plug>(ultisnips_expand)", 'm')
+    smap <c-u> <Plug>(ultisnips_expand)
+    let g:UltiSnipsExpandTrigger		= "<Plug>(ultisnips_expand)"
+    let g:UltiSnipsJumpForwardTrigger	= "<c-k>"
+    let g:UltiSnipsJumpBackwardTrigger	= "<c-h>"
+    let g:UltiSnipsRemoveSelectModeMappings = 0
+
+
+    " let g:UltiSnipsListSnippets="<c-l>"
     " imap <C-l> <ESC>:Denite -start-insert ultisnips<CR>
 "}
 Plug 'honza/vim-snippets'
+Plug 'preservim/nerdtree'
+"{
+    nnoremap <silent> <Leader>dd :NERDTree<CR>
+    nnoremap <silent> <Leader>df :NERDTreeFind<CR>
+"}
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'junegunn/fzf.vim'
+"{
+    nnoremap <Leader>f :GFiles<CR>
+    nnoremap <Leader>b :Buffers<CR>
+    nnoremap <Leader>b :Buffers<CR>
+    nnoremap <Leader>r :Rg<CR>
+"}
 
 " Development {1
 Plug 'tpope/vim-fugitive', { 'augroup' : 'fugitive'}
@@ -106,27 +128,53 @@ Plug 'kien/rainbow_parentheses.vim',
         \ ['darkcyan',    'SeaGreen3'],
         \ ['red',         'firebrick3'],
         \ ]
+Plug 'ncm2/ncm2'
+"{
+    autocmd BufEnter * call ncm2#enable_for_buffer()
+    " IMPORTANT: :help Ncm2PopupOpen for more information
+    set completeopt=noinsert,menuone,noselect
+
+    " NOTE: you need to install completion sources to get completions. Check
+    " our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
+    Plug 'ncm2/ncm2-bufword'
+    Plug 'ncm2/ncm2-path'
+    Plug 'ncm2/ncm2-go'
+    Plug 'ncm2/ncm2-ultisnips'
+    "{
+        " " Press enter key to trigger snippet expansion
+        " " The parameters are the same as `:help feedkeys()`
+        " inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
+        "
+        " " c-j c-k for moving in snippet
+        " let g:UltiSnipsExpandTrigger		= "<Plug>(ultisnips_expand)"
+        " let g:UltiSnipsJumpForwardTrigger	= "<c-k>"
+        " let g:UltiSnipsJumpBackwardTrigger	= "<c-h>"
+        " let g:UltiSnipsRemoveSelectModeMappings = 0
+    "}
 "}
-" Plug 'autozimu/LanguageClient-neovim',
-" "{
-"     \ {
-"         \ 'branch': 'next',
-"         \ 'do': 'bash install.sh',
-"     \ }
-"     let g:LanguageClient_serverCommands = {
-"         \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-"         \ 'go': ['gopls'],
-"     \ }
-"     for lscLang in keys(g:LanguageClient_serverCommands)
-"         exec 'au FileType ' . lscLang . ' nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>'
-"         exec 'au FileType ' . lscLang . ' nnoremap <silent> <C-p> :call LanguageClient#textDocument_hover()<CR>'
-"         exec 'au FileType ' . lscLang . ' nnoremap <silent> <F5> :call LanguageClient_contextMenu()<CR>'
-"         exec 'au FileType ' . lscLang . ' nnoremap <silent> <C-N> :call LanguageClient#textDocument_rename()<CR>'
-"         exec 'au FileType ' . lscLang . ' nnoremap <silent> <Leader>i :call LanguageClient_textDocument_hover()<CR>'
-"         " exec 'nnoremap <F5> :call LanguageClient_contextMenu()<CR>'
-"     endfor
-"     let g:LanguageClient_loggingLevel = 'DEBUG'
-" "}
+
+"}
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+\ }
+"{
+    let g:LanguageClient_hasSnippetSupport = 1
+    let g:LanguageClient_serverCommands = {
+        \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+        \ 'go': ['gopls'],
+    \ }
+    for lscLang in keys(g:LanguageClient_serverCommands)
+        exec 'au FileType ' . lscLang . ' nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>'
+        exec 'au FileType ' . lscLang . ' nnoremap <silent> <C-p> :call LanguageClient#textDocument_hover()<CR>'
+        exec 'au FileType ' . lscLang . ' nnoremap <silent> <F5> :call LanguageClient_contextMenu()<CR>'
+        exec 'au FileType ' . lscLang . ' nnoremap <silent> <C-N> :call LanguageClient#textDocument_rename()<CR>'
+        exec 'au FileType ' . lscLang . ' nnoremap <silent> <Leader>i :call LanguageClient_textDocument_hover()<CR>'
+        " exec 'nnoremap <F5> :call LanguageClient_contextMenu()<CR>'
+    endfor
+    " let g:LanguageClient_loggingFile =  expand('~/langclient.log')
+    " let g:LanguageClient_loggingLevel = 'DEBUG'
+"}
 
 " Support for extra filetypes {1
 Plug 'jceb/vim-orgmode', {'for':['org']}
