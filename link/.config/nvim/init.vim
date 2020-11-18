@@ -160,6 +160,15 @@ endif
 
 
 "-------------------------------------------------------------------------------
+" Configure netrw{1
+"-------------------------------------------------------------------------------
+let g:netrw_liststyle = 3     " Use tree style list
+let g:netrw_banner = 0        " Hide the banner
+" let g:netrw_browse_split = 4  " Open files in the previous window
+let g:netrw_winsize = 20      " Specify percentage of window for splits
+
+
+"-------------------------------------------------------------------------------
 " Custom Digraphs{1
 "-------------------------------------------------------------------------------
 digraphs Ci 264
