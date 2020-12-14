@@ -24,7 +24,7 @@ let g:configdir = expand("$HOME/.config/nvim/")
 "-------------------------------------------------------------------------------
 " Source plugin config if it exists {1
 "-------------------------------------------------------------------------------
-let s:plugin_file = expand(g:configdir . 'vimrc_plugins')
+let s:plugin_file = expand(g:configdir . 'plugins.vim')
 if filereadable(s:plugin_file) && &loadplugins
     exec 'source ' . s:plugin_file
 endif
