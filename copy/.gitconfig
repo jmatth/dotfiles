@@ -1,6 +1,7 @@
+# vim: set noexpandtab:
 [user]
-	email = jmatth@pm.me
-	name = Josh Matthews
+	email = josh@jmatth.com
+	name = Joshua Matthews
 [color]
 	ui = auto
 	diff = auto
@@ -33,4 +34,3 @@
 	templatedir = ~/.git_template
 [push]
 	default = current
-# vim: set noexpandtab:
