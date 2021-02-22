@@ -35,6 +35,16 @@ theme.border_normal = xrdb.color8
 theme.border_focus  = theme.bg_urgent
 theme.border_marked = xrdb.color10
 
+-- Lain layout icons
+theme.lain_icons         = os.getenv("HOME") ..
+                           "/.config/awesome/lain/icons/layout/zenburn/"
+theme.layout_termfair    = theme.lain_icons .. "termfair.png"
+theme.layout_centerfair  = theme.lain_icons .. "centerfair.png"  -- termfair.center
+theme.layout_cascade     = theme.lain_icons .. "cascade.png"
+theme.layout_cascadetile = theme.lain_icons .. "cascadetile.png" -- cascade.tile
+theme.layout_centerwork  = theme.lain_icons .. "centerwork.png"
+theme.layout_centerworkh = theme.lain_icons .. "centerworkh.png" -- centerwork.horizontal
+
 -- There are other variable sets
 -- overriding the default one when
 -- defined, the sets are:
