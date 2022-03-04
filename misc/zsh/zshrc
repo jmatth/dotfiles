@@ -276,3 +276,8 @@ typeset -aU fpath
 if [[ "$TERM" == "linux" ]] && which vconsole-color &> /dev/null; then
     vconsole-color
 fi
+
+# Use starship prompt if available
+if whence -p starship &> /dev/null; then
+    eval "$(starship init zsh)"
+fi
