@@ -55,7 +55,6 @@ else
         'spectrum' \
         'utility' \
         'completion' \
-        'prompt' \
         'ssh' \
         'python' \
         'archive' \
@@ -84,7 +83,7 @@ else
         # Set the prompt theme to load.
         # Setting it to 'random' loads a random theme.
         # Auto set to 'off' on dumb terminals.
-        zstyle ':prezto:module:prompt' theme 'jmatth'
+        # zstyle ':prezto:module:prompt' theme 'jmatth'
 
         # Auto start a session when Zsh is launched.
         # zstyle ':prezto:module:screen' auto-start 'yes'
@@ -111,6 +110,7 @@ else
         # antigen-bundle zsh-users/zsh-syntax-highlighting
         zplug zsh-users/zsh-completions
         zplug rupa/z, use:"z.sh"
+        # zplug jeffreytse/zsh-vi-mode
         zplug load
 
         zplug check || echo 'zsh plugins missing, run zplug install'
@@ -192,6 +192,8 @@ alias grepp="ps aux | grep "
 alias gwt='cd ${$(git rev-parse --show-cdup):-.}'
 # unalias gws || true
 alias gws="git status"
+alias gw="git switch"
+alias gwc="git switch"
 
 # Directory navigation
 alias ..="cd .."
@@ -218,12 +220,13 @@ alias vimdiff='nvim -d'
 #---------------------------------------------------------------------
 # More aliases, but specifically for coreutils replacements
 #---------------------------------------------------------------------
-if (( $+commands[exa] )); then
-    alias ls="exa"
-    alias sl="exa"
-    alias la="exa -alF"
-    alias ll="exa -lF"
-    alias l="exa -1a"
+if (( $+commands[eza] )); then
+    alias ls="eza"
+    alias sl="eza"
+    alias la="eza -alF"
+    alias ll="eza -lF"
+    alias l="eza -1a"
+    alias tree="eza -T"
 fi
 if (( $+commands[bat] )); then
     compdef _gnu_generic bat
@@ -278,6 +281,6 @@ if [[ "$TERM" == "linux" ]] && which vconsole-color &> /dev/null; then
 fi
 
 # Use starship prompt if available
-if whence -p starship &> /dev/null; then
-    eval "$(starship init zsh)"
-fi
+# if whence -p starship &> /dev/null; then
+#     eval "$(starship init zsh)"
+# fi

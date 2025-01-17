@@ -1,7 +1,12 @@
 # vim: set ft=zsh ts=4 sw=4 expandtab :
 
+# function zle-keymap-select {
+#     zle reset-prompt
+# }
+
 function theme_precmd
 {
+    # print
     local TERMWIDTH
     (( TERMWIDTH = ${COLUMNS} - 2 ))
 
@@ -10,13 +15,13 @@ function theme_precmd
         git-info
     fi
 
-    if (( $+functions[python-info] )); then
-        python-info
-    fi
+    # if (( $+functions[python-info] )); then
+    #     python-info
+    # fi
 
-    if (( $+functions[node-info] )); then
-        node-info
-    fi
+    # if (( $+functions[node-info] )); then
+    #     node-info
+    # fi
 
     ###
     # Fit as much info in the top line as possible
@@ -236,14 +241,13 @@ ${PR_BRACKET_COLOR}[%(!.%S${PR_RED}ROOT%s.$PR_CYAN%n)$PR_NO_COLOR@$PR_HOST_COLOR
 $PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_URCORNER$PR_SHIFT_OUT\
 
 $PR_BAR_COLOR$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT\
-${git_info:+${(e)git_info[prompt]}}\
-$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_HBAR$PR_SHIFT_OUT\
 $PR_NO_COLOR%#$PR_BAR_COLOR${$(vi_mode_prompt_info_left):-">"}$PR_NO_COLOR '
 
     # display exitcode on the right when >0
     return_code="%(?..%{$fg[red]%}%?! $PR_NO_COLOR)"
     RPROMPT=' $return_code$PR_BAR_COLOR${$(vi_mode_prompt_info_right):-"<"}$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_HBAR$PR_SHIFT_OUT\
-${PR_BRACKET_COLOR}[$PR_MAGENTA%!$PR_BRACKET_COLOR]$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_LRCORNER$PR_SHIFT_OUT$PR_NO_COLOR'
+${git_info:+${(e)git_info[prompt]}}$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_LRCORNER$PR_SHIFT_OUT$PR_NO_COLOR'
+# ${PR_BRACKET_COLOR}[$PR_MAGENTA%!$PR_BRACKET_COLOR]$PR_BAR_COLOR$PR_SHIFT_IN$PR_HBAR$PR_LRCORNER$PR_SHIFT_OUT$PR_NO_COLOR'
     PS2='$PR_NO_COLOR$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
 $PR_BLUE$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT(\
 $PR_BOLD_GREEN%_$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\

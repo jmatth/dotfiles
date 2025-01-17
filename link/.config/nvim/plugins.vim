@@ -163,27 +163,27 @@ if !exists('g:vscode')
   "}
 
   "}
-  Plug 'autozimu/LanguageClient-neovim', {
-      \ 'branch': 'next',
-      \ 'do': 'bash install.sh',
-  \ }
-  "{
-      let g:LanguageClient_hasSnippetSupport = 1
-      let g:LanguageClient_serverCommands = {
-          \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-          \ 'go': ['gopls'],
-      \ }
-      for lscLang in keys(g:LanguageClient_serverCommands)
-          exec 'au FileType ' . lscLang . ' nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>'
-          exec 'au FileType ' . lscLang . ' nnoremap <silent> <C-p> :call LanguageClient#textDocument_hover()<CR>'
-          exec 'au FileType ' . lscLang . ' nnoremap <silent> <F5> :call LanguageClient_contextMenu()<CR>'
-          exec 'au FileType ' . lscLang . ' nnoremap <silent> <C-N> :call LanguageClient#textDocument_rename()<CR>'
-          exec 'au FileType ' . lscLang . ' nnoremap <silent> <Leader>i :call LanguageClient_textDocument_hover()<CR>'
-          " exec 'nnoremap <F5> :call LanguageClient_contextMenu()<CR>'
-      endfor
-      " let g:LanguageClient_loggingFile =  expand('~/langclient.log')
-      " let g:LanguageClient_loggingLevel = 'DEBUG'
-  "}
+  " Plug 'autozimu/LanguageClient-neovim', {
+  "     \ 'branch': 'next',
+  "     \ 'do': 'bash install.sh',
+  " \ }
+  " "{
+  "     let g:LanguageClient_hasSnippetSupport = 1
+  "     let g:LanguageClient_serverCommands = {
+  "         \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+  "         \ 'go': ['gopls'],
+  "     \ }
+  "     for lscLang in keys(g:LanguageClient_serverCommands)
+  "         exec 'au FileType ' . lscLang . ' nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>'
+  "         exec 'au FileType ' . lscLang . ' nnoremap <silent> <C-p> :call LanguageClient#textDocument_hover()<CR>'
+  "         exec 'au FileType ' . lscLang . ' nnoremap <silent> <F5> :call LanguageClient_contextMenu()<CR>'
+  "         exec 'au FileType ' . lscLang . ' nnoremap <silent> <C-N> :call LanguageClient#textDocument_rename()<CR>'
+  "         exec 'au FileType ' . lscLang . ' nnoremap <silent> <Leader>i :call LanguageClient_textDocument_hover()<CR>'
+  "         " exec 'nnoremap <F5> :call LanguageClient_contextMenu()<CR>'
+  "     endfor
+  "     " let g:LanguageClient_loggingFile =  expand('~/langclient.log')
+  "     " let g:LanguageClient_loggingLevel = 'DEBUG'
+  " "}
 
   " Support for extra filetypes {1
   Plug 'jceb/vim-orgmode', {'for':['org']}
