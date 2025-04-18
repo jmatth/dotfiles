@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+{{ if eq .chezmoi.os "darwin" }}
+brew install -q \
+    eza \
+    bat \
+    just \
+    fzf \
+    jq \
+    git \
+    git-lfs \
+    curl \
+    neovim \
+    ripgrep \
+    starship \
+    xcodes \
+    zsh \
+    zoxide \
+    zellij
+
+casks=('aerospace' 'fireox@developer-edition' 'font-fira-code-nerd-font' 'iterm2' 'vscodium' 'vial')
+for c in "$casks"; do
+    brew list --casks | grep "^$c\$" &> /dev/null && continue
+    brew install --cask "$c"
+done
+{{ end }}
+
+{{ if eq .chezmoi.os "linux" }}
+if command -v pacman; then
+    if !command -v yay; then
+        sudo pacman -S --needed git base-devel
+        yaybuild="$(mktemp -d)"
+        git clone https://aur.archlinux.org/yay-bin.git "$yaybuild"
+        pushd "$yaybuild"
+        makepkg -si
+        popd
+        rm -rf "$yaybuild"
+    fi
+    yay -Sy --noconfirm \
+        eza \
+        bat \
+        just \
+        fzf \
+        jq \
+        git-lfs \
+        neovim \
+        ripgrep \
+        starship \
+        zoxide \
+        zellij \
+        vscodium-bin
+fi
+{{ end }}
+
