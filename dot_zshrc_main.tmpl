@@ -1,0 +1,303 @@
+#---------------------------------------------------------------------
+# Configure plugins and load with antigen
+#---------------------------------------------------------------------
+# Add custom functions to path
+export fpath=( $HOME/.config/zsh/functions $fpath )
+
+#---------------------------------------------------------------------
+# Configure plugins and load with antigen
+#---------------------------------------------------------------------
+# Minimum recommend version
+min_zsh_version='4.3.10'
+if ! autoload -Uz is-at-least || ! is-at-least $min_zsh_version; then
+    print "zshrc: old shell detected, minimum required:\
+        $min_zsh_version" >&2
+else
+    export ZPLUG_HOME=$HOME/.zplug
+    # Make sure we have antigen first
+    if [ ! -d $ZPLUG_HOME ] && ! which git &> /dev/null; then
+        echo "ERROR: zplug not found and we don't have git. Plugins\
+            and themes will not be loaded."
+    else
+        if ! [ -d $ZPLUG_HOME ]; then
+            echo "[33mNo ~/.zplug directory found. Installing zplug.[m"
+            rm -rf $ZPLUG_HOME &> /dev/null
+            git clone https://github.com/zplug/zplug $ZPLUG_HOME
+        fi
+
+        # Load antigen
+        source $ZPLUG_HOME/init.zsh
+
+        # Set case-sensitivity for completion, history lookup, etc.
+        zstyle ':prezto:*:*' case-sensitive 'no'
+
+        # Color output (auto set to 'no' on dumb terminals).
+        zstyle ':prezto:*:*' color 'yes'
+
+        # Set the Zsh modules to load (man zshmodules).
+        # zstyle ':prezto:load' zmodule 'attr' 'stat'
+
+        # Set the Zsh functions to load (man zshcontrib).
+        zstyle ':prezto:load' zfunction 'zargs' 'zmv'
+
+        # Don't alias normal commands to interactive versions
+        zstyle ':prezto:module:utility' safe-ops 'no'
+
+        # Set the Prezto modules to load (browse modules).
+        # The order matters.
+        zstyle ':prezto:load' pmodule \
+        'osx' \
+        'environment' \
+        'terminal' \
+        'editor' \
+        'history' \
+        'directory' \
+        'spectrum' \
+        'utility' \
+        'completion' \
+        'ssh' \
+        'python' \
+        'archive' \
+        'ruby' \
+        'node' \
+        'git'
+
+        # Set the key mapping style to 'emacs' or 'vi'.
+        zstyle ':prezto:module:editor' keymap 'vi'
+
+        # Auto convert .... to ../..
+        # zstyle ':prezto:module:editor' dot-expansion 'yes'
+
+        # Indicate when waiting on completions
+        zstyle ':prezto:module:editor:info:completing' format '[1;31m...[m'
+
+        # Ignore submodules when they are 'dirty', 'untracked', 'all', or 'none'.
+        # zstyle ':prezto:module:git:status:ignore' submodules 'all'
+
+        # Set the command prefix on non-GNU systems.
+        # zstyle ':prezto:module:gnu-utility' prefix 'g'
+
+        # Set the Pacman frontend.
+        # zstyle ':prezto:module:pacman' frontend 'yaourt'
+
+        # Set the prompt theme to load.
+        # Setting it to 'random' loads a random theme.
+        # Auto set to 'off' on dumb terminals.
+        # zstyle ':prezto:module:prompt' theme 'jmatth'
+
+        # Auto start a session when Zsh is launched.
+        # zstyle ':prezto:module:screen' auto-start 'yes'
+
+        # Set the SSH identities to load into the agent.
+        zstyle ':prezto:module:ssh:load' identities 'id_rsa'
+
+        # Auto set the tab and window titles.
+        zstyle ':prezto:module:terminal' auto-title 'no'
+
+        # Auto start a session when Zsh is launched.
+        zstyle ':prezto:module:tmux:auto-start' remote 'yes'
+
+        # Override some git formatting
+        zstyle ':prezto:module:git:log:medium' format '%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%C(bold)PGP:%C(reset)    %C(magenta)%G? %GK %GS%C(reset)%n%+B'
+
+        # Set virtualenv location
+        export WORKON_HOME="$HOME/.virtualenvs"
+
+        # Install and source my fork of prezto
+        zplug sorin-ionescu/prezto
+
+        # extra plugins
+        # antigen-bundle zsh-users/zsh-syntax-highlighting
+        zplug zsh-users/zsh-completions
+        zplug rupa/z, use:"z.sh"
+        # zplug jeffreytse/zsh-vi-mode
+        zplug load
+
+        zplug check || echo 'zsh plugins missing, run zplug install'
+    fi
+fi
+unset min_zsh_version
+
+
+#---------------------------------------------------------------------
+# Set zsh options
+#---------------------------------------------------------------------
+# Expand expressions in prompt variables
+setopt promptsubst
+
+
+#---------------------------------------------------------------------
+# Exports
+#---------------------------------------------------------------------
+# Add extra executables to the path
+export PATH=$PATH:$HOME/.local/bin:$HOME/projects/go/bin:$HOME/.cabal/bin:$HOME/.dotfiles/bin
+
+# Add extra libraries
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.local/lib
+
+# Fix UTF-8 characters breaking the prompt
+export LANG="en_US.utf-8"
+
+# Set editor
+export EDITOR="nvim"
+
+# Report runtime stats if something runs for more than 30 seconds
+export REPORTTIME=30
+
+
+#---------------------------------------------------------------------
+# Key bindings
+#---------------------------------------------------------------------
+# Same custom keybinding as in vim
+bindkey "tn" vi-cmd-mode
+bindkey "" vi-cmd-mode
+bindkey "" history-incremental-search-backward
+# Clear all escape-prefixed bindings
+# bindkey -rpM viins '^['; bindkey -rp '^['
+
+# Colemak
+bindkey -M vicmd "h" up-line-or-history
+bindkey -M vicmd "k" down-line-or-history
+bindkey -M vicmd "j" vi-backward-char
+
+
+#---------------------------------------------------------------------
+# Aliases
+#---------------------------------------------------------------------
+# Config mangement
+alias zmod="$EDITOR ~/.zshrc_main"
+alias lzmod="$EDITOR ~/.zshrc"
+alias zsave="source ~/.zshrc"
+alias vmod="$EDITOR $HOME/.config/nvim/init.lua"
+alias smod="$EDITOR $HOME/.ssh/config"
+alias hosts="$EDITOR /etc/hosts"
+
+# sudo
+alias sudo="sudo -E"
+
+# ls
+alias la="ls -AlhF"
+alias lsa="ls -A"
+
+# grep
+alias grepc="grep --color=always"
+alias grepi="grep -i"
+alias grepp="ps aux | grep "
+
+# git
+alias gwt='cd ${$(git rev-parse --show-cdup):-.}'
+# unalias gws || true
+alias gws="git status"
+alias gw="git switch"
+alias gwc="git switch"
+
+# Directory navigation
+alias ..="cd .."
+
+# zmv
+alias zmv="zmv -wM"
+alias zcp="zmv -wC"
+alias zln="zmv -wL"
+
+alias vim=nvim
+alias vimdiff='nvim -d'
+
+
+#---------------------------------------------------------------------
+# More aliases, but specifically for coreutils replacements
+#---------------------------------------------------------------------
+if (( $+commands[eza] )); then
+    alias ls="eza"
+    alias sl="eza"
+    alias la="eza -alF"
+    alias ll="eza -lF"
+    alias l="eza -1a"
+    alias tree="eza -T"
+fi
+if (( $+commands[bat] )); then
+    compdef _gnu_generic bat
+    alias cat="bat"
+fi
+
+
+#---------------------------------------------------------------------
+# Shell functions.
+#---------------------------------------------------------------------
+# Move up n directories
+function up () {
+    if [[ $# > 1 || $# == 1 && $1 != <-> ]]; then
+        echo "Usage: up [int]"
+        return 2
+    else
+        cd $(builtin printf "../"%.0s {1..${1:-1}})
+    fi
+}
+
+function mkcd () {
+    mkdir -p $1 && cd $1
+}
+
+# Shorthand clone from github
+function hclone () {
+    local url
+    if [[ "$1" == "-p" ]]; then
+        url="git@github.com:$2.git"
+        shift
+    else
+        url="git://github.com/$1.git"
+    fi
+    git clone "$url" $2
+}
+
+{{ if eq .chezmoi.os "darwin" }}
+#---------------------------------------------------------------------
+# macOS specific
+#---------------------------------------------------------------------
+# Put homebrew before system programs but keep
+path=(/usr/local/bin $path)
+
+# change the mac version of ls to match my solarized dircolors
+export LSCOLORS=gxfxfeaeBxdehebxbxgxgx
+
+# tmux color black magic
+if [[ `tput colors` -ge 256 ]]; then
+    alias tmux="TERM=screen-256color-bce tmux"
+elif [[ `tput colors` -ge 16 ]]; then
+    alias tmux="TERM=screen-16color-bce tmux"
+fi
+
+# Fix weird behaviors
+alias file="file -h"
+
+# Can remove if Apple ever fixes their version of less
+if test -f /usr/local/bin/less; then
+    export PAGER="/usr/local/bin/less -is"
+fi
+
+notify() {
+    osascript -e "display notification \"$1\" with title \"$2\" subtitle \"$3\""
+}
+{{ end }}
+
+#---------------------------------------------------------------------
+# Fix variables
+#---------------------------------------------------------------------
+# Eliminate duplicates in PATH and fpath
+typeset -aU path
+typeset -aU fpath
+
+
+#---------------------------------------------------------------------
+# Misc
+#---------------------------------------------------------------------
+# Change the colorscheme if using a vconsole
+if [[ "$TERM" == "linux" ]] && which vconsole-color &> /dev/null; then
+    vconsole-color
+fi
+
+# Use starship prompt if available
+if (( $+commands[starship] )); then
+    eval "$(starship init zsh)"
+fi
+
+# vi: ft=zsh
