@@ -838,6 +838,37 @@ require("lazy").setup({
 	-- 	priority = 1000,
 	-- 	lazy = false,
 	-- },
+	--
+
+	{
+		"Tsuzat/NeoSolarized.nvim",
+		priority = 1000,
+		lazy = false,
+		config = function()
+			require("NeoSolarized").setup({
+				style = "dark", -- "dark" or "light"
+				transparent = true, -- true/false; Enable this to disable setting the background color
+				terminal_colors = true, -- Configure the colors used when opening a `:terminal` in Neovim
+				enable_italics = true, -- Italics for different hightlight groups (eg. Statement, Condition, Comment, Include, etc.)
+				styles = {
+					-- Style to be applied to different syntax groups
+					comments = { italic = true },
+					keywords = { italic = true },
+					functions = { bold = true },
+					variables = {},
+					string = { italic = true },
+					underline = true, -- true/false; for global underline
+					undercurl = true, -- true/false; for global undercurl
+				},
+				-- Add specific hightlight groups
+				on_highlights = function(highlights, colors)
+					highlights.MiniStatuslineFilename.bg = colors.bg0
+					-- highlights.Include.fg = colors.red -- Using `red` foreground for Includes
+				end,
+			})
+			vim.cmd.colorscheme("NeoSolarized")
+		end,
+	},
 
 	{
 		"craftzdog/solarized-osaka.nvim",
@@ -874,7 +905,7 @@ require("lazy").setup({
 				---@param colors ColorScheme
 				-- on_highlights = function(highlights, colors) end,
 			})
-			vim.cmd.colorscheme("solarized-osaka")
+			-- vim.cmd.colorscheme("solarized-osaka")
 		end,
 	},
 
