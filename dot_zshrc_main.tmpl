@@ -14,7 +14,7 @@ if ! autoload -Uz is-at-least || ! is-at-least $min_zsh_version; then
         $min_zsh_version" >&2
 else
     export ZPLUG_HOME=$HOME/.zplug
-    # Make sure we have antigen first
+    # Make sure we have zplug first
     if [ ! -d $ZPLUG_HOME ] && ! which git &> /dev/null; then
         echo "ERROR: zplug not found and we don't have git. Plugins\
             and themes will not be loaded."
@@ -25,7 +25,7 @@ else
             git clone https://github.com/zplug/zplug $ZPLUG_HOME
         fi
 
-        # Load antigen
+        # Load zplug
         source $ZPLUG_HOME/init.zsh
 
         # Set case-sensitivity for completion, history lookup, etc.
@@ -55,7 +55,6 @@ else
         'spectrum' \
         'utility' \
         'completion' \
-        'ssh' \
         'python' \
         'archive' \
         'ruby' \
@@ -89,7 +88,7 @@ else
         # zstyle ':prezto:module:screen' auto-start 'yes'
 
         # Set the SSH identities to load into the agent.
-        zstyle ':prezto:module:ssh:load' identities 'id_rsa'
+        # zstyle ':prezto:module:ssh:load' identities 'id_rsa'
 
         # Auto set the tab and window titles.
         zstyle ':prezto:module:terminal' auto-title 'no'
@@ -294,6 +293,11 @@ typeset -aU fpath
 if [[ "$TERM" == "linux" ]] && which vconsole-color &> /dev/null; then
     vconsole-color
 fi
+
+# Use GPG as SSH agent
+unset SSH_AGENT_PID
+export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+export GPG_TTY="$(tty)"
 
 # Use starship prompt if available
 if (( $+commands[starship] )); then
