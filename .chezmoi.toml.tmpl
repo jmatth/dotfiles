@@ -1,5 +1,10 @@
 {{- $email := promptStringOnce . "email" "Email address" -}}
+{{- $secKeyDict := dict "5C Nano" "F44FB2225CB45CEC14BC695D154F9D4C16EF691A" "5 NFC" "200415C556B1D236511E81F221AE0975076D9FBC" -}}
+{{- $secKeyChoices := keys $secKeyDict -}}
+{{- $secKeyName := promptChoiceOnce . "signingKey" "Select security key" $secKeyChoices -}}
+{{- $secKey := get $secKeyDict $secKeyName -}}
 
 [data]
 	email = {{ $email | quote }}
+	signingKey = {{ $secKey | quote }}
 
