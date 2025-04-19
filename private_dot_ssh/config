@@ -1,0 +1,16 @@
+Host *
+    ServerAliveInterval 60
+    HashKnownHosts no
+    ControlMaster auto
+    ControlPath ~/.ssh/.cm-%r@%h:%p
+    VisualHostKey yes
+    UseRoaming no
+    # Try uncommenting this if you get
+    # broken_pipe on NATed networks
+    # or virtual machines
+    # IPQoS=throughput
+Host localhost
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+Host github.com
+    User git
