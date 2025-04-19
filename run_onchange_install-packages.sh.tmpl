@@ -27,7 +27,7 @@ done
 
 {{ if eq .chezmoi.os "linux" }}
 if command -v pacman; then
-    if !command -v yay; then
+    if ! command -v yay; then
         sudo pacman -S --needed git base-devel
         yaybuild="$(mktemp -d)"
         git clone https://aur.archlinux.org/yay-bin.git "$yaybuild"
