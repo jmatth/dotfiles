@@ -1,0 +1,112 @@
+format = """
+[┌─](blue)\
+$directory\
+$fill\
+$golang\
+$nodejs\
+$rust\
+$dart\
+$username@$hostname\
+[─┐](blue) \
+$line_break\
+[└─](blue)%$character
+"""
+right_format = '$status [<─$git_branch$git_commit$git_status─┘](blue)'
+
+add_newline = false
+
+[line_break]
+disabled = false
+
+[fill]
+symbol = '─'
+style = 'blue'
+
+[character]
+format = '$symbol '
+success_symbol = '[>](blue)'
+error_symbol = '[>](blue)'
+vicmd_symbol = '[\[](red)'
+
+# [rcharacter]
+# format = '$symbol '
+# success_symbol = '[<](blue)'
+# error_symbol = '[<](blue)'
+# vicmd_symbol = '[\]](red)'
+
+[directory]
+format = '[\[](blue)[$path]($style)[$read_only]($read_only_style)[\]─](blue)'
+style = 'green'
+read_only = ' '
+
+
+[username]
+show_always = true
+format = '[─\[](blue)[$user]($style)'
+style_user = 'cyan'
+style_root = 'red inverted'
+
+[hostname]
+ssh_only = false
+format = '[$hostname]($style)[\]](blue)'
+style = 'green'
+
+[git_branch]
+format = '[\[](blue)[$branch]($style)'
+style = 'yellow'
+only_attached = true
+
+[git_commit]
+format = '[\[](blue)[$hash]($style)'
+style = 'yellow'
+tag_disabled = true
+tag_symbol = ''
+
+[git_status]
+format='$staged$renamed$modified$deleted$untracked$conflicted$stashed$ahead_behind[\]](blue)'
+staged = ' [+](green)'
+renamed = ' [\$](purple)'
+modified = ' [*](red)'
+deleted = ' [x](red)'
+untracked = ' [?](red)'
+stashed = ' [&](purple)'
+ahead = ' [⇡](bright-red)'
+behind = ' [⇣](bright-red)'
+diverged = ' [⇕](bright-red)'
+
+[status]
+disabled = false
+format = '[$status$symbol](red)'
+symbol = '!'
+success_symbol = ''
+recognize_signal_code = true
+map_symbol = false
+
+[dart]
+format = '[─\[](blue)[$symbol$version]($style)[\]](blue)'
+version_format = '${raw}'
+symbol = ' '
+style = 'cyan'
+
+[rust]
+format = '[─\[](blue)[$symbol$version]($style)[\]](blue)'
+version_format = '${raw}'
+symbol = ' '
+style = 'bright-red'
+
+[nodejs]
+format = '[─\[](blue)[$symbol$version]($style)[\]](blue)'
+version_format = '${raw}'
+style = 'green'
+
+[python]
+format = '[─\[](blue)[$symbol$version]($style)[\]](blue)'
+version_format = '${raw}'
+symbol = ' '
+style = 'yellow'
+
+[golang]
+format = '[─\[](blue)[$symbol$version]($style)[\]](blue)'
+version_format = '${raw}'
+symbol = 'ﳑ '
+style = 'blue'
