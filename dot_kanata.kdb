@@ -1,0 +1,126 @@
+(defcfg
+  override-release-on-activation yes   ;; needed for correct output
+)
+
+;; Swap or define characters, when key is shifted
+;; (defoverrides
+;;   ;; (lsft -) (lsft ')
+;;   (lsft /) (lsft ,)
+;;   (lsft ,) (lsft /)
+;; )
+
+(defalias
+  ;; tap for caps lock, hold for left control
+  ctrlesc (tap-hold 200 200 esc lctl)
+  sclsft (tap-hold-press 200 200 S-9 lsft)
+  scrsft (tap-hold-press 200 200 S-0 rsft)
+  gdsh  (fork - ' (lsft rsft))
+  gslsh (fork / , (lsft rsft))
+  gcmm  (fork , / (lsft rsft))
+  gqt   (fork ' - (lsft rsft))
+  vim    (layer-while-held vim)
+  tabvim (tap-hold 200 200 tab @vim)
+  tocfg  (layer-while-held config)
+  engph  (layer-switch graphite)
+  enmgph (layer-switch magic-graphite)
+  enqwerty (layer-switch qwerty)
+  fn     (tap-hold 200 200 fn (layer-while-held fn))
+  mgc (switch
+    ((key-history o 1)) a break
+    ((key-history u 1)) e break
+    ((key-history p 1)) h break
+    ((key-history spc 1)) (macro t h e) break
+    ((key-history . 1)) (macro . /) break
+    () XX break
+  )
+)
+
+(defsrc
+  esc      f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
+  grv      1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab      q    w    e    r    t    y    u    i    o    p    [    ]    \
+  caps     a    s    d    f    g    h    j    k    l    ;    '    ret
+  lsft     z    x    c    v    b    n    m    ,    .    /    rsft
+  fn lctl lalt lmet           spc            rmet ralt
+)
+
+;; (deflayer colemak-dh
+;;   esc      f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
+;;   grv      1    2    3    4    5    6    7    8    9    0    -    =    bspc
+;;   @tabvim  q    w    f    p    b    j    l    u    y    ;    [    ]    \
+;;   @ctrlesc a    r    s    t    g    m    n    e    i    o    '    ret
+;;   @sclsft  z    x    c    d    v    k    h    ,    .    /    @scrsft
+;;   @fn lctl lalt lmet           spc            rmet @tocfg
+;; )
+
+(deflayer graphite
+  esc      f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
+  grv      1    2    3    4    5    6    7    8    9    0    [    ]    bspc
+  @tabvim  b    l    d    w    z    @gqt f    o    u    j    ;    =    \
+  @ctrlesc n    r    t    s    g    y    h    a    e    i    @gcmm ret
+  @sclsft  q    x    m    c    v    k    p    .    @gdsh    @gslsh @scrsft
+  @fn lctl lalt lmet           spc            rmet @tocfg
+)
+
+(deflayer qwerty
+  _        _    _    _    _    _    _    _    _    _    _    _    _
+  _        _    _    _    _    _    _    _    _    _    _    _    _    _
+  _        _    _    _    _    _    _    _    _    _    _    _    _    _
+  _        _    _    _    _    _    _    _    _    _    _    _    _    
+  _        _    _    _    _    _    _    _    _    _    _    _
+  _   _    _    _              _              _    @tocfg
+)
+
+(deflayer magic-graphite
+  grv      f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
+  @gqt     1    2    3    4    5    6    7    8    9    0    [    ]    bspc
+  @tabvim  b    l    d    w    z    p    @mgc o    u    j    ;    =    \
+  @ctrlesc n    r    t    s    g    y    h    a    e    i    @gcmm ret
+  @sclsft  q    x    m    c    v    k    f    .    @gdsh    @gslsh @scrsft
+  @fn lctl lalt lmet           spc            rmet @tocfg
+)
+
+(deflayer fn
+  esc      brdn brup f3   f4   f5   f6   prev pp   next mute vold volu
+  _        _    _    _    _    _    _    _    _    _    _    _    _    del
+  _        _    _    _    _    _    _    _    _    _    _    _    _    _
+  _        _    _    _    _    _    _    _    _    _    _    _    _    
+  _        _    _    _    _    _    _    _    _    _    _    _
+  _   _    _    _              _              _    _
+)
+
+(deflayer config
+  _        _    _    _    _    _    _    _    _    _    _    _    _
+ @enqwerty @engph @enmgph _    _    _    _    _    _    _    _    _    _    _
+  _        _      _      _    lrld _    _    _    _    _    _    _    _    _
+  _        _      _      _    _    _    _    _    _    _    _    _    _    
+  _        _      _      _    _    _    _    _    _    _    _    _
+  _   _    _    _              _              _    _
+)
+
+(deflayer vim
+  _        _    _    _    _    _    _    _    _    _    _    _    _
+  _        _    _    _    _    _    _    _    _    _     _    _    _    _
+  _        _    _    _    _    _    pgup home up   end   _    _    _    _
+  _        _    _    _    _    _    pgdn left down right _    _    _
+  _        _    _    _    _    _    _    _    _    _     _    _
+  _   _    _    _              _              _    _
+)
+
+(deflayer sym
+  _        _    _    _    _    _    _    _    _    _    _    _    _
+  _        _    _    _    _    _    _    _    _    _    _    _    _    _
+  _        _    _    _    _    _    _    _    _    _    _    _    _    _
+  _        _    _    _    _    _    _    _    _    _    _    _    _    
+  _        _    _    _    _    _    _    _    _    _    _    _
+  _   _    _    _              _              _    _
+)
+
+(deflayer blank
+  _        _    _    _    _    _    _    _    _    _    _    _    _
+  _        _    _    _    _    _    _    _    _    _    _    _    _    _
+  _        _    _    _    _    _    _    _    _    _    _    _    _    _
+  _        _    _    _    _    _    _    _    _    _    _    _    _    
+  _        _    _    _    _    _    _    _    _    _    _    _
+  _   _    _    _              _              _    _
+)
