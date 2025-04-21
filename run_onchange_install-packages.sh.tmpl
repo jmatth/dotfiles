@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash -x
 
 {{ if eq .chezmoi.os "darwin" }}
 brew install -q \
@@ -16,10 +16,11 @@ brew install -q \
     xcodes \
     zsh \
     zoxide \
+    mise \
     zellij
 
-casks=('aerospace' 'fireox@developer-edition' 'font-fira-code-nerd-font' 'iterm2' 'vscodium' 'vial')
-for c in "$casks"; do
+declare -a casks=('font-fira-code-nerd-font' 'karabiner-elements' 'nikitabobko/tap/aerospace' 'firefox@developer-edition' 'iterm2' 'vscodium' 'vial')
+for c in "${casks[@]}"; do
     brew list --casks | grep "^$c\$" &> /dev/null && continue
     brew install --cask "$c"
 done
@@ -37,6 +38,8 @@ if command -v pacman; then
         rm -rf "$yaybuild"
     fi
     yay -Sy --noconfirm \
+        gnupg \
+        pinentry-mac \
         eza \
         bat \
         just \
