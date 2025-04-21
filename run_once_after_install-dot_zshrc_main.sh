@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 
-echo 'source $HOME/.zshrc_main' >> $HOME/.zshrc
+if ! grep .zshrc_main $HOME/.zshrc; then
+    echo 'source $HOME/.zshrc_main' >> $HOME/.zshrc
+fi
 
