@@ -1,5 +1,13 @@
+# Vim backups, swap files, etc.
 *.swp
 *.swo
 *~
+
+# Ruby
 .rbenv-gemsets
+
+# macOS
 .DS_Store
+
+# Mise
+mise.local.toml
