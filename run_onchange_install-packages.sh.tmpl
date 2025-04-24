@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -x
+#!/usr/bin/env bash
 
 {{ if eq .chezmoi.os "darwin" }}
 brew install -q \
@@ -52,6 +52,7 @@ if command -v pacman; then
         starship \
         zoxide \
         zellij \
+        mise \
         vscodium-bin
 fi
 {{ end }}
