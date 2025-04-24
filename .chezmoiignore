@@ -1,3 +1,4 @@
 {{- if ne .chezmoi.os "darwin" }}
 .aerospace.toml
+Library/Application Support/VSCodium/product.json
 {{- end }}
