@@ -194,6 +194,7 @@ alias zln="zmv -wL"
 
 alias vim=nvim
 alias vimdiff='nvim -d'
+alias code=codium
 
 
 #---------------------------------------------------------------------
@@ -301,6 +302,11 @@ fi
 # Activate mise if installed
 if (( $+commands[mise] )); then
     eval "$(mise activate --shims zsh)"
+fi
+
+# Activate cargo/rustup if installed
+if test -e "$HOME/.cargo/env"; then
+    source "$HOME/.cargo/env"
 fi
 
 # vi: ft=zsh
