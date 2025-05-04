@@ -49,7 +49,7 @@
   @tabvim  b    l    d    w    z    @gqt f    o    u    j    ;    =    \
   @ctrlesc n    r    t    s    g    y    h    a    e    i    @gcmm ret
   @sclsft  q    x    m    c    v    k    p    .    @gdsh    @gslsh @scrsft
-  @fn lctl lalt lmet           spc            rmet ralt
+  @fn      lctl lalt lmet           spc            rmet @fn
 )
 
 (deflayer qwerty
@@ -58,7 +58,7 @@
   _        _    _    _    _    _    _    _    _    _    _    _    _    _
   _        _    _    _    _    _    _    _    _    _    _    _    _    
   _        _    _    _    _    _    _    _    _    _    _    _
-  _   _    _    _              _              _    _
+  @fn _    _    _              _              _    _
 )
 
 (deflayer magic-graphite
@@ -72,10 +72,10 @@
 
 (deflayer fn
   esc       brdn   brup    f3   f4   f5   f6   prev pp   next mute vold volu
-  @enqwerty @engph @enmgph _    _    _    _    _    _    _    _    _    _    del
-  _         _      _       _    lrld _    _    _    _    _    _    _    _    _
-  _         _      _       _    _    _    _    _    _    _    _    _    _    
-  _         _      _       _    _    _    _    _    _    _    _    _
+  @enqwerty @engph @enmgph _    _    _    _    _    _    _    _    lrld _    del
+  _         _      _       S-[  S-]  _    _    _    _    _    _    _    _    _
+  _         _      _       S-9  S-0  _    _    =    S-;  +    S-1  _    _
+  _         _      _       [    ]    _    _    _    _    _    _    _
   _   _     _      _                 _              _    _
 )
 
@@ -85,15 +85,6 @@
   _        _    _    _    _    _    pgup home up   end   _    _    _    _
   _        _    _    _    _    _    pgdn left down right _    _    _
   _        _    _    _    _    _    _    _    _    _     _    _
-  _   _    _    _              _              _    _
-)
-
-(deflayer sym
-  _        _    _    _    _    _    _    _    _    _    _    _    _
-  _        _    _    _    _    _    _    _    _    _    _    _    _    _
-  _        _    _    _    _    _    _    _    _    _    _    _    _    _
-  _        _    _    _    _    _    _    _    _    _    _    _    _    
-  _        _    _    _    _    _    _    _    _    _    _    _
   _   _    _    _              _              _    _
 )
 
