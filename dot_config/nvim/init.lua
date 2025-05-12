@@ -140,6 +140,31 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+local function reconfigNeosolarized(isDark)
+	require("NeoSolarized").setup({
+		style = isDark and "dark" or "light", -- "dark" or "light"
+		transparent = isDark, -- true/false; Enable this to disable setting the background color
+		terminal_colors = true, -- Configure the colors used when opening a `:terminal` in Neovim
+		enable_italics = true, -- Italics for different hightlight groups (eg. Statement, Condition, Comment, Include, etc.)
+		styles = {
+			-- Style to be applied to different syntax groups
+			comments = { italic = true },
+			keywords = { italic = true },
+			functions = { bold = true },
+			variables = {},
+			string = { italic = true },
+			underline = true, -- true/false; for global underline
+			undercurl = true, -- true/false; for global undercurl
+		},
+		-- Add specific hightlight groups
+		on_highlights = function(highlights, colors)
+			highlights.MiniStatuslineFilename.bg = colors.bg0
+			-- highlights.Include.fg = colors.red -- Using `red` foreground for Includes
+		end,
+	})
+	vim.cmd.colorscheme("NeoSolarized")
+end
+
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
@@ -154,6 +179,33 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
 	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
+
+	-- Handle dark/light mode automatically
+	{
+		"f-person/auto-dark-mode.nvim",
+		opts = {
+			set_dark_mode = function()
+				vim.api.nvim_set_option_value("background", "dark", {})
+				reconfigNeosolarized(true)
+				vim.cmd.colorscheme("NeoSolarized")
+			end,
+			set_light_mode = function()
+				vim.api.nvim_set_option_value("background", "light", {})
+				reconfigNeosolarized(false)
+				vim.cmd.colorscheme("NeoSolarized")
+			end,
+			update_interval = 3000,
+			fallback = "dark",
+		},
+		-- opts = {
+		--   -- your configuration comes here
+		--   -- or leave it empty to use the default settings
+		--   -- refer to the configuration section below
+		-- }
+		cond = function()
+			return not vim.g.vscode
+		end,
+	},
 
 	-- NOTE: Plugins can also be added by using a table,
 	-- with the first argument being the link and the following
@@ -188,6 +240,9 @@ require("lazy").setup({
 				changedelete = { text = "~" },
 			},
 		},
+		cond = function()
+			return not vim.g.vscode
+		end,
 	},
 
 	-- NOTE: Plugins can also be configured to run Lua code when they are loaded.
@@ -266,6 +321,9 @@ require("lazy").setup({
 
 	{ -- Fuzzy Finder (files, lsp, etc)
 		"nvim-telescope/telescope.nvim",
+		cond = function()
+			return not vim.g.vscode
+		end,
 		event = "VimEnter",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
@@ -380,10 +438,16 @@ require("lazy").setup({
 				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
 			},
 		},
+		cond = function()
+			return not vim.g.vscode
+		end,
 	},
 	{
 		-- Main LSP Configuration
 		"neovim/nvim-lspconfig",
+		cond = function()
+			return not vim.g.vscode
+		end,
 		dependencies = {
 			-- Automatically install LSPs and related tools to stdpath for Neovim
 			-- Mason must be loaded before its dependents so we need to set it up here.
@@ -449,6 +513,10 @@ require("lazy").setup({
 					-- or a suggestion from your LSP for this to activate.
 					map("gra", vim.lsp.buf.code_action, "[G]oto Code [A]ction", { "n", "x" })
 
+					map("grh", vim.lsp.buf.hover, "[H]over", { "n", "x" })
+
+					map("gre", vim.diagnostic.open_float, "Show [E]error", { "n", "x" })
+
 					-- Find references for the word under your cursor.
 					map("grr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
 
@@ -513,19 +581,23 @@ require("lazy").setup({
 							callback = vim.lsp.buf.document_highlight,
 						})
 
-						vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-							buffer = event.buf,
-							group = highlight_augroup,
-							callback = vim.lsp.buf.clear_references,
-						})
-
-						vim.api.nvim_create_autocmd("LspDetach", {
-							group = vim.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
-							callback = function(event2)
-								vim.lsp.buf.clear_references()
-								vim.api.nvim_clear_autocmds({ group = "kickstart-lsp-highlight", buffer = event2.buf })
-							end,
-						})
+						if not vim.g.vscode then
+							vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+								buffer = event.buf,
+								group = highlight_augroup,
+								callback = vim.lsp.buf.clear_references,
+							})
+							vim.api.nvim_create_autocmd("LspDetach", {
+								group = vim.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
+								callback = function(event2)
+									vim.lsp.buf.clear_references()
+									vim.api.nvim_clear_autocmds({
+										group = "kickstart-lsp-highlight",
+										buffer = event2.buf,
+									})
+								end,
+							})
+						end
 					end
 
 					-- The following code creates a keymap to toggle inlay hints in your
@@ -656,6 +728,9 @@ require("lazy").setup({
 
 	{ -- Autoformat
 		"stevearc/conform.nvim",
+		cond = function()
+			return not vim.g.vscode
+		end,
 		event = { "BufWritePre" },
 		cmd = { "ConformInfo" },
 		keys = {
@@ -697,6 +772,9 @@ require("lazy").setup({
 
 	{ -- Autocompletion
 		"saghen/blink.cmp",
+		cond = function()
+			return not vim.g.vscode
+		end,
 		event = "VimEnter",
 		version = "1.*",
 		dependencies = {
@@ -800,6 +878,9 @@ require("lazy").setup({
 		--
 		-- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
 		"folke/tokyonight.nvim",
+		cond = function()
+			return not vim.g.vscode
+		end,
 		priority = 1000, -- Make sure to load this before all the other start plugins.
 		config = function()
 			---@diagnostic disable-next-line: missing-fields
@@ -818,9 +899,19 @@ require("lazy").setup({
 
 	-- { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 
-	{ "rebelot/kanagawa.nvim" },
+	{
+		"rebelot/kanagawa.nvim",
+		cond = function()
+			return not vim.g.vscode
+		end,
+	},
 
-	{ "EdenEast/nightfox.nvim" },
+	{
+		"EdenEast/nightfox.nvim",
+		cond = function()
+			return not vim.g.vscode
+		end,
+	},
 
 	-- {
 	-- 	"navarasu/onedark.nvim",
@@ -842,36 +933,22 @@ require("lazy").setup({
 
 	{
 		"Tsuzat/NeoSolarized.nvim",
+		cond = function()
+			return not vim.g.vscode
+		end,
 		priority = 1000,
 		lazy = false,
 		config = function()
-			require("NeoSolarized").setup({
-				style = "dark", -- "dark" or "light"
-				transparent = true, -- true/false; Enable this to disable setting the background color
-				terminal_colors = true, -- Configure the colors used when opening a `:terminal` in Neovim
-				enable_italics = true, -- Italics for different hightlight groups (eg. Statement, Condition, Comment, Include, etc.)
-				styles = {
-					-- Style to be applied to different syntax groups
-					comments = { italic = true },
-					keywords = { italic = true },
-					functions = { bold = true },
-					variables = {},
-					string = { italic = true },
-					underline = true, -- true/false; for global underline
-					undercurl = true, -- true/false; for global undercurl
-				},
-				-- Add specific hightlight groups
-				on_highlights = function(highlights, colors)
-					highlights.MiniStatuslineFilename.bg = colors.bg0
-					-- highlights.Include.fg = colors.red -- Using `red` foreground for Includes
-				end,
-			})
+			reconfigNeosolarized(true)
 			vim.cmd.colorscheme("NeoSolarized")
 		end,
 	},
 
 	{
 		"craftzdog/solarized-osaka.nvim",
+		cond = function()
+			return not vim.g.vscode
+		end,
 		priority = 1000,
 		config = function()
 			require("solarized-osaka").setup({
@@ -945,6 +1022,9 @@ require("lazy").setup({
 	-- Highlight todo, notes, etc in comments
 	{
 		"folke/todo-comments.nvim",
+		cond = function()
+			return not vim.g.vscode
+		end,
 		event = "VimEnter",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		opts = { signs = false },
@@ -968,19 +1048,21 @@ require("lazy").setup({
 			-- - sr)'  - [S]urround [R]eplace [)] [']
 			require("mini.surround").setup()
 
-			-- Simple and easy statusline.
-			--  You could remove this setup call if you don't like it,
-			--  and try some other statusline plugin
-			local statusline = require("mini.statusline")
-			-- set use_icons to true if you have a Nerd Font
-			statusline.setup({ use_icons = vim.g.have_nerd_font })
+			if not vim.g.vscode then
+				-- Simple and easy statusline.
+				--  You could remove this setup call if you don't like it,
+				--  and try some other statusline plugin
+				local statusline = require("mini.statusline")
+				-- set use_icons to true if you have a Nerd Font
+				statusline.setup({ use_icons = vim.g.have_nerd_font })
 
-			-- You can configure sections in the statusline by overriding their
-			-- default behavior. For example, here we set the section for
-			-- cursor location to LINE:COLUMN
-			---@diagnostic disable-next-line: duplicate-set-field
-			statusline.section_location = function()
-				return "%2l:%-2v"
+				-- You can configure sections in the statusline by overriding their
+				-- default behavior. For example, here we set the section for
+				-- cursor location to LINE:COLUMN
+				---@diagnostic disable-next-line: duplicate-set-field
+				statusline.section_location = function()
+					return "%2l:%-2v"
+				end
 			end
 
 			-- ... and there is more!
@@ -989,6 +1071,9 @@ require("lazy").setup({
 	},
 	{ -- Highlight, edit, and navigate code
 		"nvim-treesitter/nvim-treesitter",
+		cond = function()
+			return not vim.g.vscode
+		end,
 		build = ":TSUpdate",
 		main = "nvim-treesitter.configs", -- Sets main module to use for opts
 		-- [[ Configure Treesitter ]] See `:help nvim-treesitter`
