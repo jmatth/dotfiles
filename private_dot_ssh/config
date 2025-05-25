@@ -1,3 +1,8 @@
+  Host 192.168.64.2
+    HostName 192.168.64.2
+    User josh
+    ForwardAgent yes
+
 Host *
     ServerAliveInterval 60
     HashKnownHosts no
