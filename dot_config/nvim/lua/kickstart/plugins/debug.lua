@@ -6,7 +6,7 @@
 -- be extended to other languages as well. That's why it's called
 -- kickstart.nvim and not kitchen-sink.nvim ;)
 
-if vim.g.vscode then
+if vim.g.vscode or vim.g.nvimpager then
 	return {}
 end
 

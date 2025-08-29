@@ -167,6 +167,14 @@ local function reconfigNeosolarized(isDark)
 	vim.cmd.colorscheme("NeoSolarized")
 end
 
+local function isTerminal()
+	return not vim.g.vscode
+end
+
+local function isNative()
+	return isTerminal() and not vim.g.nvimpager
+end
+
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
@@ -204,9 +212,7 @@ require("lazy").setup({
 		--   -- or leave it empty to use the default settings
 		--   -- refer to the configuration section below
 		-- }
-		cond = function()
-			return not vim.g.vscode
-		end,
+		cond = isTerminal(),
 	},
 
 	-- NOTE: Plugins can also be added by using a table,
@@ -242,9 +248,7 @@ require("lazy").setup({
 				changedelete = { text = "~" },
 			},
 		},
-		cond = function()
-			return not vim.g.vscode
-		end,
+		cond = isNative(),
 	},
 
 	-- NOTE: Plugins can also be configured to run Lua code when they are loaded.
@@ -307,7 +311,7 @@ require("lazy").setup({
 
 			-- Document existing key chains
 			spec = {
-				{ "<leader>s", group = "[S]earch" },
+				{ "<leader>f", group = "[F]ind" },
 				{ "<leader>t", group = "[T]oggle" },
 				{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
 			},
@@ -323,9 +327,7 @@ require("lazy").setup({
 
 	{ -- Fuzzy Finder (files, lsp, etc)
 		"nvim-telescope/telescope.nvim",
-		cond = function()
-			return not vim.g.vscode
-		end,
+		cond = isTerminal(),
 		event = "VimEnter",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
@@ -392,15 +394,15 @@ require("lazy").setup({
 
 			-- See `:help telescope.builtin`
 			local builtin = require("telescope.builtin")
-			vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
-			vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
-			vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })
-			vim.keymap.set("n", "<leader>ss", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
-			vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch current [W]ord" })
-			vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
-			vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
-			vim.keymap.set("n", "<leader>sr", builtin.resume, { desc = "[S]earch [R]esume" })
-			vim.keymap.set("n", "<leader>s.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+			vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "[F]ind [H]elp" })
+			vim.keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "[F]ind [K]eymaps" })
+			vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "[F]ind [F]iles" })
+			vim.keymap.set("n", "<leader>fs", builtin.builtin, { desc = "[F]ind [S]elect Telescope" })
+			vim.keymap.set("n", "<leader>fw", builtin.grep_string, { desc = "[F]ind current [W]ord" })
+			vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "[F]ind by [G]rep" })
+			vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "[F]ind [D]iagnostics" })
+			vim.keymap.set("n", "<leader>fr", builtin.resume, { desc = "[F]ind [R]esume" })
+			vim.keymap.set("n", "<leader>f.", builtin.oldfiles, { desc = '[F]ind Recent Files ("." for repeat)' })
 			vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
 
 			-- Slightly advanced example of overriding default behavior and theme
@@ -414,17 +416,17 @@ require("lazy").setup({
 
 			-- It's also possible to pass additional configuration options.
 			--  See `:help telescope.builtin.live_grep()` for information about particular keys
-			vim.keymap.set("n", "<leader>s/", function()
+			vim.keymap.set("n", "<leader>f/", function()
 				builtin.live_grep({
 					grep_open_files = true,
 					prompt_title = "Live Grep in Open Files",
 				})
-			end, { desc = "[S]earch [/] in Open Files" })
+			end, { desc = "[F]ind [/] in Open Files" })
 
 			-- Shortcut for searching your Neovim configuration files
-			vim.keymap.set("n", "<leader>sn", function()
+			vim.keymap.set("n", "<leader>fn", function()
 				builtin.find_files({ cwd = vim.fn.stdpath("config") })
-			end, { desc = "[S]earch [N]eovim files" })
+			end, { desc = "[F]ind [N]eovim files" })
 		end,
 	},
 
@@ -440,16 +442,12 @@ require("lazy").setup({
 				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
 			},
 		},
-		cond = function()
-			return not vim.g.vscode
-		end,
+		cond = isNative(),
 	},
 	{
 		-- Main LSP Configuration
 		"neovim/nvim-lspconfig",
-		cond = function()
-			return not vim.g.vscode
-		end,
+		cond = isNative(),
 		dependencies = {
 			-- Automatically install LSPs and related tools to stdpath for Neovim
 			-- Mason must be loaded before its dependents so we need to set it up here.
@@ -583,7 +581,7 @@ require("lazy").setup({
 							callback = vim.lsp.buf.document_highlight,
 						})
 
-						if not vim.g.vscode then
+						if not vim.g.vscode or vim.g.pager then
 							vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
 								buffer = event.buf,
 								group = highlight_augroup,
@@ -730,9 +728,7 @@ require("lazy").setup({
 
 	{ -- Autoformat
 		"stevearc/conform.nvim",
-		cond = function()
-			return not vim.g.vscode
-		end,
+		cond = isNative(),
 		event = { "BufWritePre" },
 		cmd = { "ConformInfo" },
 		keys = {
@@ -774,9 +770,7 @@ require("lazy").setup({
 
 	{ -- Autocompletion
 		"saghen/blink.cmp",
-		cond = function()
-			return not vim.g.vscode
-		end,
+		cond = isNative(),
 		event = "VimEnter",
 		version = "1.*",
 		dependencies = {
@@ -880,9 +874,7 @@ require("lazy").setup({
 		--
 		-- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
 		"folke/tokyonight.nvim",
-		cond = function()
-			return not vim.g.vscode
-		end,
+		cond = isTerminal(),
 		priority = 1000, -- Make sure to load this before all the other start plugins.
 		config = function()
 			---@diagnostic disable-next-line: missing-fields
@@ -903,16 +895,12 @@ require("lazy").setup({
 
 	{
 		"rebelot/kanagawa.nvim",
-		cond = function()
-			return not vim.g.vscode
-		end,
+		cond = isTerminal(),
 	},
 
 	{
 		"EdenEast/nightfox.nvim",
-		cond = function()
-			return not vim.g.vscode
-		end,
+		cond = isTerminal(),
 	},
 
 	-- {
@@ -935,9 +923,7 @@ require("lazy").setup({
 
 	{
 		"Tsuzat/NeoSolarized.nvim",
-		cond = function()
-			return not vim.g.vscode
-		end,
+		cond = isTerminal(),
 		priority = 1000,
 		lazy = false,
 		config = function()
@@ -948,9 +934,7 @@ require("lazy").setup({
 
 	{
 		"craftzdog/solarized-osaka.nvim",
-		cond = function()
-			return not vim.g.vscode
-		end,
+		cond = isTerminal(),
 		priority = 1000,
 		config = function()
 			require("solarized-osaka").setup({
@@ -1024,9 +1008,7 @@ require("lazy").setup({
 	-- Highlight todo, notes, etc in comments
 	{
 		"folke/todo-comments.nvim",
-		cond = function()
-			return not vim.g.vscode
-		end,
+		cond = isTerminal(),
 		event = "VimEnter",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		opts = { signs = false },
@@ -1048,7 +1030,47 @@ require("lazy").setup({
 			-- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
 			-- - sd'   - [S]urround [D]elete [']quotes
 			-- - sr)'  - [S]urround [R]eplace [)] [']
-			require("mini.surround").setup()
+			require("mini.surround").setup({
+				-- Add custom surroundings to be used on top of builtin ones. For more
+				-- information with examples, see `:h MiniSurround.config`.
+				custom_surroundings = nil,
+
+				-- Duration (in ms) of highlight when calling `MiniSurround.highlight()`
+				-- highlight_duration = 500,
+
+				-- Module mappings. Use `''` (empty string) to disable one.
+				mappings = {
+					add = "<leader>sa", -- Add surrounding in Normal and Visual modes
+					delete = "<leader>sd", -- Delete surrounding
+					find = "<leader>sf", -- Find surrounding (to the right)
+					find_left = "<leader>sF", -- Find surrounding (to the left)
+					highlight = "<leader>sh", -- Highlight surrounding
+					replace = "<leader>sr", -- Replace surrounding
+					update_n_lines = "<leader>sn", -- Update `n_lines`
+
+					-- suffix_last = 'l', -- Suffix to search with "prev" method
+					-- suffix_next = 'n', -- Suffix to search with "next" method
+				},
+
+				-- Number of lines within which surrounding is searched
+				n_lines = 20,
+
+				-- Whether to respect selection type:
+				-- - Place surroundings on separate lines in linewise mode.
+				-- - Place surroundings on each line in blockwise mode.
+				-- respect_selection_type = false,
+
+				-- How to search for surrounding (first inside current line, then inside
+				-- neighborhood). One of 'cover', 'cover_or_next', 'cover_or_prev',
+				-- 'cover_or_nearest', 'next', 'prev', 'nearest'. For more details,
+				-- see `:h MiniSurround.config`.
+				-- search_method = 'cover',
+
+				-- Whether to disable showing non-error feedback
+				-- This also affects (purely informational) helper messages shown after
+				-- idle time if user input is required.
+				-- silent = false,
+			})
 
 			if not vim.g.vscode then
 				-- Simple and easy statusline.
@@ -1073,9 +1095,7 @@ require("lazy").setup({
 	},
 	{ -- Highlight, edit, and navigate code
 		"nvim-treesitter/nvim-treesitter",
-		cond = function()
-			return not vim.g.vscode
-		end,
+		cond = isNative(),
 		build = ":TSUpdate",
 		main = "nvim-treesitter.configs", -- Sets main module to use for opts
 		-- [[ Configure Treesitter ]] See `:help nvim-treesitter`
