@@ -73,9 +73,9 @@
 (deflayer fn
   esc       brdn   brup    f3   f4   f5   f6   prev pp   next mute vold volu
   @enqwerty @engph @enmgph _    _    _    _    _    _    _    _    lrld _    del
-  _         _      _       S-[  S-]  _    _    _    _    _    _    _    _    _
-  _         _      _       S-9  S-0  _    _    =    S-;  +    S-1  _    _
-  _         _      _       [    ]    _    _    _    _    _    _    _
+  _         _      S-\     S-[  S-]  _    _    -    S-,  S-.  _    _    _    _
+  _         _      S-7     S-9  S-0  _    S-3  =    +    S-;  S-1  S-/  _
+  _         _      _       [    ]    _    _    S-8  \    /    S-5  _
   _   _     _      _                 _              _    _
 )
 
