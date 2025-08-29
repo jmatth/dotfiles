@@ -108,5 +108,5 @@ style = 'yellow'
 [golang]
 format = '[─\[](blue)[$symbol$version]($style)[\]](blue)'
 version_format = '${raw}'
-symbol = 'ﳑ '
+symbol = ' '
 style = 'blue'
