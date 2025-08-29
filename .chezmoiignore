@@ -1,4 +1,5 @@
 {{- if ne .chezmoi.os "darwin" }}
 .aerospace.toml
 Library/Application Support/VSCodium/product.json
+Library/Application Support/nushell/*
 {{- end }}
