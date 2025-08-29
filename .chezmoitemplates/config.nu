@@ -130,16 +130,23 @@ if not (which carapace | is-empty) {
     }
 }
 
+const vendor_autoload = $nu.data-dir | path join "vendor/autoload"
+mkdir $vendor_autoload
+
 if not (which starship | is-empty) {
     $env.STARSHIP_SHELL = "nu"
-    mkdir ($nu.data-dir | path join "vendor/autoload")
-    starship init nu | save -f ($nu.data-dir | path join "vendor/autoload/starship.nu")
+    let starship_path = $vendor_autoload | path join "starship.nu"
+    if not ($starship_path | path exists) {
+        starship init nu | save -f $starship_path
+    }
 }
 
 # Set up mise
 if not (which mise | is-empty) {
-    let mise_path = $nu.default-config-dir | path join mise.nu
-    ^mise activate nu | str replace "export-env {" "" | prepend "export-env {" | save $mise_path --force
+    let mise_path = $vendor_autoload | path join mise.nu
+    if not ($mise_path | path exists) {
+        ^mise activate nu | save -f $mise_path
+    }
 }
 
 # # Log
