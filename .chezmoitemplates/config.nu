@@ -129,6 +129,7 @@ if not (which carapace | is-empty) {
         completer: $carapace_completer
     }
 }
+$env.config.completions.algorithm = 'fuzzy'
 
 const vendor_autoload = $nu.data-dir | path join "vendor/autoload"
 mkdir $vendor_autoload
