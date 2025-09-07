@@ -16,14 +16,49 @@
 # You can also pretty-print and page through the documentation for configuration
 # options using:
 #     config nu --doc | nu-highlight | less -R
+use std/util "path add"
 
-# mkdir ($nu.data-dir | path join "vendor/autoload")
-# starship init nu | save -f ($nu.data-dir | path join "vendor/autoload/starship.nu")
+$env.config.show_banner = false
+
+# ------------------------
+# History-related settings
+# ------------------------
+# $env.config.history.*
+
+# file_format (string):  Either "sqlite" or "plaintext". While text-backed history
+# is currently the default for historical reasons, "sqlite" is stable and
+# provides more advanced history features.
+$env.config.history.file_format = "sqlite"
+
+# max_size (int): The maximum number of entries allowed in the history.
+# After exceeding this value, the oldest history items will be removed
+# as new commands are added.
+$env.config.history.max_size = 5_000_000
+
+# sync_on_enter (bool): Whether the plaintext history file is updated
+# each time a command is entered. If set to `false`, the plaintext history
+# is only updated/written when the shell exits. This setting has no effect
+# for SQLite-backed history.
+# $env.config.history.sync_on_enter = true
+
+# isolation (bool):
+# `true`: New history from other currently-open Nushell sessions is not
+# seen when scrolling through the history using PrevHistory (typically
+# the Up key) or NextHistory (Down key)
+# `false`: All commands entered in other Nushell sessions will be mixed with
+# those from the current shell.
+# Note: Older history items (from before the current shell was started) are
+# always shown.
+# This setting only applies to SQLite-backed history
+$env.config.history.isolation = true
+
+if not ($env.SHELL | str ends-with /nu) {
+    $env.SHELL = $nu.current-exe
+}
+
+let isroot = (id -u | into int) == 0
 
 # Solarized colors
-
-$env.SHELL = (which nu | first).path
-
 mut $base03  = 'black_bold'
 mut $base02  = 'black'
 mut $base01  = 'green_bold'
@@ -101,7 +136,17 @@ let $solarized_light_theme = {
 
 $env.config.color_config = $solarized_light_theme
 
-if not (which vivid | is-empty) {
+if (uname).kernel-name == 'Darwin' {
+    path add '/opt/homebrew/sbin'
+    path add '/opt/homebrew/bin'
+}
+
+let cargohome = $"($env.HOME)/.cargo"
+if ($cargohome | path exists) {
+    path add $'($cargohome)/bin'
+}
+
+if (which vivid | is-not-empty) {
     $env.LS_COLORS = $"(vivid generate solarized-light)"
 }
 
@@ -109,17 +154,50 @@ $env.config.render_right_prompt_on_last_line = true
 
 $env.config.buffer_editor = "nvim"
 $env.config.edit_mode = "vi"
-
-$env.config.show_banner = false
+$env.config.cursor_shape.vi_normal = "block"
+$env.config.cursor_shape.vi_insert = "block"
 
 # The prompt indicators are environmental variables that represent
 # the state of the prompt
-$env.PROMPT_INDICATOR = " "
-$env.PROMPT_INDICATOR_VI_INSERT = ""
-$env.PROMPT_INDICATOR_VI_NORMAL = ""
-$env.PROMPT_MULTILINE_INDICATOR = "::: "
+let promptchar = if $isroot { $'(ansi {fg: $red, attr: rb})#(ansi rst)' } else { '%' }
+$env.PROMPT_INDICATOR = $'($promptchar)(ansi $blue)> '
+$env.PROMPT_INDICATOR_VI_INSERT = $'($promptchar)(ansi $blue)> '
+$env.PROMPT_INDICATOR_VI_NORMAL = $'($promptchar)(ansi red)[ '
+$env.PROMPT_MULTILINE_INDICATOR = '::: '
 
-if not (which carapace | is-empty) {
+$env.config.menus ++= [{
+    name: history_menu
+    only_buffer_difference: true # Search is done on the text written after activating the menu
+    marker: $'(ansi {fg: $green attr: r})?(ansi rst)(ansi $blue)> '   # Indicator that appears with the menu is active
+    type: {
+        layout: list             # Type of menu
+        page_size: 10            # Number of entries that will presented when activating the menu
+    }
+    style: {
+        text: $base00                         # Text style
+        selected_text: { fg: $green attr: r } # Text style for selected option
+        description_text: $yellow             # Text style for description
+    }
+}]
+
+$env.config.menus ++= [{
+    name: completion_menu
+    only_buffer_difference: false # Search is done on the text written after activating the menu
+    marker: $'(ansi {fg: $green attr: r})|(ansi rst)(ansi $blue)> '    # Indicator that appears with the menu is active
+    type: {
+        layout: columnar          # Type of menu
+        columns: 4                # Number of columns where the options are displayed
+        col_width: 20             # Optional value. If missing all the screen width is used to calculate column width
+        col_padding: 2            # Padding between columns
+    }
+    style: {
+        text: $green                          # Text style
+        selected_text: { fg: $green attr: r } # Text style for selected option
+        description_text: $yellow             # Text style for description
+    }
+}]
+
+if (which carapace | is-not-empty) {
     let carapace_completer = {|spans|
         carapace $spans.0 nushell ...$spans | from json
     }
@@ -129,12 +207,17 @@ if not (which carapace | is-empty) {
         completer: $carapace_completer
     }
 }
-$env.config.completions.algorithm = 'fuzzy'
+$env.config.completions.algorithm = "fuzzy"
+$env.config.completions.case_sensitive = false
+$env.config.completions.sort = "smart"
+$env.config.completions.quick = true
+$env.config.completions.partial = true
+$env.config.completions.use_ls_colors = true
 
 const vendor_autoload = $nu.data-dir | path join "vendor/autoload"
 mkdir $vendor_autoload
 
-if not (which starship | is-empty) {
+if (which starship | is-not-empty) {
     $env.STARSHIP_SHELL = "nu"
     let starship_path = $vendor_autoload | path join "starship.nu"
     if not ($starship_path | path exists) {
@@ -143,30 +226,24 @@ if not (which starship | is-empty) {
 }
 
 # Set up mise
-if not (which mise | is-empty) {
+if (which mise | is-not-empty) {
     let mise_path = $vendor_autoload | path join mise.nu
     if not ($mise_path | path exists) {
         ^mise activate nu | save -f $mise_path
     }
 }
 
-# # Log
-# zstyle -s ':prezto:module:git:log:medium' format '_git_log_medium_format' \
-#     || _git_log_medium_format='%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B'
-mut _git_log_medium_format = '%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B'
-# zstyle -s ':prezto:module:git:log:oneline' format '_git_log_oneline_format' \
-#     || _git_log_oneline_format='%C(green)%h%C(reset) %s%C(red)%d%C(reset)%n'
-mut _git_log_oneline_format = '%C(green)%h%C(reset) %s%C(red)%d%C(reset)%n'
-# zstyle -s ':prezto:module:git:log:brief' format '_git_log_brief_format' \
-#     || _git_log_brief_format='%C(green)%h%C(reset) %s%n%C(blue)(%ar by %an)%C(red)%d%C(reset)%n'
-mut _git_log_brief_format = '%C(green)%h%C(reset) %s%n%C(blue)(%ar by %an)%C(red)%d%C(reset)%n'
+if (which brew | is-not-empty) {
 
-# # Status
-# zstyle -s ':prezto:module:git:status:ignore' submodules '_git_status_ignore_submodules' \
-#     || _git_status_ignore_submodules='none'
-mut _git_status_ignore_submodules = 'none'
+}
 
-# # Custom commands
+#
+## Aliases and custom commands
+#
+
+def kk [] {
+    sudo kanata -c $"($env.HOME)/.kanata.kdb"
+}
 
 # Create a directory and cd into it
 def --env mkcd [dir: string] {
@@ -188,6 +265,22 @@ def --env up [levels: int = 1] {
 #
 # Git Aliases
 #
+
+## Log
+# zstyle -s ':prezto:module:git:log:medium' format '_git_log_medium_format' \
+#     || _git_log_medium_format='%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B'
+mut _git_log_medium_format = '%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B'
+# zstyle -s ':prezto:module:git:log:oneline' format '_git_log_oneline_format' \
+#     || _git_log_oneline_format='%C(green)%h%C(reset) %s%C(red)%d%C(reset)%n'
+mut _git_log_oneline_format = '%C(green)%h%C(reset) %s%C(red)%d%C(reset)%n'
+# zstyle -s ':prezto:module:git:log:brief' format '_git_log_brief_format' \
+#     || _git_log_brief_format='%C(green)%h%C(reset) %s%n%C(blue)(%ar by %an)%C(red)%d%C(reset)%n'
+mut _git_log_brief_format = '%C(green)%h%C(reset) %s%n%C(blue)(%ar by %an)%C(red)%d%C(reset)%n'
+
+## Status
+# zstyle -s ':prezto:module:git:status:ignore' submodules '_git_status_ignore_submodules' \
+#     || _git_status_ignore_submodules='none'
+mut _git_status_ignore_submodules = 'none'
 
 # Git
 alias g = git

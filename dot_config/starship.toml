@@ -7,9 +7,9 @@ $nodejs\
 $rust\
 $dart\
 $username@$hostname\
-[─┐](blue) \
+[─┐](blue)\
 $line_break\
-[└─](blue)%$character
+[└─](blue)
 """
 right_format = '$status [<─$git_branch$git_commit$git_status─┘](blue)'
 
