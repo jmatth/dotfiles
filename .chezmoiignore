@@ -2,4 +2,6 @@
 .aerospace.toml
 Library/Application Support/VSCodium/product.json
 Library/Application Support/nushell/*
+{{ else if ne .chezmoi.os "linux" }}
+.config/nushell/*
 {{- end }}
