@@ -197,15 +197,14 @@ $env.config.menus ++= [{
     }
 }]
 
-if (which carapace | is-not-empty) {
-    let carapace_completer = {|spans|
-        carapace $spans.0 nushell ...$spans | from json
-    }
-    $env.config.completions.external = {
-        enable: true
-        max_results: 100
-        completer: $carapace_completer
-    }
+$env.CARAPACE_MATCH = 'CASE_INSENSITIVE'
+let carapace_completer = {|spans|
+    carapace $spans.0 nushell ...$spans | from json
+}
+$env.config.completions.external = {
+    enable: true
+    max_results: 100
+    completer: $carapace_completer
 }
 $env.config.completions.algorithm = "fuzzy"
 $env.config.completions.case_sensitive = false
@@ -223,6 +222,12 @@ if (which starship | is-not-empty) {
     if not ($starship_path | path exists) {
         starship init nu | save -f $starship_path
     }
+}
+
+# Use GPG as SSH agent
+if $nu.os-info.family == unix {
+    $env.SSH_AUTH_SOCK = $env.HOME | path join $in .gnupg/S.gpg-agent.ssh
+    $env.GPG_TTY = ^tty
 }
 
 # Set up mise
@@ -261,6 +266,8 @@ def --env up [levels: int = 1] {
     }
     cd (generate {|i| if $i > 0 { {out: '../', next: ($i - 1)} } } $levels | str join)
 }
+
+alias code = codium
 
 #
 # Git Aliases
