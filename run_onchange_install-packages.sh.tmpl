@@ -32,6 +32,15 @@ done
 {{ if eq .chezmoi.os "linux" }}
 if command -v pacman; then
     osname=$(cat /etc/os-release | grep '^ID=' | cut -d= -f2)
+    if ! command -v yay; then
+        sudo pacman -S --needed git base-devel
+        yaybuild="$(mktemp -d)"
+        git clone https://aur.archlinux.org/yay-bin.git "$yaybuild"
+        pushd "$yaybuild"
+        makepkg -si
+        popd
+        rm -rf "$yaybuild"
+    fi
     if [[ "$osname" == "cachyos" ]]; then
         sudo pacman -Sy --noconfirm \
             nushell \
@@ -52,15 +61,6 @@ if command -v pacman; then
             vivid \
             vscodium
     else
-        if ! command -v yay; then
-            sudo pacman -S --needed git base-devel
-            yaybuild="$(mktemp -d)"
-            git clone https://aur.archlinux.org/yay-bin.git "$yaybuild"
-            pushd "$yaybuild"
-            makepkg -si
-            popd
-            rm -rf "$yaybuild"
-        fi
         yay -Sy --noconfirm \
             nushell \
             gnupg \
