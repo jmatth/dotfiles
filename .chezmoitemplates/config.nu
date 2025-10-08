@@ -121,8 +121,8 @@ let $solarized_light_theme = {
     shape_float: $violet
     shape_range: $yellow
     shape_internalcall: $magenta
-    shape_external: $base00
-    shape_externalarg: $base1
+    shape_external: $base01
+    shape_externalarg: $base00
     shape_literal: $blue
     shape_operator: $yellow
     shape_signature: $base1
@@ -132,6 +132,8 @@ let $solarized_light_theme = {
     shape_variable: $violet
     shape_flag: $blue
     shape_custom: { attr: b }
+
+    search_result: { fg: $green attr: r }
 }
 
 $env.config.color_config = $solarized_light_theme
@@ -167,8 +169,8 @@ $env.PROMPT_MULTILINE_INDICATOR = '::: '
 
 $env.config.menus ++= [{
     name: history_menu
-    only_buffer_difference: true # Search is done on the text written after activating the menu
-    marker: $'(ansi {fg: $green attr: r})?(ansi rst)(ansi $blue)> '   # Indicator that appears with the menu is active
+    only_buffer_difference: true                                    # Search is done on the text written after activating the menu
+    marker: $'(ansi {fg: $green attr: r})?(ansi rst)(ansi $blue)> ' # Indicator that appears with the menu is active
     type: {
         layout: list             # Type of menu
         page_size: 10            # Number of entries that will presented when activating the menu
@@ -182,8 +184,8 @@ $env.config.menus ++= [{
 
 $env.config.menus ++= [{
     name: completion_menu
-    only_buffer_difference: false # Search is done on the text written after activating the menu
-    marker: $'(ansi {fg: $green attr: r})|(ansi rst)(ansi $blue)> '    # Indicator that appears with the menu is active
+    only_buffer_difference: false                                   # Search is done on the text written after activating the menu
+    marker: $'(ansi {fg: $green attr: r})|(ansi rst)(ansi $blue)> ' # Indicator that appears with the menu is active
     type: {
         layout: columnar          # Type of menu
         columns: 4                # Number of columns where the options are displayed
@@ -225,7 +227,7 @@ if (which starship | is-not-empty) {
 }
 
 # Use GPG as SSH agent
-if $nu.os-info.family == unix {
+if $nu.os-info.family == unix and 'SSH_TTY' not-in $env {
     $env.SSH_AUTH_SOCK = $env.HOME | path join $in .gnupg/S.gpg-agent.ssh
     $env.GPG_TTY = ^tty
 }
@@ -238,16 +240,18 @@ if (which mise | is-not-empty) {
     }
 }
 
-if (which brew | is-not-empty) {
-
-}
-
 #
 ## Aliases and custom commands
 #
 
+alias grep = rg
+alias vrg = rg --vimgrep
+
+alias code = codium
+
+# Start Kanata
 def kk [] {
-    sudo kanata -c $"($env.HOME)/.kanata.kdb"
+    sudo kanata -n -c $"($env.HOME)/.kanata.kdb"
 }
 
 # Create a directory and cd into it
@@ -266,8 +270,6 @@ def --env up [levels: int = 1] {
     }
     cd (generate {|i| if $i > 0 { {out: '../', next: ($i - 1)} } } $levels | str join)
 }
-
-alias code = codium
 
 #
 # Git Aliases
@@ -345,7 +347,30 @@ alias gCt = git checkout --theirs --
 # alias gCT = gCt $(gCl)
 
 # Data (d)
-alias gd = git ls-files
+
+# List all files in repo.
+def "ngit ls-files" [] {
+    (
+        git ls-files -t |
+        from ssv -nm 1 |
+        rename status name |
+        update status {|r|
+            match $r.status {
+            H => 'unmodified',           # tracked file that is not either unmerged or skip-worktree
+            S => 'skip-worktree',        # tracked file that is skip-worktree
+            M => 'unmerged',             # tracked file that is unmerged
+            R => 'removed',              # tracked file with unstaged removal/deletion
+            C => 'modified',             # tracked file with unstaged modification/change
+            K => 'untracked conflicting' # untracked paths which are part of file/directory conflicts which prevent checking out tracked files
+            ? => 'untracked'             # untracked file
+            U => 'resolve-undo'          # file with resolve-undo information
+            _ => 'UNKNOWN',
+        }} |
+        metadata set -l
+    )
+}
+alias ngd = ngit ls-files
+alias gd  = git ls-files
 alias gdc = git ls-files --cached
 alias gdx = git ls-files --deleted
 alias gdm = git ls-files --modified
@@ -484,6 +509,11 @@ alias grs = git rebase --skip
 # Remote (R)
 alias gR = git remote
 alias gRl = git remote --verbose
+# List git remotes.
+def "ngit remote" [] {
+    git remote -v | lines | parse "{name}\t{url} ({type})"
+}
+alias ngRl = ngit remote
 alias gRa = git remote add
 alias gRx = git remote rm
 alias gRm = git remote rename
@@ -525,6 +555,24 @@ alias gts = git tag --sign
 alias gtv = git verify-tag
 
 # Working Copy (w)
+
+# Show working tree status.
+def "ngit status" [] {
+    (
+        git status --porcelain=v1 |
+        from ssv -nm 1 |
+        rename status name |
+        update status {|r|
+            match $r.status {
+            ?? => 'untracked',
+            A => 'added'
+            M => 'modified',
+            _ => 'UNKNOWN',
+        }} |
+        metadata set -l
+    )
+}
+alias ngws = ngit status
 alias gwS = git status --ignore-submodules=$"($_git_status_ignore_submodules)" --short
 alias gws = git status --ignore-submodules=$"($_git_status_ignore_submodules)"
 alias gwd = git diff --no-ext-diff
