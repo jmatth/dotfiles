@@ -208,6 +208,10 @@ def --env 'theme set auto' [] {
 }
 theme set auto
 
+if $env.TERM == 'linux' {
+    $env.config.table.mode = 'single'
+}
+
 if (uname).kernel-name == 'Darwin' {
     path add '/opt/homebrew/sbin'
     path add '/opt/homebrew/bin'
