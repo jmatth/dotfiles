@@ -76,7 +76,7 @@ mut $blue    = 'blue'
 mut $cyan    = 'cyan'
 mut $green   = 'green'
 
-if $env.COLORTERM in ['truecolor' '24bit'] {
+if ($env | get -o COLORTERM) in ['truecolor' '24bit'] {
     $base03  = '#002b36'
     $base02  = '#073642'
     $base01  = '#586e75'
