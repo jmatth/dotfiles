@@ -296,7 +296,7 @@ if (which starship | is-not-empty) {
 
 # Use GPG as SSH agent
 if $nu.os-info.family == unix and 'SSH_TTY' not-in $env {
-    $env.SSH_AUTH_SOCK = $env.HOME | path join $in .gnupg/S.gpg-agent.ssh
+    $env.SSH_AUTH_SOCK = $'(gpgconf --list-dirs agent-ssh-socket)'
     $env.GPG_TTY = ^tty
 }
 
