@@ -191,10 +191,12 @@ def 'theme get' []: nothing -> string {
 # Change color theme to dark.
 def --env 'theme set dark' [] {
     $env.config.color_config = $solarized_dark_theme
+    $env.LS_COLORS = $"(vivid generate solarized-dark)"
 }
 # Change color theme to light.
 def --env 'theme set light' [] {
     $env.config.color_config = $solarized_light_theme
+    $env.LS_COLORS = $"(vivid generate solarized-light)"
 }
 # Automatically change the theme to match the system
 def --env 'theme set auto' [] {
@@ -214,10 +216,6 @@ if (uname).kernel-name == 'Darwin' {
 let cargohome = $"($env.HOME)/.cargo"
 if ($cargohome | path exists) {
     path add $'($cargohome)/bin'
-}
-
-if (which vivid | is-not-empty) {
-    $env.LS_COLORS = $"(vivid generate solarized-light)"
 }
 
 $env.config.render_right_prompt_on_last_line = true
@@ -419,9 +417,8 @@ alias gCt = git checkout --theirs --
 # List all files in repo.
 def "ngit ls-files" [] {
     (
-        git ls-files -t |
-        from ssv -nm 1 |
-        rename status name |
+        git ls-files -tcdmo |
+        parse '{status} {name}'|
         update status {|r|
             match $r.status {
             H => 'unmodified',           # tracked file that is not either unmerged or skip-worktree
