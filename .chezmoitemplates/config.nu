@@ -136,7 +136,75 @@ let $solarized_light_theme = {
     search_result: { fg: $green attr: r }
 }
 
-$env.config.color_config = $solarized_light_theme
+let $solarized_dark_theme = {
+    separator: $base01
+    leading_trailing_space_bg: $base02
+    header: $base01
+    date: $violet
+    filesize: $blue
+    row_index: $cyan
+    bool: $red
+    int: $base01
+    duration: $red
+    range: $red
+    float: $red
+    string: $base01
+    nothing: $red
+    binary: $red
+    cellpath: $red
+    hints: $base01
+
+    # shape_garbage: { fg: $base07 bg: $red attr: b } # base16 white on red
+    # but i like the regular white on red for parse errors
+    shape_garbage: { fg: $red attr: r }
+    shape_bool: $blue
+    shape_int: $violet
+    shape_float: $violet
+    shape_range: $yellow
+    shape_internalcall: $magenta
+    shape_external: $base1
+    shape_externalarg: $base0
+    shape_literal: $blue
+    shape_operator: $yellow
+    shape_signature: $base01
+    shape_string: $base01
+    shape_filepath: $blue
+    shape_globpattern: $blue
+    shape_variable: $violet
+    shape_flag: $blue
+    shape_custom: { attr: b }
+
+    search_result: { fg: $green attr: r }
+}
+
+def 'theme get' []: nothing -> string {
+    if $nu.os-info.name == macos {
+        if (^defaults read -g AppleInterfaceStyle | complete).exit_code == 1 {
+            return 'light'
+        } else {
+            return 'dark'
+        }
+    }
+    return 'dark'
+}
+
+# Change color theme to dark.
+def --env 'theme set dark' [] {
+    $env.config.color_config = $solarized_dark_theme
+}
+# Change color theme to light.
+def --env 'theme set light' [] {
+    $env.config.color_config = $solarized_light_theme
+}
+# Automatically change the theme to match the system
+def --env 'theme set auto' [] {
+    if (theme get) == light {
+        theme set light
+    } else {
+        theme set dark
+    }
+}
+theme set auto
 
 if (uname).kernel-name == 'Darwin' {
     path add '/opt/homebrew/sbin'
