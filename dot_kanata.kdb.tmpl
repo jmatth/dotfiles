@@ -1,0 +1,123 @@
+{{- $fn := eq .chezmoi.os "darwin" | ternary "fn " "nop0" -}}
+{{- $del := eq .chezmoi.os "darwin" | ternary "nop1" "del" -}}
+(defvar
+{{- if eq .chezmoi.os "darwin" }}
+  fn   fn
+  ffn  @fn
+  lctl lctl
+  rctl rctl
+{{ else }}
+  fn   nop0
+  ffn  nop0
+  lctl @lftl
+  rctl @rftl
+{{ end -}}
+)
+
+(defcfg
+  override-release-on-activation yes   ;; needed for correct output
+)
+
+;; Swap or define characters, when key is shifted
+;; (defoverrides
+;;   ;; (lsft -) (lsft ')
+;;   (lsft /) (lsft ,)
+;;   (lsft ,) (lsft /)
+;; )
+
+(defalias
+  ;; tap for caps lock, hold for left control
+  ctrlesc  (tap-hold 200 200 esc lctl)
+  sclsft   (tap-hold-press 200 200 S-9 lsft)
+  scrsft   (tap-hold-press 200 200 S-0 rsft)
+  gdsh     (fork - ' (lsft rsft))
+  gslsh    (fork / , (lsft rsft))
+  gcmm     (fork , / (lsft rsft))
+  gqt      (fork ' - (lsft rsft))
+  vim      (layer-while-held vim)
+  tabvim   (tap-hold 200 200 tab @vim)
+  engph    (layer-switch graphite)
+  enmgph   (layer-switch magic-graphite)
+  enqwerty (layer-switch qwerty)
+{{- if eq .chezmoi.os "darwin" }}
+  fn       (tap-hold 200 200 fn (layer-while-held fn))
+{{ else }}
+  lftl     (tap-hold 200 200 lctl (layer-while-held fn))
+  rftl     (tap-hold 200 200 rctl (layer-while-held fn))
+{{ end }}
+  mgc (switch
+    ((key-history o 1)) a break
+    ((key-history u 1)) e break
+    ((key-history p 1)) h break
+    ((key-history spc 1)) (macro t h e) break
+    ((key-history . 1)) (macro . /) break
+    () XX break
+  )
+)
+
+(defsrc
+  esc       f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  {{$del}}
+  grv       1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab       q    w    e    r    t    y    u    i    o    p    [    ]    \
+  caps      a    s    d    f    g    h    j    k    l    ;    '    ret
+  lsft      z    x    c    v    b    n    m    ,    .    /    rsft
+  {{$fn}} lctl lmet lalt           spc            ralt rctrl
+)
+
+(deflayer graphite
+  esc        f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  del
+  grv        1    2    3    4    5    6    7    8    9    0    [    ]    bspc
+  @tabvim    b    l    d    w    z    @gqt f    o    u    j    ;    =    \
+  @ctrlesc   n    r    t    s    g    y    h    a    e    i    @gcmm ret
+  @sclsft    q    x    m    c    v    k    p    .    @gdsh    @gslsh @scrsft
+  $ffn $lctl lmet lalt           spc            ralt $rctl
+)
+
+(deflayer qwerty
+  _        _    _    _    _    _    _    _    _    _    _    _    _    _
+  _        _    _    _    _    _    _    _    _    _    _    _    _    _
+  _        _    _    _    _    _    _    _    _    _    _    _    _    _
+  _        _    _    _    _    _    _    _    _    _    _    _    _    
+  _        _    _    _    _    _    _    _    _    _    _    _
+  $ffn     _    _    _              _              _    _
+)
+
+(deflayer magic-graphite
+  grv        f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  del
+  @gqt       1    2    3    4    5    6    7    8    9    0    [    ]    bspc
+  @tabvim    b    l    d    w    z    p    @mgc o    u    j    ;    =    \
+  @ctrlesc   n    r    t    s    g    y    h    a    e    i    @gcmm ret
+  @sclsft    q    x    m    c    v    k    f    .    @gdsh    @gslsh @scrsft
+  $ffn $lctl lalt lmet           spc            rmet ralt
+)
+
+(deflayer fn
+{{- if eq .chezmoi.os "darwin" }}
+  esc       brdn   brup    f3   f4   f5   f6   prev pp   next mute vold volu del
+{{ else }}
+  esc       f1     f2      f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  del
+{{ end -}}
+  @enqwerty @engph @enmgph _    _    _    _    _    _    _    _    lrld _    del
+  _         _      S-\     S-[  S-]  _    _    -    S-,  S-.  _    _    _    _
+  _         _      S-7     S-9  S-0  _    S-3  =    +    S-;  S-1  S-/  _
+  _         _      _       [    ]    _    _    S-8  \    /    S-5  _
+  _   _     _      _                 _              _    _
+)
+
+(deflayer vim
+  _        _    _    _    _    _    _    _    _    _     _    _    _    _
+  _        _    _    _    _    _    _    _    _    _     _    _    _    _
+  _        _    _    _    _    _    pgup home up   end   _    _    _    _
+  _        _    _    _    _    _    pgdn left down right _    _    _
+  _        _    _    _    _    _    _    _    _    _     _    _
+  _   _    _    _              _              _    _
+)
+
+(deflayer blank
+  _        _    _    _    _    _    _    _    _    _    _    _    _    _
+  _        _    _    _    _    _    _    _    _    _    _    _    _    _
+  _        _    _    _    _    _    _    _    _    _    _    _    _    _
+  _        _    _    _    _    _    _    _    _    _    _    _    _
+  _        _    _    _    _    _    _    _    _    _    _    _
+  _   _    _    _              _              _    _
+)
