@@ -94,7 +94,7 @@ def 'theme generate' [light: bool]: nothing -> record {
         $theme.palette.base02  = '#073642'
         $theme.palette.sec     = (if $light { '#93a1a1' } else { '#586e75' })
         $theme.palette.pri     = (if $light { '#657b83' } else { '#839496' })
-        $theme.palette.emp     = (if $light { '586e75' } else { '#93a1a1' })
+        $theme.palette.emp     = (if $light { '#586e75' } else { '#93a1a1' })
         $theme.palette.base2   = '#eee8d5'
         $theme.palette.base3   = '#fdf6e3'
         $theme.palette.yellow  = '#b58900'
@@ -212,18 +212,9 @@ if $env.TERM == 'linux' {
     $env.config.table.mode = 'single'
 }
 
-if (uname).kernel-name == 'Darwin' {
-    path add '/opt/homebrew/sbin'
-    path add '/opt/homebrew/bin'
-}
-
-let cargohome = $"($env.HOME)/.cargo"
-if ($cargohome | path exists) {
-    path add $'($cargohome)/bin'
-}
-
 $env.config.render_right_prompt_on_last_line = true
 
+$env.EDITOR = "nvim"
 $env.config.buffer_editor = "nvim"
 $env.config.edit_mode = "vi"
 $env.config.cursor_shape.vi_normal = "block"
