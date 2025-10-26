@@ -262,8 +262,20 @@ $env.config.menus ++= [{
 }]
 
 $env.CARAPACE_MATCH = 'CASE_INSENSITIVE'
+$env.CARAPACE_EXCLUDES = 'nvim,vim,vi'
 let carapace_completer = {|spans|
-    carapace $spans.0 nushell ...$spans | from json
+  # if the current command is an alias, get it's expansion
+  let expanded_alias = (scope aliases | where name == $spans.0 | $in.0?.expansion?)
+
+  # overwrite
+  let spans = (if $expanded_alias != null  {
+    # put the first word of the expanded alias first in the span
+    $spans | skip 1 | prepend ($expanded_alias | split row " " | take 1)
+  } else {
+    $spans | skip 1 | prepend ($spans.0)
+  })
+
+  carapace $spans.0 nushell ...$spans | from json
 }
 $env.config.completions.external = {
     enable: true

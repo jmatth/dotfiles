@@ -23,6 +23,13 @@ if (uname).kernel-name == 'Darwin' {
     path add '/opt/homebrew/bin'
 }
 
+if (uname).kernel-name == 'Linux' {
+    let omarchy_bin_path = ($env.HOME | path join .local share omarchy bin)
+    if ($omarchy_bin_path | path exists) {
+        path add $omarchy_bin_path
+    }
+}
+
 let cargohome = $"($env.HOME)/.cargo"
 if ($cargohome | path exists) {
     path add $'($cargohome)/bin'
