@@ -621,13 +621,30 @@ alias gtv = git verify-tag
 def "ngit status" [] {
     (
         git status --porcelain=v1 |
-        from ssv -nm 1 |
-        rename status name |
+        parse --regex '(?<status>..) (?<name>.*)' |
+        move name --first |
+        upsert staged false |
+        update staged {|r|
+            if $r.status == '??' {
+                return false
+            }
+            let stchars = $r.status | split chars
+            let staged = $stchars.0 != ' '
+            let unstaged = $stchars.1 != ' '
+            if $staged and $unstaged {
+                return 'mixed'
+            } else if $staged {
+                return true
+            } else {
+                return false
+            }
+        } |
         update status {|r|
             match $r.status {
-            ?? => 'untracked',
-            A => 'added'
-            M => 'modified',
+            '??' => 'untracked',
+            'A ' => 'added'
+            ' M' | 'M ' | 'MM' => 'modified',
+            'D ' => 'deleted',
             _ => 'UNKNOWN',
         }} |
         metadata set -l
