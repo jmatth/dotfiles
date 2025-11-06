@@ -39,6 +39,14 @@
   engph    (layer-switch graphite)
   enmgph   (layer-switch magic-graphite)
   enqwerty (layer-switch qwerty)
+  h        (tap-hold-release 200 200 h rctl)
+  a        (tap-hold-release 200 200 a rsft)
+  e        (tap-hold-release 200 200 e ralt)
+  i        (tap-hold-release 200 200 i rmet)
+  s        (tap-hold-release 200 200 s lctl)
+  t        (tap-hold-release 200 200 t lsft)
+  r        (tap-hold-release 200 200 r lalt)
+  n        (tap-hold-release 200 200 n lmet)
 {{- if eq .chezmoi.os "darwin" }}
   fn       (tap-hold 200 200 fn (layer-while-held fn))
 {{ else }}
@@ -68,7 +76,7 @@
   esc        f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  del
   grv        1    2    3    4    5    6    7    8    9    0    [    ]    bspc
   @tabvim    b    l    d    w    z    @gqt f    o    u    j    ;    =    \
-  @ctrlesc   n    r    t    s    g    y    h    a    e    i    @gcmm ret
+  @ctrlesc   @n   @r   @t   @s   g    y    @h   @a   @e   @i   @gcmm ret
   @sclsft    q    x    m    c    v    k    p    .    @gdsh    @gslsh @scrsft
   $ffn $lctl lmet lalt           spc            ralt $rctl
 )
