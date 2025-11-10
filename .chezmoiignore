@@ -1,7 +1,7 @@
 {{- if ne .chezmoi.os "darwin" }}
 .aerospace.toml
-Library/Application Support/VSCodium/product.json
-Library/Application Support/nushell/*
+Library
 {{ else if ne .chezmoi.os "linux" }}
-.config/nushell/*
+.config/nushell
+.config/ghostty
 {{- end }}

@@ -8,6 +8,8 @@ macos-icon = holographic
 font-family = Fira Code Retina
 font-size = 14
 {{- else -}}
-# TODO: copy in Linux config
+theme = Builtin Solarized Dark
+font-family = FiraCode Nerd Font
+font-size = 12
 {{- end }}
 
