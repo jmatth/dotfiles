@@ -5,6 +5,7 @@
 command = /opt/homebrew/bin/nu
 keybind = global:shift+alt+grave_accent=toggle_quick_terminal
 macos-icon = holographic
+theme = iTerm2 Solarized Dark
 font-family = Fira Code Retina
 font-size = 14
 {{- else -}}
