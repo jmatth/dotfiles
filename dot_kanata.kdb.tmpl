@@ -1,6 +1,10 @@
 {{- $fn := eq .chezmoi.os "darwin" | ternary "fn " "nop0" -}}
 {{- $del := eq .chezmoi.os "darwin" | ternary "nop1" "del" -}}
 (defvar
+  lhkeys (q w e r t a s d f g z x c v b)
+  rhkeys (y u i o p h j k l ; n m , . /)
+  tap-repress 200
+  tap-hold    200
 {{- if eq .chezmoi.os "darwin" }}
   fn   fn
   ffn  @fn
@@ -26,32 +30,33 @@
 ;; )
 
 (defalias
-  ;; tap for caps lock, hold for left control
-  ctrlesc  (tap-hold 200 200 esc lctl)
-  sclsft   (tap-hold-press 200 200 S-9 lsft)
-  scrsft   (tap-hold-press 200 200 S-0 rsft)
+  vim      (layer-while-held vim)
+  ctrlesc  (tap-hold $tap-repress $tap-hold esc lctl)
+  sclsft   (tap-hold-press $tap-repress $tap-hold S-9 lsft)
+  scrsft   (tap-hold-press $tap-repress $tap-hold S-0 rsft)
   gdsh     (fork - ' (lsft rsft))
   gslsh    (fork / , (lsft rsft))
   gcmm     (fork , / (lsft rsft))
   gqt      (fork ' - (lsft rsft))
-  vim      (layer-while-held vim)
-  tabvim   (tap-hold 200 200 tab @vim)
+  escfn    (tap-hold $tap-repress $tap-hold esc (layer-while-held fn))
+  gcmmfn   (tap-hold $tap-repress $tap-hold @gcmm (layer-while-held fn))
+  tabvim   (tap-hold $tap-repress $tap-hold tab @vim)
   engph    (layer-switch graphite)
   enmgph   (layer-switch magic-graphite)
   enqwerty (layer-switch qwerty)
-  h        (tap-hold-release 200 200 h rctl)
-  a        (tap-hold-release 200 200 a rsft)
-  e        (tap-hold-release 200 200 e ralt)
-  i        (tap-hold-release 200 200 i rmet)
-  s        (tap-hold-release 200 200 s lctl)
-  t        (tap-hold-release 200 200 t lsft)
-  r        (tap-hold-release 200 200 r lalt)
-  n        (tap-hold-release 200 200 n lmet)
+  h        (tap-hold-release-keys $tap-repress $tap-hold h rsft $rhkeys)
+  a        (tap-hold-release-keys $tap-repress $tap-hold a rctl $rhkeys)
+  e        (tap-hold-release-keys $tap-repress $tap-hold e ralt $rhkeys)
+  i        (tap-hold-release-keys $tap-repress $tap-hold i rmet $rhkeys)
+  s        (tap-hold-release-keys $tap-repress $tap-hold s lsft $lhkeys)
+  t        (tap-hold-release-keys $tap-repress $tap-hold t lctl $lhkeys)
+  r        (tap-hold-release-keys $tap-repress $tap-hold r lalt $lhkeys)
+  n        (tap-hold-release-keys $tap-repress $tap-hold n lmet $lhkeys)
 {{- if eq .chezmoi.os "darwin" }}
-  fn       (tap-hold 200 200 fn (layer-while-held fn))
+  fn       (tap-hold $tap-repress $tap-hold fn (layer-while-held fn))
 {{ else }}
-  lftl     (tap-hold 200 200 lctl (layer-while-held fn))
-  rftl     (tap-hold 200 200 rctl (layer-while-held fn))
+  lftl     (tap-hold $tap-repress $tap-hold lctl (layer-while-held fn))
+  rftl     (tap-hold $tap-repress $tap-hold rctl (layer-while-held fn))
 {{ end }}
   mgc (switch
     ((key-history o 1)) a break
@@ -76,7 +81,7 @@
   esc        f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12  del
   grv        1    2    3    4    5    6    7    8    9    0    [    ]    bspc
   @tabvim    b    l    d    w    z    @gqt f    o    u    j    ;    =    \
-  @ctrlesc   @n   @r   @t   @s   g    y    @h   @a   @e   @i   @gcmm ret
+  @escfn     @n   @r   @t   @s   g    y    @h   @a   @e   @i   @gcmmfn ret
   @sclsft    q    x    m    c    v    k    p    .    @gdsh    @gslsh @scrsft
   $ffn $lctl lmet lalt           spc            ralt $rctl
 )
