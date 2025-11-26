@@ -190,6 +190,15 @@ require("lazy").setup({
 	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
 	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
 
+	-- Remember last cursor position
+	{
+		"vladdoster/remember.nvim",
+    config = function()
+        require('remember')
+    end,
+		cond = isTerminal(),
+	},
+
 	-- Handle dark/light mode automatically
 	{
 		"f-person/auto-dark-mode.nvim",
