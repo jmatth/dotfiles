@@ -17,6 +17,7 @@
 # options using:
 #     config nu --doc | nu-highlight | less -R
 use std/util "path add"
+use std/dirs
 
 $env.config.show_banner = false
 
@@ -314,9 +315,27 @@ if (which mise | is-not-empty) {
     }
 }
 
+if (which zoxide | is-not-empty) {
+    let zoxide_path = $user_autoload | path join "zoxide.nu"
+    if not ($zoxide_path | path exists) {
+        zoxide init nushell | save -f $zoxide_path
+    }
+}
+
 #
 ## Aliases and custom commands
 #
+
+# Open Yazi file manager and update $env.PWD when it exits
+def --wrapped --env y [...args] {
+	let tmp = (mktemp -t "yazi-cwd.XXXXXX")
+	yazi ...$args --cwd-file $tmp
+	let cwd = (open $tmp)
+	if $cwd != "" and $cwd != $env.PWD {
+		cd $cwd
+	}
+	rm -fp $tmp
+}
 
 alias grep = rg
 alias vrg = rg --vimgrep
