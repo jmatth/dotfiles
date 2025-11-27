@@ -59,7 +59,7 @@ vim.opt.splitbelow = true
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = "  ", trail = "·", nbsp = "␣" }
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 vim.opt.ts = 2
 
 -- Preview substitutions live, as you type!
@@ -193,9 +193,9 @@ require("lazy").setup({
 	-- Remember last cursor position
 	{
 		"vladdoster/remember.nvim",
-    config = function()
-        require('remember')
-    end,
+		config = function()
+			require("remember")
+		end,
 		cond = isTerminal(),
 	},
 
