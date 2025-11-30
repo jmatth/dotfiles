@@ -18,6 +18,10 @@
 # them for future reference.
 use std/util "path add"
 
+$env.NU_LIB_DIRS ++= [($nu.home-path)/.config/nushell/modules]
+# Need to use an absolute path here because parse time keywords are annoying.
+use ~/.config/nushell/modules/mise.nu
+
 if (uname).kernel-name == 'Darwin' {
     path add '/opt/homebrew/sbin'
     path add '/opt/homebrew/bin'
