@@ -19,6 +19,13 @@
 use std/util "path add"
 
 $env.NU_LIB_DIRS ++= [($nu.home-path)/.config/nushell/modules]
+# Generate nu module to handle mise integration. Probably won't work on initial
+# install so this is mainly here to make periodically regenerating the module
+# easier.
+def 'mise nugen' []: nothing -> nothing {
+    mise activate nu | save -f ~/.config/nushell/modules/mise.nu
+}
+
 # Need to use an absolute path here because parse time keywords are annoying.
 use ~/.config/nushell/modules/mise.nu
 
