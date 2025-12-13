@@ -60,12 +60,12 @@ export def 'generate' [light: bool]: nothing -> record {
         7:  'eee8d5'
         8:  '002b36'
         9:  'cb4b16'
-        A: '586e75'
-        B: '657b83'
-        C: '839496'
-        D: '6c71c4'
-        E: '93a1a1'
-        F: 'fdf6e3'
+        A:  '586e75'
+        B:  '657b83'
+        C:  '839496'
+        D:  '6c71c4'
+        E:  '93a1a1'
+        F:  'fdf6e3'
     }
 
     $theme.color_config = {
@@ -84,7 +84,7 @@ export def 'generate' [light: bool]: nothing -> record {
         nothing: $theme.palette.red
         binary: $theme.palette.red
         cellpath: $theme.palette.red
-        hints: $theme.palette.sec
+        hints: { pri: $theme.palette.sec attr: d }
 
         # shape_garbage: { fg: $base07 bg: $red attr: b } # base16 white on red
         # but i like the regular white on red for parse errors

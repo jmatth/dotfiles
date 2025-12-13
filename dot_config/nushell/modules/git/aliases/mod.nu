@@ -2,17 +2,6 @@
 # Git Aliases
 #
 
-## Log
-# zstyle -s ':prezto:module:git:log:medium' format '_git_log_medium_format' \
-#     || _git_log_medium_format='%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B'
-const _git_log_medium_format = '%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B'
-# zstyle -s ':prezto:module:git:log:oneline' format '_git_log_oneline_format' \
-#     || _git_log_oneline_format='%C(green)%h%C(reset) %s%C(red)%d%C(reset)%n'
-const _git_log_oneline_format = '%C(green)%h%C(reset) %s%C(red)%d%C(reset)%n'
-# zstyle -s ':prezto:module:git:log:brief' format '_git_log_brief_format' \
-#     || _git_log_brief_format='%C(green)%h%C(reset) %s%n%C(blue)(%ar by %an)%C(red)%d%C(reset)%n'
-const _git_log_brief_format = '%C(green)%h%C(reset) %s%n%C(blue)(%ar by %an)%C(red)%d%C(reset)%n'
-
 ## Status
 # zstyle -s ':prezto:module:git:status:ignore' submodules '_git_status_ignore_submodules' \
 #     || _git_status_ignore_submodules='none'
@@ -22,7 +11,7 @@ const _git_status_ignore_submodules = 'none'
 export alias g = git
 
 # Branch (b)
-export alias gb = git branch
+export alias gb  = git branch
 export alias gba = git branch --all --verbose
 export alias gbc = git checkout -b
 export alias gbd = git branch --delete
@@ -84,13 +73,13 @@ export alias gdk = git ls-files --killed
 export alias gdi = git status --porcelain --short --ignored | sed -n "s/^!! //p"
 
 # Fetch (f)
-export alias gf = git fetch
-export alias gfa = git fetch --all
-export alias gfc = git clone
+export alias gf   = git fetch
+export alias gfa  = git fetch --all
+export alias gfc  = git clone
 export alias gfcr = git clone --recurse-submodules
-export alias gfm = git pull
+export alias gfm  = git pull
 export alias gfma = git pull --autostash
-export alias gfr = git pull --rebase
+export alias gfr  = git pull --rebase
 export alias gfra = git pull --rebase --autostash
 
 # Flow (F)
@@ -157,7 +146,7 @@ export alias gFsm = git flow support pull
 export alias gFsx = git flow support delete
 
 # Grep (g)
-export alias gg = git grep
+export alias gg  = git grep
 export alias ggi = git grep --ignore-case
 export alias ggl = git grep --files-with-matches
 export alias ggL = git grep --files-without-matches
@@ -178,24 +167,24 @@ export alias gix = git rm -r --cached
 export alias giX = git rm -r --force --cached
 
 # Log (l)
-export alias gl = git log --topo-order --pretty=format:$"($_git_log_medium_format)"
-export alias gls = git log --topo-order --stat --pretty=format:$"($_git_log_medium_format)"
-export alias gld = git log --topo-order --stat --patch --full-diff --pretty=format:$"($_git_log_medium_format)"
-export alias glo = git log --topo-order --pretty=format:$"($_git_log_oneline_format)"
-export alias glg = git log --topo-order --graph --pretty=format:$"($_git_log_oneline_format)"
-export alias glb = git log --topo-order --pretty=format:$"($_git_log_brief_format)"
+export alias gl  = git log --topo-order --pretty=med
+export alias gls = git log --topo-order --stat --pretty=med
+export alias gld = git log --topo-order --stat --patch --full-diff --pretty=med
+export alias glo = git log --topo-order --pretty=ol
+export alias glg = git log --topo-order --graph --pretty=ol
+export alias glb = git log --topo-order --pretty=br
 export alias glc = git shortlog --summary --numbered
 export alias glS = git log --show-signature
 
 # Merge (m)
-export alias gm = git merge
+export alias gm  = git merge
 export alias gmC = git merge --no-commit
 export alias gmF = git merge --no-ff
 export alias gma = git merge --abort
 export alias gmt = git mergetool
 
 # Push (p)
-export alias gp = git push
+export alias gp  = git push
 export alias gpf = git push --force-with-lease
 export alias gpF = git push --force
 export alias gpa = git push --all
@@ -205,14 +194,14 @@ export alias gpt = git push --tags
 # alias gpp = git pull origin "$(git-branch-current 2> /dev/null)" and git push origin "$(git-branch-current 2> /dev/null)"
 
 # Rebase (r)
-export alias gr = git rebase
+export alias gr  = git rebase
 export alias gra = git rebase --abort
 export alias grc = git rebase --continue
 export alias gri = git rebase --interactive
 export alias grs = git rebase --skip
 
 # Remote (R)
-export alias gR = git remote
+export alias gR  = git remote
 export alias gRl = git remote --verbose
 # List git remotes.
 export alias gRa = git remote add
@@ -224,7 +213,7 @@ export alias gRs = git remote show
 export alias gRb = git-hub-browse
 
 # Stash (s)
-export alias gs = git stash
+export alias gs  = git stash
 export alias gsa = git stash apply
 export alias gsx = git stash drop
 export alias gsX = git-stash-clear-interactive
@@ -238,7 +227,7 @@ export alias gsS = git stash save --patch --no-keep-index
 export alias gsw = git stash save --include-untracked --keep-index
 
 # Submodule (S)
-export alias gS = git submodule
+export alias gS  = git submodule
 export alias gSa = git submodule add
 export alias gSf = git submodule foreach
 export alias gSi = git submodule init
@@ -250,7 +239,7 @@ export alias gSu = git submodule update --remote --recursive
 export alias gSx = git-submodule-remove
 
 # Tag (t)
-export alias gt = git tag
+export alias gt  = git tag
 export alias gtl = git tag --list
 export alias gts = git tag --sign
 export alias gtv = git verify-tag
