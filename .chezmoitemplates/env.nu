@@ -18,6 +18,13 @@
 # them for future reference.
 use std/util "path add"
 
+if (uname).kernel-name == 'Darwin' {
+    path add '/opt/homebrew/sbin'
+    path add '/opt/homebrew/bin'
+}
+
+path add ($env.HOME | path join .local bin)
+
 $env.NU_LIB_DIRS ++= [($nu.home-path)/.config/nushell/modules]
 # Generate nu module to handle mise integration. Probably won't work on initial
 # install so this is mainly here to make periodically regenerating the module
@@ -28,11 +35,6 @@ def 'mise nugen' []: nothing -> nothing {
 
 # Need to use an absolute path here because parse time keywords are annoying.
 use ~/.config/nushell/modules/mise.nu
-
-if (uname).kernel-name == 'Darwin' {
-    path add '/opt/homebrew/sbin'
-    path add '/opt/homebrew/bin'
-}
 
 if (uname).kernel-name == 'Linux' {
     let omarchy_bin_path = ($env.HOME | path join .local share omarchy bin)
