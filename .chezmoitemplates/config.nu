@@ -191,6 +191,18 @@ alias vrg = rg --vimgrep
 
 alias code = codium
 
+alias la = ls -a
+alias ll = ls -la
+alias tree = eza -T
+
+# Run ls and l
+def lg []: [nothing -> string] {
+    ls |
+        sort-by type name -i |
+        grid -ic |
+        str trim
+}
+
 # Start Kanata
 def kk [] {
     sudo kanata -n -c $"($env.HOME)/.kanata.kdb"
