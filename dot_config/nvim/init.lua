@@ -323,6 +323,7 @@ require("lazy").setup({
 				{ "<leader>f", group = "[F]ind" },
 				{ "<leader>t", group = "[T]oggle" },
 				{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+				{ "<leader>e", group = "[E]asy motion", mode = { "n", "v" } },
 			},
 		},
 	},
@@ -1021,6 +1022,15 @@ require("lazy").setup({
 		event = "VimEnter",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		opts = { signs = false },
+	},
+
+	-- Easier motion
+	{
+		"https://codeberg.org/andyg/leap.nvim.git",
+		config = function()
+			vim.keymap.set({ "n", "x", "o" }, "<Leader>e", "<Plug>(leap)")
+			-- vim.keymap.set("n", "S", "<Plug>(leap-from-window)")
+		end,
 	},
 
 	{
