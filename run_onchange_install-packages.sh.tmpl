@@ -1,26 +1,37 @@
 #!/usr/bin/env bash
 
-{{ if eq .chezmoi.os "darwin" }}
-brew install -q \
-    eza \
-    bat \
-    just \
-    less \
-    fzf \
-    jq \
-    git \
-    git-lfs \
-    curl \
-    neovim \
-    ripgrep \
-    starship \
-    xcodes \
-    zsh \
-    zoxide \
-    mise \
+export PATH="$HOME/.local/bin:$PATH"
+
+curl https://mise.run | sh
+
+mise tool-alias add nushell 'ubi:nushell/nushell[exe=nu]'
+mkdir -p $HOME/.config/nushell/modules
+mise activate nu > $HOME/.config/nushell/modules/mise.nu
+
+mise use -g \
+    nushell \
     carapace \
     vivid \
+    jq \
+    fzf \
+    just \
+    bat \
+    eza \
+    starship \
+    ripgrep \
+    neovim \
+    zoxide \
+    git-lfs \
     zellij
+
+{{ if eq .chezmoi.os "darwin" }}
+
+brew install -q \
+    less \
+    git \
+    curl \
+    xcodes \
+    zsh
 
 declare -a casks=('font-fira-code-nerd-font' 'karabiner-elements' 'nikitabobko/tap/aerospace' 'firefox@developer-edition' 'iterm2' 'vscodium' 'vial')
 for c in "${casks[@]}"; do
@@ -32,55 +43,19 @@ done
 {{ if eq .chezmoi.os "linux" }}
 if command -v pacman; then
     osname=$(cat /etc/os-release | grep '^ID=' | cut -d= -f2)
-    if [[ "$osname" == "cachyos" ]]; then
-        paru -Sy --noconfirm \
-            nushell \
-            gnupg \
-            eza \
-            bat \
-            just \
-            fzf \
-            jq \
-            git-lfs \
-            neovim \
-            unzip \
-            ripgrep \
-            starship \
-            zoxide \
-            zellij \
-            mise \
-            vivid \
-            vscodium
-    else
-        if ! command -v yay; then
-            sudo pacman -S --needed git base-devel
-            builddir="$(mktemp -d)"
-            git clone https://aur.archlinux.org/paru.git "$builddir"
-            pushd "$builddir"
-            makepkg -si
-            popd
-            rm -rf "$yaybuild"
-        fi
-        paru -Sy --noconfirm \
-            nushell \
-            gnupg \
-            eza \
-            bat \
-            just \
-            fzf \
-            jq \
-            git-lfs \
-            neovim \
-            unzip \
-            ripgrep \
-            starship \
-            zoxide \
-            zellij \
-            mise \
-            vivid \
-            carapace \
-            vscodium-bin
+    if ! command -v paru; then
+        sudo pacman -S --needed git base-devel
+        builddir="$(mktemp -d)"
+        git clone https://aur.archlinux.org/paru.git "$builddir"
+        pushd "$builddir"
+        makepkg -si
+        popd
+        rm -rf "$builddir"
     fi
+    paru -Sy --noconfirm \
+        gnupg \
+        unzip \
+        vscodium-bin
 fi
 {{ end }}
 
