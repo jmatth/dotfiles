@@ -4,7 +4,7 @@ export PATH="$HOME/.local/bin:$PATH"
 
 curl https://mise.run | sh
 
-mise tool-alias add nushell 'ubi:nushell/nushell[exe=nu]'
+mise tool-alias add nushell 'github:nushell/nushell[exe=nu]'
 mkdir -p $HOME/.config/nushell/modules
 mise activate nu > $HOME/.config/nushell/modules/mise.nu
 
