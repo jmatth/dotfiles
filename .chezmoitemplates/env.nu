@@ -23,7 +23,7 @@ if (uname).kernel-name == 'Darwin' {
     path add '/opt/homebrew/bin'
 }
 
-path add ($env.HOME | path join .local bin)
+path add ($nu.home-path | path join .local bin)
 
 $env.NU_LIB_DIRS ++= [($nu.home-path)/.config/nushell/modules]
 # Generate nu module to handle mise integration. Probably won't work on initial
@@ -37,13 +37,13 @@ def 'mise nugen' []: nothing -> nothing {
 use ~/.config/nushell/modules/mise.nu
 
 if (uname).kernel-name == 'Linux' {
-    let omarchy_bin_path = ($env.HOME | path join .local share omarchy bin)
+    let omarchy_bin_path = ($nu.home-path | path join .local share omarchy bin)
     if ($omarchy_bin_path | path exists) {
         path add $omarchy_bin_path
     }
 }
 
-let cargohome = $"($env.HOME)/.cargo"
+let cargohome = $"($nu.home-path)/.cargo"
 if ($cargohome | path exists) {
     path add $'($cargohome)/bin'
 }

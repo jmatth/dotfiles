@@ -205,7 +205,7 @@ def lg []: [nothing -> string] {
 
 # Start Kanata
 def kk [] {
-    sudo kanata -n -c $"($env.HOME)/.kanata.kdb"
+    sudo kanata -n -c $"($nu.home-path)/.kanata.kdb"
 }
 
 # Create a directory and cd into it
