@@ -25,16 +25,19 @@ if (uname).kernel-name == 'Darwin' {
 
 path add ($nu.home-path | path join .local bin)
 
-$env.NU_LIB_DIRS ++= [($nu.home-path)/.config/nushell/modules]
+$env.NU_LIB_DIRS ++= [($nu.default-config-dir | path join modules)]
+
+const mise_mod_path = ($nu.default-config-dir | path join modules mise.nu)
+
 # Generate nu module to handle mise integration. Probably won't work on initial
 # install so this is mainly here to make periodically regenerating the module
 # easier.
 def 'mise nugen' []: nothing -> nothing {
-    mise activate nu | save -f ~/.config/nushell/modules/mise.nu
+    mkdir ($mise_mod_path | path dirname)
+    mise activate nu | save -f $mise_mod_path
 }
 
-# Need to use an absolute path here because parse time keywords are annoying.
-use ~/.config/nushell/modules/mise.nu
+use $mise_mod_path
 
 if (uname).kernel-name == 'Linux' {
     let omarchy_bin_path = ($nu.home-path | path join .local share omarchy bin)
