@@ -205,7 +205,12 @@ def lg []: [nothing -> string] {
 
 # Start Kanata
 def kk [] {
-    sudo kanata -n -c $"($nu.home-path)/.kanata.kdb"
+    let kanata = (which kanata).0.path
+    if ($kanata | is-empty) {
+        print 'Could not find kanata, not installed or missing from PATH?'
+        return
+    }
+    sudo $kanata -n -c $"($nu.home-path)/.kanata.kdb"
 }
 
 # Create a directory and cd into it
