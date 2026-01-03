@@ -38,6 +38,10 @@ def 'mise nugen' []: nothing -> nothing {
 }
 
 use $mise_mod_path
+# Mise doesn't run the full env update code on activation. Retreive it as the
+# most recently added pre_prompt hook and run it manually so $env.PATH is
+# populated for future config files.
+do --env ($env.config.hooks.pre_prompt | last | get code)
 
 if (uname).kernel-name == 'Linux' {
     let omarchy_bin_path = ($nu.home-path | path join .local share omarchy bin)
