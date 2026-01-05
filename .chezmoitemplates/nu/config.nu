@@ -59,16 +59,21 @@ $env.config.history.max_size = 5_000_000
 # This setting only applies to SQLite-backed history
 $env.config.history.isolation = true
 
-if not ($env.SHELL | str ends-with /nu) {
+if not ($env.SHELL? | default '' | str ends-with /nu) {
     $env.SHELL = $nu.current-exe
 }
 
-let isroot = (id -u | into int) == 0
+let isroot = do {
+    if (which id | is-empty) {
+        return false
+    }
+    return ((id -u | into int) == 0)
+}
 
 use theme
 theme set auto
 
-if $env.TERM == 'linux' {
+if $env.TERM? == 'linux' {
     $env.config.table.mode = 'single'
 }
 

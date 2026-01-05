@@ -1,7 +1,10 @@
+chezutils
 {{- if ne .chezmoi.os "darwin" }}
 .aerospace.toml
 Library
 {{ else if ne .chezmoi.os "linux" }}
 .config/nushell
 .config/ghostty
+{{ else if ne .chezmoi.os "windows" }}
+AppData
 {{- end }}

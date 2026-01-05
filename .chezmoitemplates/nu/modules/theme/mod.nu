@@ -114,7 +114,7 @@ export def 'generate' [light: bool]: nothing -> record {
 
 # Set the colors of the linux console.
 export def 'update-console' [ansi_mapping: record, light: bool]: nothing -> nothing {
-    if $env.term != 'linux' { return }
+    if $env.TERM? != 'linux' { return }
     $ansi_mapping | items {|num, hex|
         print -rn $'(ansi osc)P($num)($hex)'
     }
