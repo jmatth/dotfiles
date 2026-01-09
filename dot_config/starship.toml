@@ -1,5 +1,5 @@
 format = """
-[┌─](blue)\
+[╭─](blue)\
 $directory\
 $fill\
 $golang\
@@ -7,11 +7,11 @@ $nodejs\
 $rust\
 $dart\
 $username@$hostname\
-[─┐](blue)\
+[─╮](blue)\
 $line_break\
-[└─](blue)
+[╰─](blue)
 """
-right_format = '$status [<─$git_branch$git_commit$git_status─┘](blue)'
+right_format = '$status [<─$git_branch$git_commit$git_status─╯](blue)'
 
 add_newline = false
 
