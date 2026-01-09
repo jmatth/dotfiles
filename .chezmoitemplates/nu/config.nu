@@ -89,6 +89,9 @@ $env.config.cursor_shape.vi_insert = "block"
 # the prompt.
 let solarized = theme generate false
 let promptchar = if $isroot { $'(ansi {fg: $solarized.palette.red, attr: rb})#(ansi rst)' } else { '%' }
+$env.TRANSIENT_PROMPT_COMMAND = {||
+    do $env.PROMPT_COMMAND | str replace '─╮' ''
+}
 $env.PROMPT_INDICATOR = $'($promptchar)(ansi $solarized.palette.blue)>(ansi reset) '
 $env.PROMPT_INDICATOR_VI_INSERT = $'($promptchar)(ansi $solarized.palette.blue)>(ansi reset) '
 $env.PROMPT_INDICATOR_VI_NORMAL = $'($promptchar)(ansi red)[(ansi reset) '
@@ -97,7 +100,7 @@ $env.PROMPT_MULTILINE_INDICATOR = '::: '
 $env.config.menus ++= [
     {
         name: history_menu
-        only_buffer_difference: true                                    # Search is done on the text written after activating the menu
+        only_buffer_difference: true # Search is done on the text written after activating the menu
         marker: $'(ansi {fg: $solarized.palette.green attr: r})?(ansi rst)(ansi $solarized.palette.blue)> ' # Indicator that appears with the menu is active
         type: {
             layout: list             # Type of menu
