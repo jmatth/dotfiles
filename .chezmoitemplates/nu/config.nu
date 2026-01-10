@@ -238,6 +238,60 @@ def --env up [levels: int = 1]: nothing -> nothing {
     cd (generate {|i| if $i > 0 { {out: '../', next: ($i - 1)} } } $levels | str join)
 }
 
+# Wrapper around the file utility available on most Unix systems. Returns a
+# table in most cases. Piping in a single string will return a record.
+# Arguments are automatically treated as globs, similar to ls. If arguments
+# are provided and values are piped in they will be combined in the underlying
+# call to the file binary.
+def file [
+    --mime(-i)                 # Output mime type strings instead human readable strings
+    --dereference(-L)          # Follow symlinks
+    --no-buffer(-n)            # Flush stdout after checking each file
+    --preserve-date(-p)        # Attempt to preserve the access time of files analyzed
+    --raw(-r)                  # Dont translate unprintable characters to octal
+    --special-files(-s)        # Read block and character device files too
+    --uncompress(-z)           # Try to look inside compressed files
+    --split-info(-m)           # Split the info string around `, `. Ignored if `--mime` is set.
+    ...files: glob
+]: [
+    nothing -> table
+    string -> record
+    glob -> table
+    list<string> -> table
+    list<glob> -> table
+] {
+    let args = [
+        ...(if $mime { ['--mime'] })
+        ...(if $dereference { ['--dereference'] } else {[ '--no-dereference' ]})
+        ...(if $no_buffer { ['--no-buffer'] })
+        ...(if $preserve_date { ['--preserve-date'] })
+        ...(if $raw { ['--raw'] })
+        ...(if $special_files { ['--special-files'] })
+        ...(if $uncompress { ['--uncompress'] })
+        ...$files
+    ]
+    let input = $in
+    let inargs = match ($input | describe | str replace --regex '<.*' '') {
+        'list' => $input,
+        'nothing' => [],
+        _ => [$input],
+    }
+    ^file ...$args ...$inargs |
+        parse '{name}: {info}' |
+        if $mime {
+            update info { str trim | split row '; ' } |
+                insert type { $in.info.0 } |
+                insert encoding { $in.info.1 } |
+                reject info
+        } else {
+            update info { str trim | if $split_info { split row ', ' } else {} }
+        } |
+        metadata set -l |
+        if ($files | is-empty) and ($input | describe) == string {
+            first
+        } else {}
+}
+
 # Visually test ANSI color support
 def colortest []: nothing -> nothing {
     def printcolor [fgbg: int, color: int, txt: string = '::']: nothing -> nothing {
