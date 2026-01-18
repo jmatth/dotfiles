@@ -218,7 +218,7 @@ def kk [] {
         print 'Could not find kanata, not installed or missing from PATH?'
         return
     }
-    sudo $kanata -n -c $"($nu.home-path)/.kanata.kdb"
+    sudo $kanata -n -c $"($nu.home-dir)/.kanata.kdb"
 }
 
 # Create a directory and cd into it

@@ -23,7 +23,7 @@ if (uname).kernel-name == 'Darwin' {
     path add '/opt/homebrew/bin'
 }
 
-path add ($nu.home-path | path join .local bin)
+path add ($nu.home-dir | path join .local bin)
 
 $env.NU_LIB_DIRS ++= [($nu.default-config-dir | path join modules)]
 
@@ -44,13 +44,13 @@ use $mise_mod_path
 do --env ($env.config.hooks.pre_prompt | last | get code)
 
 if (uname).kernel-name == 'Linux' {
-    let omarchy_bin_path = ($nu.home-path | path join .local share omarchy bin)
+    let omarchy_bin_path = ($nu.home-dir | path join .local share omarchy bin)
     if ($omarchy_bin_path | path exists) {
         path add $omarchy_bin_path
     }
 }
 
-let cargohome = $"($nu.home-path)/.cargo"
+let cargohome = $"($nu.home-dir)/.cargo"
 if ($cargohome | path exists) {
     path add $'($cargohome)/bin'
 }
