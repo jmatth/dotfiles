@@ -1,3 +1,4 @@
+setup.sh
 chezutils
 {{- if ne .chezmoi.os "darwin" }}
 .aerospace.toml
