@@ -1,3 +1,16 @@
+# Activate mise if installed
+export PATH="$HOME/.local/bin:$PATH"
+if (( $+commands[mise] )); then
+    eval "$(mise activate zsh)"
+
+    # Try to switch to nushell if
+    # - mise is available with nushell installed
+    # - we are at shell level 1
+    if [[ $- == *i* && $SHLVL < 2 ]] && mise which nu &> /dev/null; then
+        exec mise x -- nu -il
+    fi
+fi
+
 #---------------------------------------------------------------------
 # Configure plugins and load with antigen
 #---------------------------------------------------------------------
@@ -301,11 +314,6 @@ export GPG_TTY="$(tty)"
 # Use starship prompt if available
 if (( $+commands[starship] )); then
     eval "$(starship init zsh)"
-fi
-
-# Activate mise if installed
-if (( $+commands[mise] )); then
-    eval "$(mise activate zsh)"
 fi
 
 # Activate cargo/rustup if installed
