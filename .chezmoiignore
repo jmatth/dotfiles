@@ -5,6 +5,8 @@ Library
 {{ else if ne .chezmoi.os "linux" }}
 .config/nushell
 .config/ghostty
+.config/ghostty
+.config/VSCodium
 {{ else if ne .chezmoi.os "windows" }}
 AppData
 {{- end }}
