@@ -2,27 +2,29 @@
 
 export PATH="$HOME/.local/bin:$PATH"
 
-curl https://mise.run | sh
+if ! command -v mise &> /dev/null; then
+    curl https://mise.run | sh
+    mise tool-alias add nushell 'github:nushell/nushell[exe=nu]'
+    mise use -g \
+        nushell \
+        carapace \
+        vivid \
+        jq \
+        fzf \
+        just \
+        bat \
+        eza \
+        starship \
+        ripgrep \
+        neovim \
+        zoxide \
+        git-lfs \
+        tmux \
+        zellij
 
-mise tool-alias add nushell 'github:nushell/nushell[exe=nu]'
-mkdir -p $HOME/.config/nushell/modules
-mise activate nu > $HOME/.config/nushell/modules/mise.nu
-
-mise use -g \
-    nushell \
-    carapace \
-    vivid \
-    jq \
-    fzf \
-    just \
-    bat \
-    eza \
-    starship \
-    ripgrep \
-    neovim \
-    zoxide \
-    git-lfs \
-    zellij
+    mkdir -p $HOME/.config/nushell/modules
+    mise activate nu > $HOME/.config/nushell/modules/mise.nu
+fi
 
 {{ if eq .chezmoi.os "darwin" }}
 
@@ -42,7 +44,6 @@ done
 
 {{ if eq .chezmoi.os "linux" }}
 if command -v pacman; then
-    osname=$(cat /etc/os-release | grep '^ID=' | cut -d= -f2)
     if ! command -v paru; then
         sudo pacman -S --needed git base-devel
         builddir="$(mktemp -d)"
