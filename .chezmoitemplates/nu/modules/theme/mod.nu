@@ -3,10 +3,18 @@ use ./solarized
 
 export-env {
     $env.nu_color_theme = {
-        dark: 'rose-pine-moon'
+        dark: 'rose-pine'
         light: 'rose-pine-dawn'
     }
 }
+
+def themes [] {[
+    solarized-dark
+    solarized-light
+    rose-pine
+    rose-pine-moon
+    rose-pine-dawn
+]}
 
 # Detect the system theme, either "light" or "dark".
 # Returns "dark" by default if system theme cannot be determined.
@@ -29,7 +37,7 @@ export def 'fetch name' []: nothing -> string {
     }
 }
 
-export def fetch [name: string]: nothing -> record {
+export def fetch [name: string@themes]: nothing -> record {
     let theme = match $name {
         'solarized-dark'  => (solarized generate false)
         'solarized-light' => (solarized generate true)
@@ -58,7 +66,7 @@ export def 'update-console' [ansi_mapping: record, light: bool]: nothing -> noth
 }
 
 # Change color theme
-export def --env set [name: string]: nothing -> nothing {
+export def --env set [name: string@themes]: nothing -> nothing {
     let theme = fetch $name
     $env.config.color_config = $theme.color_config
     if (which vivid | is-not-empty) {

@@ -5,8 +5,10 @@ use ./rose-pine-moon.nu
 export def generate [light: bool, alt: bool] {
   let palette = if $light {
     $rose_pine_dawn.palette
-  } else {
+  } else if $alt {
     $rose_pine_moon.palette
+  } else {
+    $rose_pine.palette
   }
 
   return {
@@ -14,7 +16,7 @@ export def generate [light: bool, alt: bool] {
     color_config: {
       separator: default
       leading_trailing_space_bg: { attr: n }
-      header: green_bold
+      header: $palette.internal.subtle
       empty: blue
       bool: light_cyan
       int: default
@@ -27,7 +29,7 @@ export def generate [light: bool, alt: bool] {
       nothing: default
       binary: default
       cell-path: default
-      row_index: green_bold
+      row_index: $palette.internal.subtle
       record: default
       list: default
       closure: green_bold
