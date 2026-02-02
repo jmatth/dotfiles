@@ -82,69 +82,6 @@ export alias gfma = git pull --autostash
 export alias gfr  = git pull --rebase
 export alias gfra = git pull --rebase --autostash
 
-# Flow (F)
-export alias gFi = git flow init
-export alias gFf = git flow feature
-export alias gFb = git flow bugfix
-export alias gFl = git flow release
-export alias gFh = git flow hotfix
-export alias gFs = git flow support
-
-export alias gFfl = git flow feature list
-export alias gFfs = git flow feature start
-export alias gFff = git flow feature finish
-export alias gFfp = git flow feature publish
-export alias gFft = git flow feature track
-export alias gFfd = git flow feature diff
-export alias gFfr = git flow feature rebase
-export alias gFfc = git flow feature checkout
-export alias gFfm = git flow feature pull
-export alias gFfx = git flow feature delete
-
-export alias gFbl = git flow bugfix list
-export alias gFbs = git flow bugfix start
-export alias gFbf = git flow bugfix finish
-export alias gFbp = git flow bugfix publish
-export alias gFbt = git flow bugfix track
-export alias gFbd = git flow bugfix diff
-export alias gFbr = git flow bugfix rebase
-export alias gFbc = git flow bugfix checkout
-export alias gFbm = git flow bugfix pull
-export alias gFbx = git flow bugfix delete
-
-export alias gFll = git flow release list
-export alias gFls = git flow release start
-export alias gFlf = git flow release finish
-export alias gFlp = git flow release publish
-export alias gFlt = git flow release track
-export alias gFld = git flow release diff
-export alias gFlr = git flow release rebase
-export alias gFlc = git flow release checkout
-export alias gFlm = git flow release pull
-export alias gFlx = git flow release delete
-
-export alias gFhl = git flow hotfix list
-export alias gFhs = git flow hotfix start
-export alias gFhf = git flow hotfix finish
-export alias gFhp = git flow hotfix publish
-export alias gFht = git flow hotfix track
-export alias gFhd = git flow hotfix diff
-export alias gFhr = git flow hotfix rebase
-export alias gFhc = git flow hotfix checkout
-export alias gFhm = git flow hotfix pull
-export alias gFhx = git flow hotfix delete
-
-export alias gFsl = git flow support list
-export alias gFss = git flow support start
-export alias gFsf = git flow support finish
-export alias gFsp = git flow support publish
-export alias gFst = git flow support track
-export alias gFsd = git flow support diff
-export alias gFsr = git flow support rebase
-export alias gFsc = git flow support checkout
-export alias gFsm = git flow support pull
-export alias gFsx = git flow support delete
-
 # Grep (g)
 export alias gg  = git grep
 export alias ggi = git grep --ignore-case
@@ -256,4 +193,11 @@ export alias gwc = git clean --dry-run
 export alias gwC = git clean --force
 export alias gwx = git rm -r
 export alias gwX = git rm -r --force
-# alias gwt = cd ${$(git rev-parse --show-cdup):-.}'
+
+# cd to the root of the current git directory.
+def --env gwt [] {
+    let path_to_root = git rev-parse --show-cdup | str trim
+    if (path_to_root | is-empty) { return }
+    cd $path_to_root
+}
+
