@@ -280,8 +280,8 @@ def file [
         parse '{name}: {info}' |
         if $mime {
             update info { str trim | split row '; ' } |
-                insert type { $in.info.0 } |
-                insert encoding { $in.info.1 } |
+                insert type { $in.info.0? } |
+                insert encoding { $in.info.1? } |
                 reject info
         } else {
             update info { str trim | if $split_info { split row ', ' } else {} }
