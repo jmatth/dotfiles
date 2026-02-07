@@ -179,6 +179,11 @@ local function isNative()
 	return isTerminal() and not vim.g.nvimpager
 end
 
+-- Why is lua like this?
+function string.starts(String, Start)
+	return string.sub(String, 1, string.len(Start)) == Start
+end
+
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
@@ -209,13 +214,35 @@ require("lazy").setup({
 		opts = {
 			set_dark_mode = function()
 				vim.api.nvim_set_option_value("background", "dark", {})
-				reconfigNeosolarized(true)
-				vim.cmd.colorscheme("NeoSolarized")
+				local curr_scheme = vim.g.colors_name
+				if curr_scheme == nil then
+					curr_scheme = "{{ .theme }}"
+				end
+				if curr_scheme == "ayu" then
+					vim.g.ayucolor = "mirage"
+					vim.cmd.colorscheme("ayu")
+				elseif curr_scheme == "NeoSolarized" or curr_scheme == "solarized" then
+					reconfigNeosolarized(true)
+				elseif string.starts(curr_scheme, "rose-pine") then
+					vim.cmd.colorscheme("rose-pine-moon")
+				end
+				vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
 			end,
 			set_light_mode = function()
 				vim.api.nvim_set_option_value("background", "light", {})
-				reconfigNeosolarized(false)
-				vim.cmd.colorscheme("NeoSolarized")
+				local curr_scheme = vim.g.colors_name
+				if curr_scheme == nil then
+					curr_scheme = "{{ .theme }}"
+				end
+				if curr_scheme == "ayu" then
+					vim.g.ayucolor = "light"
+					vim.cmd.colorscheme("ayu")
+				elseif curr_scheme == "NeoSolarized" or curr_scheme == "solarized" then
+					reconfigNeosolarized(false)
+				elseif string.starts(curr_scheme, "rose-pine") then
+					vim.cmd.colorscheme("rose-pine-dawn")
+				end
+				vim.api.nvim_set_hl(0, "Normal", { bg = "NONE" })
 			end,
 			update_interval = 3000,
 			fallback = "dark",
@@ -303,6 +330,7 @@ require("lazy").setup({
 		opts = {
 			-- delay between pressing a key and opening which-key (milliseconds)
 			-- this setting is independent of vim.opt.timeoutlen
+			preset = "modern",
 			delay = 0,
 			icons = {
 				-- set icon mappings to true if you have a Nerd Font
@@ -964,18 +992,17 @@ require("lazy").setup({
 		cond = isTerminal(),
 		priority = 1000,
 		lazy = false,
-		config = function()
-			reconfigNeosolarized(true)
-			vim.cmd.colorscheme("NeoSolarized")
-		end,
 	},
 
 	{
 		"rose-pine/neovim",
 		name = "rose-pine",
-		config = function()
-			vim.cmd("colorscheme rose-pine")
-		end,
+		lazy = false,
+	},
+
+	{
+		"ayu-theme/ayu-vim",
+		lazy = false,
 	},
 
 	{

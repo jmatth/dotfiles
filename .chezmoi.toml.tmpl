@@ -3,10 +3,14 @@
 {{- $secKeyChoices := keys $secKeyDict -}}
 {{- $secKeyName := promptChoiceOnce . "signingKey" "Select security key" $secKeyChoices "5630" -}}
 {{- $secKey := get $secKeyDict $secKeyName -}}
+{{- $themes := list "solarized" "ayu" "rose-pine" -}}
+{{- $theme := promptChoiceOnce . "theme" "Choose a theme" $themes -}}
+
 
 [data]
 	email = {{ $email | quote }}
 	signingKey = {{ $secKey | quote }}
+	theme = {{ $theme | quote }}
 
 [merge]
 	command = "nvim"

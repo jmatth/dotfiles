@@ -1,6 +1,19 @@
 # vim: set ft=ini
 # Not actually ini but close enough for syntax highlighting
 
+{{ if eq .theme "solarized" -}}
+{{ if eq .chezmoi.os "darwin" -}}
+theme = dark:iTerm2 Solarized Dark,light:iTerm2 Solarized Light
+{{ else -}}
+theme = dark:Builtin Solarized Dark,light:Builtin Solarized Light
+{{ end -}}
+{{ else if eq .theme "ayu" -}}
+theme = dark:Ayu Mirage,light:Ayu Light
+{{ else if eq .theme "rose-pine" -}}
+theme = dark:Rose Pine Moon,light:Rose Pine Dawn
+{{ end -}}
+background-opacity = 0.9
+
 {{ if eq .chezmoi.os "darwin" -}}
 keybind = global:shift+alt+grave_accent=toggle_quick_terminal
 macos-icon = holographic
@@ -8,7 +21,7 @@ theme = dark:iTerm2 Solarized Dark,light:iTerm2 Solarized Light
 font-family = Fira Code Retina
 font-size = 14
 {{- else -}}
-theme = dark:Builtin Solarized Dark,light:Builtin Solarized Light
+window-decoration = server
 font-family = FiraCode Nerd Font
 font-size = 12
 {{- end }}
