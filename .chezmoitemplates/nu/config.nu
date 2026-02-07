@@ -203,6 +203,9 @@ alias la = ls -a
 alias ll = ls -la
 alias tree = eza -T
 
+alias jobs = job list
+alias fg = job unfreeze
+
 # Run ls and l
 def lg []: [nothing -> string] {
     ls |
