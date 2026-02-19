@@ -330,3 +330,105 @@ def colortest []: nothing -> nothing {
 
     return null
 }
+
+module archive {
+    def tabulate_tar []: string -> table {
+        detect columns -n | rename mode owner size date time name |
+        insert user  { get owner | split row '/' | first } |
+        insert group { get owner | split row '/' | last } |
+        reject owner |
+        update size { into filesize } |
+        move mode --after date |
+        update date {|r| $'($r.date)T($r.time)+00:00' | into datetime } | reject time |
+        move --first name | metadata set -l
+    }
+
+    def get_handler [input: path] {
+        let handlers = [[matches list extract];
+            [[.tar.gz .tgz]
+                {|i, v| tar tvzf $i | tabulate_tar }
+                {|i, v| }
+            ]
+            [[.tar.bz2 .tbz .tbz2]
+                {|i, v| tar tvjf $i | tabulate_tar }
+                {|i, v| }
+            ]
+            [[.tar.xz .txz]
+                {|i, v|
+                    let tar_has_xz = (tar --xz --help | complete).exit_code == 0
+                    if $tar_has_xz {
+                        tar --xz -tvf $i | tabulate_tar
+                    } else {
+                        xzcat $i | tar tvf - | tabulate_tar
+                    }
+                }
+                {|i, v| }
+            ]
+            [[.tar.zma .tlz]
+                {|i, v|
+                    let tar_has_lzma = (tar --lzma --help | complete).exit_code == 0
+                    if $tar_has_lzma {
+                        tar --lzma -tvf $i | tabulate_tar
+                    } else {
+                        lzcat $i | tar tvf - | tabulate_tar
+                    }
+            }, {|i, v| }]
+            [[.tar.zst .tzst]
+                {|i, v| tar -I zstd -tvf $i | tabulate_tar }
+                {|i, v| }
+            ]
+            [[.tar]
+                {|i, v| tar tvf $i | tabulate_tar }
+                {|i, v| }
+            ]
+            [[.zip .jar]
+                {|i, v|
+                    unzip -lv $i |
+                    detect columns -s 1 --guess |
+                    skip 1 | drop 2 |
+                    rename -b { str downcase } |
+                    move --first name |
+                    update size { into filesize } | update length { into filesize } |
+                    update date {|r| $'($r.date)T($r.time)+00:00' | into datetime } | reject time |
+                    metadata set -l
+                }
+                {|i, v| }
+            ]
+            [[.rar]
+                {|i, v|
+                    if (which unrar | is-not-empty) {
+                        unrar v $i | detect columns --skip 6 | skip 1 | drop 2 |
+                        rename -b { str downcase } |
+                        update size { into filesize } |
+                        update packed { into filesize } |
+                        update date {|r| $'($r.date)T($r.time)+00:00' | into datetime } | reject time |
+                        move name --first | metadata set -l
+                    } else if (which rar | is-not-empty) {
+                        rar $'(if $v { 'v' } else { 'l' })' $i
+                    } else {
+                        lsar ...(if $v { '-l' }) $i
+                    }
+                }
+                {|i, v| }
+            ]
+            [[.7z]
+                {|i, v|
+                    7za l $i | detect columns -s 18 --guess | skip 1 | drop 2 |
+                    rename -b { str downcase } |
+                    update date {|r| $'($r.date)T($r.time)+00:00' | into datetime } | reject time |
+                    update size { into filesize } | update compressed { if ($in | is-not-empty) { $in | into filesize } else { null } } |
+                    move name --first | metadata set -l
+                }
+                {|i, v| }
+            ]
+        ]
+        $handlers | where ($it.matches | any {|s| $input | str ends-with $s }) | first
+    }
+
+    # List the contents of common archive formats.
+    export def lsarchive [input: path] {
+        let h = get_handler $input
+        do $h.list $input true
+    }
+}
+use archive *
