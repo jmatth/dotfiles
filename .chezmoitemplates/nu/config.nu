@@ -286,7 +286,7 @@ def file [
         } else {
             update info { str trim | if $split_info { split row ', ' } else {} }
         } |
-        metadata set -l |
+        metadata set --path-columns [name] |
         if ($files | is-empty) and ($input | describe) == string {
             first
         } else {}
@@ -340,7 +340,7 @@ module archive {
         update size { into filesize } |
         move mode --after date |
         update date {|r| $'($r.date)T($r.time)+00:00' | into datetime } | reject time |
-        move --first name | metadata set -l
+        move --first name | metadata set --path-columns [name]
     }
 
     def get_handler [input: path] {
@@ -390,7 +390,7 @@ module archive {
                     move --first name |
                     update size { into filesize } | update length { into filesize } |
                     update date {|r| $'($r.date)T($r.time)+00:00' | into datetime } | reject time |
-                    metadata set -l
+                    metadata set --path-columns [name]
                 }
                 {|i, v| }
             ]
@@ -402,7 +402,7 @@ module archive {
                         update size { into filesize } |
                         update packed { into filesize } |
                         update date {|r| $'($r.date)T($r.time)+00:00' | into datetime } | reject time |
-                        move name --first | metadata set -l
+                        move name --first | metadata set --path-columns [name]
                     } else if (which rar | is-not-empty) {
                         rar $'(if $v { 'v' } else { 'l' })' $i
                     } else {
@@ -417,7 +417,7 @@ module archive {
                     rename -b { str downcase } |
                     update date {|r| $'($r.date)T($r.time)+00:00' | into datetime } | reject time |
                     update size { into filesize } | update compressed { if ($in | is-not-empty) { $in | into filesize } else { null } } |
-                    move name --first | metadata set -l
+                    move name --first | metadata set --path-columns [name]
                 }
                 {|i, v| }
             ]

@@ -15,7 +15,7 @@ export def "ls-files" [] {
             U => 'resolve-undo'          # file with resolve-undo information
             _ => 'UNKNOWN',
         }} |
-        metadata set -l
+        metadata set --path-columns [name]
     )
 }
 
@@ -54,7 +54,7 @@ export def "status" [] {
             'D ' => 'deleted',
             _ => 'UNKNOWN',
         }} |
-        metadata set -l
+        metadata set --path-columns [name]
     )
 }
 
