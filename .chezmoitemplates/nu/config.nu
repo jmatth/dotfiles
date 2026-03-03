@@ -343,18 +343,22 @@ module archive {
         move --first name | metadata set --path-columns [name]
     }
 
+    def choose_program [...options: string]: nothing -> string {
+        $options | where (which ($it | split row ' ' | first) | is-not-empty) | first | default ($options | last)
+    }
+
     def get_handler [input: path] {
         let handlers = [[matches list extract];
             [[.tar.gz .tgz]
-                {|i, v| tar tvzf $i | tabulate_tar }
-                {|i, v| }
+                {|i| tar tvzf $i | tabulate_tar }
+                {|i| tar -xvf $i --use-compress-program=$'(choose_program unpigz gunzip)' }
             ]
             [[.tar.bz2 .tbz .tbz2]
-                {|i, v| tar tvjf $i | tabulate_tar }
-                {|i, v| }
+                {|i| tar tvjf $i | tabulate_tar }
+                {|i| tar -xvf $i --use-compress-program=$'(choose_program lbunzip2 pbunzip2 bunzip2)' }
             ]
             [[.tar.xz .txz]
-                {|i, v|
+                {|i|
                     let tar_has_xz = (tar --xz --help | complete).exit_code == 0
                     if $tar_has_xz {
                         tar --xz -tvf $i | tabulate_tar
@@ -362,27 +366,36 @@ module archive {
                         xzcat $i | tar tvf - | tabulate_tar
                     }
                 }
-                {|i, v| }
+                {|i| tar -xvf $i --use-compress-program=$'(choose_program "pixz -d" xz)' }
             ]
             [[.tar.zma .tlz]
-                {|i, v|
+                {|i|
                     let tar_has_lzma = (tar --lzma --help | complete).exit_code == 0
                     if $tar_has_lzma {
                         tar --lzma -tvf $i | tabulate_tar
                     } else {
                         lzcat $i | tar tvf - | tabulate_tar
                     }
-            }, {|i, v| }]
+                }
+                {|i|
+                    let tar_has_lzma = (tar --lzma --help | complete).exit_code == 0
+                    if $tar_has_lzma {
+                        tar --lzma -xvf $i
+                    } else {
+                        lzcat $i | tar -xvf -
+                    }
+                }
+            ]
             [[.tar.zst .tzst]
-                {|i, v| tar -I zstd -tvf $i | tabulate_tar }
-                {|i, v| }
+                {|i| tar -I zstd -tvf $i | tabulate_tar }
+                {|i| tar -xvf $i --use-compress-program='zstd' }
             ]
             [[.tar]
-                {|i, v| tar tvf $i | tabulate_tar }
-                {|i, v| }
+                {|i| tar tvf $i | tabulate_tar }
+                {|i| tar -xvf $i }
             ]
             [[.zip .jar]
-                {|i, v|
+                {|i|
                     unzip -lv $i |
                     detect columns -s 1 --guess |
                     skip 1 | drop 2 |
@@ -392,10 +405,13 @@ module archive {
                     update date {|r| $'($r.date)T($r.time)+00:00' | into datetime } | reject time |
                     metadata set --path-columns [name]
                 }
-                {|i, v| }
+                {|i|
+                    let extract_dir = ($i | path parse | get stem)
+                    unzip $i -d $extract_dir
+                }
             ]
             [[.rar]
-                {|i, v|
+                {|i|
                     if (which unrar | is-not-empty) {
                         unrar v $i | detect columns --skip 6 | skip 1 | drop 2 |
                         rename -b { str downcase } |
@@ -404,22 +420,30 @@ module archive {
                         update date {|r| $'($r.date)T($r.time)+00:00' | into datetime } | reject time |
                         move name --first | metadata set --path-columns [name]
                     } else if (which rar | is-not-empty) {
-                        rar $'(if $v { 'v' } else { 'l' })' $i
+                        rar v $i
                     } else {
-                        lsar ...(if $v { '-l' }) $i
+                        lsar -l $i
                     }
                 }
-                {|i, v| }
+                {|i|
+                    if (which unrar | is-not-empty) {
+                        unrar x -ad $i
+                    } else if (which rar | is-not-empty) {
+                        rar x -ad $i
+                    } else {
+                        unar -d $i
+                    }
+                }
             ]
             [[.7z]
-                {|i, v|
+                {|i|
                     7za l $i | detect columns -s 18 --guess | skip 1 | drop 2 |
                     rename -b { str downcase } |
                     update date {|r| $'($r.date)T($r.time)+00:00' | into datetime } | reject time |
                     update size { into filesize } | update compressed { if ($in | is-not-empty) { $in | into filesize } else { null } } |
                     move name --first | metadata set --path-columns [name]
                 }
-                {|i, v| }
+                {|i| 7za x $i }
             ]
         ]
         $handlers | where ($it.matches | any {|s| $input | str ends-with $s }) | first
@@ -428,7 +452,13 @@ module archive {
     # List the contents of common archive formats.
     export def lsarchive [input: path] {
         let h = get_handler $input
-        do $h.list $input true
+        do $h.list $input
+    }
+
+    # Extract common archive formats.
+    export def unarchive [input: path] {
+        let h = get_handler $input
+        do $h.extract $input
     }
 }
 use archive *
