@@ -71,6 +71,22 @@ let isroot = do {
 }
 
 use theme
+{{ if eq .theme "solarized" -}}
+$env.nu_color_theme = {
+    dark: 'solarized-dark',
+    light: 'solarized-light',
+}
+{{ else if eq .theme "ayu" -}}
+$env.nu_color_theme = {
+    dark: 'ayu-mirage',
+    light: 'ayu-light',
+}
+{{ else if eq .theme "rose-pine" -}}
+$env.nu_color_theme = {
+    dark: 'rose-pine-moon',
+    light: 'rose-pine-dawn',
+}
+{{ end -}}
 theme set auto
 
 if $env.TERM? == 'linux' {
