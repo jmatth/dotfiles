@@ -33,6 +33,14 @@ export def 'fetch mode' []: nothing -> string {
         } else {
             return 'dark'
         }
+    } else if $nu.os-info.name == 'linux' {
+        if (which gsettings | is-not-empty) {
+            if (gsettings get org.gnome.desktop.interface color-scheme) == "'prefer-light'" {
+                return 'light'
+            } else {
+                return 'dark'
+            }
+        }
     }
     return 'dark'
 }
