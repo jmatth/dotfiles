@@ -1,10 +1,14 @@
 use ./rose_pine
 use ./solarized
+use ./ayu
+
+module default_theme { export use ./default * }
+use default_theme
 
 export-env {
     $env.nu_color_theme = {
-        dark: 'rose-pine'
-        light: 'rose-pine-dawn'
+        dark: 'default'
+        light: 'default'
     }
 }
 
@@ -14,6 +18,10 @@ def themes [] {[
     rose-pine
     rose-pine-moon
     rose-pine-dawn
+    ayu-dark
+    ayu-mirage
+    ayu-light
+    default
 ]}
 
 # Detect the system theme, either "light" or "dark".
@@ -44,6 +52,10 @@ export def fetch [name: string@themes]: nothing -> record {
         'rose-pine'       => (rose_pine generate false false)
         'rose-pine-moon'  => (rose_pine generate false true)
         'rose-pine-dawn'  => (rose_pine generate true false)
+        'ayu-dark'        => (ayu generate false false)
+        'ayu-mirage'      => (ayu generate false true)
+        'ayu-light'       => (ayu generate true false)
+        'default'         => (default_theme generate false)
     }
     return $theme
 }
@@ -70,9 +82,17 @@ export def --env set [name: string@themes]: nothing -> nothing {
     let theme = fetch $name
     $env.config.color_config = $theme.color_config
     if (which vivid | is-not-empty) {
+        if $name == 'default' {
+            hide-env LS_COLORS
+            return
+        }
+        let vivid_name = match $name {
+            $ayuname if $ayuname =~ '^ayu-.*' => 'ayu'
+            $n => $n
+        }
         $env.LS_COLORS = $"(vivid generate $name)"
     }
-    let light = $name in [solarized-light rose-pine-dawn]
+    let light = $name in [solarized-light rose-pine-dawn, ayu-light]
     update-console $theme.palette.ansi_mapping $light
 }
 
