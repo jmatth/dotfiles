@@ -20,7 +20,7 @@ def main [] {
 			let relpath = $source | path relative-to $cheztmpldir
 			mkdir ($ref | path join ($relpath | path dirname))
 			let output = ($ref | path join $relpath) + '.tmpl'
-			$"{{- template \"nu/($relpath | str replace -a '\' '/')\" -}}\n\n" | save -f $output
+			$"{{- template \"nu/($relpath | str replace -a '\' '/')\" . -}}\n\n" | save -f $output
 			print $"\t($relpath)"
 		}
 	}
