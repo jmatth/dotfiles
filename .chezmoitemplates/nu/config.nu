@@ -100,6 +100,7 @@ $env.config.buffer_editor = "nvim"
 $env.config.edit_mode = "vi"
 $env.config.cursor_shape.vi_normal = "block"
 $env.config.cursor_shape.vi_insert = "block"
+$env.MANPAGER = "nvim +Man!"
 
 # The prompt indicators are environmental variables that represent the state of
 # the prompt.
@@ -176,7 +177,7 @@ $env.config.completions.use_ls_colors = true
 
 # Use GPG as SSH agent
 if $nu.os-info.family == unix and 'SSH_TTY' not-in $env {
-    gpg-connect-agent updatestartuptty /bye | ignore
+    gpg-connect-agent updatestartuptty /bye o+e>| ignore
     $env.SSH_AUTH_SOCK = $'(gpgconf --list-dirs agent-ssh-socket)'
     $env.GPG_TTY = ^tty
 }
