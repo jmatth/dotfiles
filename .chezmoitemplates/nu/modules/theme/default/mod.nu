@@ -15,8 +15,8 @@ export def generate [light: bool] {
     return {
         palette: {
             standard: {
-                primary:   if $light { 'black' } else { 'white' }
-                secondary: if $light { 'black_dimmed' } else { 'white_dimmed' }
+                primary:   (if $light { 'black' } else { 'white' })
+                secondary: (if $light { 'black_dimmed' } else { 'white_dimmed' })
                 red:       'red'
                 green:     'green'
                 yellow:    'yellow'
