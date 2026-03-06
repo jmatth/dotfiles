@@ -98,7 +98,7 @@ export def --env set [name: string@themes]: nothing -> nothing {
             $ayuname if $ayuname =~ '^ayu-.*' => 'ayu'
             $n => $n
         }
-        $env.LS_COLORS = $"(vivid generate $name)"
+        $env.LS_COLORS = $"(vivid generate $vivid_name)"
     }
     let light = $name in [solarized-light rose-pine-dawn, ayu-light]
     update-console $theme.palette.ansi_mapping $light
