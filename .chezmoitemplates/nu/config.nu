@@ -482,3 +482,62 @@ module archive {
     }
 }
 use archive *
+
+# Open a new tmux window with permutations of a command.
+def tplex [
+    --session (-s): string
+    # Session to use. Defaults to the current session if already inside tmux and '0' otherwise. Session must already exist.
+    --window (-w): string
+    # Window to use/create. Defaults to current highest window + 1.
+    --sync = true
+    # Synchronize pane input after all commands are started.
+    base_cmd: string
+    # Command to run in each pane, such as `ssh`.
+    ...rest: string
+    # Arguments to pass to `base_cmd` per-pane, such as `host1 host2 host3`.
+]: nothing -> nothing {
+    if (which tmux | is-empty) {
+        print 'tmux not found'
+        return
+    }
+
+    if ($rest | is-empty) {
+        print 'must provide at least one argument permutation'
+        return
+    }
+
+    let effective_session = if ($session | is-not-empty) {
+        $session
+    } else if ($env.TMUX? | is-not-empty) {
+        tmux display-message -p '#S'
+    } else {
+        '0'
+    }
+
+    let effective_window = if ($window | is-not-empty) {
+        $window
+    } else {
+        tmux list-windows -t $effective_session |
+            parse '{name}: {title} ({paneCount} panes) [{width}x{height}]{_}' |
+            get name |
+            into int |
+            last |
+            each {|i| $i + 1 }
+    }
+
+    mut pane = 0
+    tmux new-window -t $"($effective_session):($effective_window)" -n 'tplex' -d
+    for cmd in $rest {
+        if $pane >= 1 {
+            tmux split-window -d -t $'($effective_window).($pane - 1)' -h
+        }
+        tmux select-pane -t $'($effective_window).($pane)'
+        tmux send-keys -t $'($effective_window).($pane)' $'($base_cmd) ($cmd)' C-m
+        tmux select-layout -t $'($effective_session):($effective_window)' tiled
+        $pane += 1
+    }
+
+    if $sync {
+        tmux set -w -t $'($effective_session):($effective_window)' synchronize-panes
+    }
+}
