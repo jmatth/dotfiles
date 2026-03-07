@@ -17,7 +17,6 @@ background-opacity = 0.9
 {{ if eq .chezmoi.os "darwin" -}}
 keybind = global:shift+alt+grave_accent=toggle_quick_terminal
 macos-icon = holographic
-theme = dark:iTerm2 Solarized Dark,light:iTerm2 Solarized Light
 font-family = Fira Code Retina
 font-size = 14
 {{- else -}}
