@@ -30,14 +30,6 @@ $env.NU_LIB_DIRS ++= [($nu.default-config-dir | path join modules)]
 
 const mise_mod_path = ($nu.default-config-dir | path join modules mise.nu)
 
-# Generate nu module to handle mise integration. Probably won't work on initial
-# install so this is mainly here to make periodically regenerating the module
-# easier.
-def 'mise nugen' []: nothing -> nothing {
-    mkdir ($mise_mod_path | path dirname)
-    mise activate nu | save -f $mise_mod_path
-}
-
 use $mise_mod_path
 # Mise doesn't run the full env update code on activation. Retreive it as the
 # most recently added pre_prompt hook and run it manually so $env.PATH is

@@ -197,6 +197,32 @@ if (which zoxide | is-not-empty) {
 }
 
 #
+## Additional mise integration
+#
+
+# Generate nu module to handle mise integration. Probably won't work on initial
+# install so this is mainly here to make periodically regenerating the module
+# easier.
+def 'mise nugen' []: nothing -> nothing {
+    mkdir ($mise_mod_path | path dirname)
+    mise activate nu | save -f $mise_mod_path
+}
+
+# Generate and load mise completions
+if (which usage | is-not-empty) {
+    autoeval ensure 'mise-completion' {||
+        let tmpspec = mktemp
+        mise usage | save -f $tmpspec
+        let usage_contents = usage g completion nu mise -f $tmpspec
+        rm $tmpspec
+        return $usage_contents
+    }
+}
+
+
+
+
+#
 ## Aliases and custom commands
 #
 
