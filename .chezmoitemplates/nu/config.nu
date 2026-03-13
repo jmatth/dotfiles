@@ -389,19 +389,27 @@ module archive {
         move --first name | metadata set --path-columns [name]
     }
 
+    # Of the provided options, return the first that is found in PATH, or the
+    # last option if no matches are found.
     def choose_program [...options: string]: nothing -> string {
         $options | where (which ($it | split row ' ' | first) | is-not-empty) | first | default ($options | last)
     }
 
     def get_handler [input: path] {
-        let handlers = [[matches list extract];
+        let handlers = [[matches list extract create];
             [[.tar.gz .tgz]
                 {|i| tar tvzf $i | tabulate_tar }
                 {|i| tar -xvf $i --use-compress-program=$'(choose_program unpigz gunzip)' }
+                {|i: string, ...rest: glob|
+                    tar -cvf $i --use-compress-program=$'(choose_program pigz gzip)' ...$rest
+                }
             ]
             [[.tar.bz2 .tbz .tbz2]
                 {|i| tar tvjf $i | tabulate_tar }
                 {|i| tar -xvf $i --use-compress-program=$'(choose_program lbunzip2 pbunzip2 bunzip2)' }
+                {|i, ...rest|
+                    tar -cvf $i --use-compress-program=$'(choose_program lbzip2 pbzip2 bzip2)' ...$rest
+                }
             ]
             [[.tar.xz .txz]
                 {|i|
@@ -413,6 +421,9 @@ module archive {
                     }
                 }
                 {|i| tar -xvf $i --use-compress-program=$'(choose_program "pixz -d" xz)' }
+                {|i, ...rest|
+                    tar -cvf $i --use-compress-program=$'(choose_program pixz xz)' ...$rest
+                }
             ]
             [[.tar.zma .tlz]
                 {|i|
@@ -431,14 +442,17 @@ module archive {
                         lzcat $i | tar -xvf -
                     }
                 }
+                {|i, ...rest| tar -cvf $i --lzma ...$rest }
             ]
             [[.tar.zst .tzst]
                 {|i| tar -I zstd -tvf $i | tabulate_tar }
                 {|i| tar -xvf $i --use-compress-program='zstd' }
+                {|i, ...rest| tar -cvf $i --use-compress-program='zstd' ...$rest }
             ]
             [[.tar]
                 {|i| tar tvf $i | tabulate_tar }
                 {|i| tar -xvf $i }
+                {|i, ...rest| tar -cvf $i ...$rest }
             ]
             [[.zip .jar]
                 {|i|
@@ -455,6 +469,7 @@ module archive {
                     let extract_dir = ($i | path parse | get stem)
                     unzip $i -d $extract_dir
                 }
+                {|i, ...rest| ^zip -r $i ...$rest}
             ]
             [[.rar]
                 {|i|
@@ -480,6 +495,7 @@ module archive {
                         unar -d $i
                     }
                 }
+                {|i, ...rest| rar a $i ...$rest}
             ]
             [[.7z]
                 {|i|
@@ -490,24 +506,37 @@ module archive {
                     move name --first | metadata set --path-columns [name]
                 }
                 {|i| 7za x $i }
+                {|i, ...rest| 7za a $i ...$rest }
             ]
         ]
         $handlers | where ($it.matches | any {|s| $input | str ends-with $s }) | first
     }
 
     # List the contents of common archive formats.
-    export def lsarchive [input: path] {
+    export def list [input: path] {
         let h = get_handler $input
         do $h.list $input
     }
 
     # Extract common archive formats.
-    export def unarchive [input: path] {
+    export def extract [input: path] {
         let h = get_handler $input
         do $h.extract $input
     }
+
+    # Create an archive in a common format. Format is determined by the
+    # extension of the first argument.
+    export def create [
+        archive: path
+        # Path to file archive to create. If a file already exists at this path it may be overwritten.
+        ...inputs: glob
+        # Files to include in the archive.
+    ] {
+        let h = get_handler $archive
+        do $h.create $archive ...$inputs
+    }
 }
-use archive *
+use archive
 
 # Open a new tmux window with permutations of a command.
 def tplex [
