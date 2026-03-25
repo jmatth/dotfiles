@@ -1,16 +1,20 @@
 {{- $email := promptStringOnce . "email" "Email address" "josh@jmatth.com" -}}
-{{- $secKeyDict := dict "5Cn206" "406042B0CD867DFFA704F8C36590AD8C622E6226" "5Cn288" "F44FB2225CB45CEC14BC695D154F9D4C16EF691A" "5630" "200415C556B1D236511E81F221AE0975076D9FBC" -}}
+{{- $secKeyDict := dict "none" "" "5Cn206" "406042B0CD867DFFA704F8C36590AD8C622E6226" "5Cn288" "F44FB2225CB45CEC14BC695D154F9D4C16EF691A" "5630" "200415C556B1D236511E81F221AE0975076D9FBC" -}}
 {{- $secKeyChoices := keys $secKeyDict -}}
 {{- $secKeyName := promptChoiceOnce . "signingKey" "Select security key" $secKeyChoices "5630" -}}
 {{- $secKey := get $secKeyDict $secKeyName -}}
 {{- $themes := list "solarized" "ayu" "rose-pine" -}}
 {{- $theme := promptChoiceOnce . "theme" "Choose a theme" $themes -}}
+{{- $installMise := promptBoolOnce . "installMise" "Install cli tools with mise?" -}}
+{{- $installNative := promptBoolOnce . "installNative" "Install native packages?" -}}
 
 
 [data]
 	email = {{ $email | quote }}
 	signingKey = {{ $secKey | quote }}
 	theme = {{ $theme | quote }}
+	installMise = {{ $installMise }}
+	installNative = {{ $installNative }}
 
 [merge]
 	command = "nvim"

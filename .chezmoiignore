@@ -3,11 +3,17 @@ chezutils
 {{- if ne .chezmoi.os "darwin" }}
 .aerospace.toml
 Library
-{{ else if ne .chezmoi.os "linux" }}
+{{- end }}
+{{ if ne .chezmoi.os "linux" }}
 .config/nushell
 .config/ghostty
 .config/ghostty
 .config/VSCodium
-{{ else if ne .chezmoi.os "windows" }}
+{{- end }}
+{{- if ne .chezmoi.os "windows" -}}
 AppData
 {{- end }}
+{{- if eq .chezmoi.os "windows" -}}
+run_*.sh
+run_*.sh.tmpl
+{{- end -}}

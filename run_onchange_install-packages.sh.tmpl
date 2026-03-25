@@ -1,33 +1,34 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
+{{ if .chezmoi.config.data.installMise -}}
 export PATH="$HOME/.local/bin:$PATH"
 
 if ! command -v mise &> /dev/null; then
     curl https://mise.run | sh
-    mise tool-alias add nushell 'github:nushell/nushell[exe=nu]'
-    mise use -g \
-        nushell \
-        carapace \
-        vivid \
-        jq \
-        fzf \
-        just \
-        bat \
-        eza \
-        starship \
-        ripgrep \
-        neovim \
-        zoxide \
-        git-lfs \
-        tmux \
-        zellij
-
-    mkdir -p $HOME/.config/nushell/modules
-    mise activate nu > $HOME/.config/nushell/modules/mise.nu
 fi
+mise use -g 'github:nushell/nushell[exe=nu]'
+mise use -g \
+    carapace \
+    vivid \
+    jq \
+    fzf \
+    just \
+    bat \
+    eza \
+    starship \
+    ripgrep \
+    neovim \
+    zoxide \
+    git-lfs \
+    tmux
 
-{{ if eq .chezmoi.os "darwin" }}
+nu_mod_dir="$(mise x -- nu -nc '$nu.default-config-dir')/modules"
+mkdir -p "$nu_mod_dir"
+mise activate nu > "$nu_mod_dir/mise.nu"
+{{- end -}}
 
+{{ if .chezmoi.config.data.installNative -}}
+{{- if eq .chezmoi.os "darwin" -}}
 brew install -q \
     less \
     git \
@@ -40,9 +41,9 @@ for c in "${casks[@]}"; do
     brew list --casks | grep "^$c\$" &> /dev/null && continue
     brew install --cask "$c"
 done
-{{ end }}
+{{- end }}
 
-{{ if eq .chezmoi.os "linux" }}
+{{ if eq .chezmoi.os "linux" -}}
 if command -v pacman; then
     if ! command -v paru; then
         sudo pacman -S --needed git base-devel
@@ -53,10 +54,10 @@ if command -v pacman; then
         popd
         rm -rf "$builddir"
     fi
-    paru -Sy --noconfirm \
+    paru -Sy --needed --noconfirm \
         gnupg \
         unzip \
         vscodium-bin
 fi
-{{ end }}
-
+{{- end -}}
+{{- end -}}
