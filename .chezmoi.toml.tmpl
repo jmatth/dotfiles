@@ -5,8 +5,8 @@
 {{- $secKey := get $secKeyDict $secKeyName -}}
 {{- $themes := list "solarized" "ayu" "rose-pine" -}}
 {{- $theme := promptChoiceOnce . "theme" "Choose a theme" $themes -}}
-{{- $installMise := promptBoolOnce . "installMise" "Install cli tools with mise?" -}}
-{{- $installNative := promptBoolOnce . "installNative" "Install native packages?" -}}
+{{- $installMise := promptBoolOnce . "installMise" "Install cli tools with mise" -}}
+{{- $installNative := promptBoolOnce . "installNative" "Install native packages" -}}
 
 
 [data]
