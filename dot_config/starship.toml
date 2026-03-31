@@ -1,26 +1,89 @@
+# format = """
+# [╭─](div)\
+# $directory\
+# $fill\
+# $golang\
+# $nodejs\
+# $rust\
+# $dart\
+# [$username@$hostname\
+# [─╮](blue) \
+# $line_break\
+# [╰─](blue)%$character
+# """
 format = """
-[╭─](blue)\
-$directory\
+[╭─](div)\
+[\\[](div)$directory[\\]─](div)\
 $fill\
-$golang\
-$nodejs\
-$rust\
-$dart\
-$username@$hostname\
-[─╮](blue)\
+([\\[](div)$golang[\\]─](div))\
+([\\[](div)$nodejs[\\]─](div))\
+([\\[](div)$rust[\\]─](div))\
+([\\[](div)$dart[\\]─](div))\
+[\\[](div)$username@$hostname[\\]](div)\
+[─╮](blue) \
+$line_break\
+[╰─](blue)%$character
+"""
+
+right_format = '$status [<─(\[$git_branch$git_commit$git_status\])─╯](blue)'
+
+add_newline = false
+palette = "main"
+
+[palettes.main]
+div = 'blue'
+
+[profiles]
+nu_full = """
+[╭─](div)\
+[\\[](div)$directory[\\]─](div)\
+$fill\
+([\\[](div)$golang[\\]─](div))\
+([\\[](div)$nodejs[\\]─](div))\
+([\\[](div)$rust[\\]─](div))\
+([\\[](div)$dart[\\]─](div))\
+[\\[](div)$username@$hostname[\\]](div)\
+[─╮](div)\
+$line_break\
+[╰─](div)
+"""
+nu_full_right = '$status [<─(\[$git_branch$git_commit$git_status\])─╯](div)'
+nu_full_trans = """
+[╭─](div)\
+[\\[](div)$directory[\\]─](div)\
+$fill\
+([\\[](div)$golang[\\]─](div))\
+([\\[](div)$nodejs[\\]─](div))\
+([\\[](div)$rust[\\]─](div))\
+([\\[](div)$dart[\\]─](div))\
+[\\[](div)$username@$hostname[\\]](div)  \
+$line_break\
+[╰─](div)
+"""
+nu_full_trunc = """
+[╭─](div)\
+[\\[](div)$directory[\\]─](div)\
+([\\[$git_branch$git_commit$git_status\\]─](div))\
+([\\[](div)$golang[\\]─](div))\
+([\\[](div)$nodejs[\\]─](div))\
+([\\[](div)$rust[\\]─](div))\
+([\\[](div)$dart[\\]─](div))\
+[\\[](div)$username@$hostname[\\]](div)  \
 $line_break\
 [╰─](blue)
 """
-right_format = '$status [<─$git_branch$git_commit$git_status─╯](blue)'
 
-add_newline = false
+nu_basic = '$directory'
+
+nu_redhat = '\[$username@$hostname $directory\]'
+nu_suse = '$username@$hostname:$directory '
 
 [line_break]
 disabled = false
 
 [fill]
 symbol = '─'
-style = 'blue'
+style = 'div'
 
 [character]
 format = '$symbol '
@@ -28,42 +91,36 @@ success_symbol = '[>](blue)'
 error_symbol = '[>](blue)'
 vicmd_symbol = '[\[](red)'
 
-# [rcharacter]
-# format = '$symbol '
-# success_symbol = '[<](blue)'
-# error_symbol = '[<](blue)'
-# vicmd_symbol = '[\]](red)'
-
 [directory]
-format = '[\[](blue)[$path]($style)[$read_only]($read_only_style)[\]─](blue)'
+format = '[$path]($style)[$read_only]($read_only_style)'
 style = 'green'
 read_only = ' '
 
 
 [username]
 show_always = true
-format = '[─\[](blue)[$user]($style)'
+format = '[$user]($style)'
 style_user = 'cyan'
 style_root = 'red inverted'
 
 [hostname]
 ssh_only = false
-format = '[$hostname]($style)[\]](blue)'
+format = '[$hostname]($style)'
 style = 'green'
 
 [git_branch]
-format = '[\[](blue)[$branch]($style)'
+format = '[$branch]($style)'
 style = 'yellow'
 only_attached = true
 
 [git_commit]
-format = '[\[](blue)[$hash]($style)'
+format = '[$hash]($style)'
 style = 'yellow'
 tag_disabled = true
 tag_symbol = ''
 
 [git_status]
-format='$staged$renamed$modified$deleted$untracked$conflicted$stashed$ahead_behind[\]](blue)'
+format='$staged$renamed$modified$deleted$untracked$conflicted$stashed$ahead_behind'
 staged = ' [+](green)'
 renamed = ' [\$](purple)'
 modified = ' [*](red)'
@@ -95,7 +152,7 @@ symbol = ' '
 style = 'bright-red'
 
 [nodejs]
-format = '[─\[](blue)[$symbol$version]($style)[\]](blue)'
+format = '[$symbol$version]($style)'
 version_format = '${raw}'
 style = 'green'
 
@@ -106,7 +163,7 @@ symbol = ' '
 style = 'yellow'
 
 [golang]
-format = '[─\[](blue)[$symbol$version]($style)[\]](blue)'
+format = '[$symbol$version]($style)'
 version_format = '${raw}'
 symbol = ' '
 style = 'blue'

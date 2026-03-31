@@ -106,9 +106,6 @@ $env.MANPAGER = "nvim +Man!"
 # the prompt.
 let palette = (theme fetch auto).palette.standard
 let promptchar = if $isroot { $'(ansi {fg: red, attr: rb})#(ansi rst)' } else { '%' }
-$env.TRANSIENT_PROMPT_COMMAND = {||
-    do $env.PROMPT_COMMAND | str replace '─╮' ''
-}
 $env.PROMPT_INDICATOR = $'($promptchar)(ansi blue)>(ansi reset) '
 $env.PROMPT_INDICATOR_VI_INSERT = $'($promptchar)(ansi blue)>(ansi reset) '
 $env.PROMPT_INDICATOR_VI_NORMAL = $'($promptchar)(ansi red)[(ansi reset) '
@@ -187,10 +184,151 @@ if $nu.os-info.family == unix and 'SSH_TTY' not-in $env {
 #
 use autoeval
 
-if (which starship | is-not-empty) {
-    $env.STARSHIP_SHELL = "nu"
-    autoeval ensure 'starship' {|| ^starship init nu }
+module prompt {
+    def get_cmd_duration []: nothing -> string {
+        # Nushell thinks "bug" and "easter egg" are synonyms:
+        # https://github.com/nushell/nushell/discussions/6402#discussioncomment-3466687
+        match $env.CMD_DURATION_MS {
+            '0823' => 0
+            $d     => $d
+        }
+    }
+
+    export def --env 'truncate on' [] {
+        $env.NU_PROMPT_TRUNCATE = true
+    }
+
+    export def --env 'truncate off' [] {
+        $env.NU_PROMPT_TRUNCATE = false
+    }
+
+    export def get_starship_profiles [] {
+        if (which starship | is-empty) { return {} }
+        let starship_profiles = starship print-config | from toml | get profiles
+        let base_profiles = $starship_profiles |
+            columns |
+            parse -r '^nu_([^_]+)$' |
+            get capture0
+        return (
+            $base_profiles | each {|p| {
+                name: $p
+                has_right:     ($'nu_($p)_right' in $starship_profiles)
+                has_transient: ($'nu_($p)_trans' in $starship_profiles)
+                has_truncated: ($'nu_($p)_trunc' in $starship_profiles)
+            }} |
+            reduce -f {} {|it acc| $acc | upsert $it.name ($it | reject name) }
+        )
+    }
+
+    def complete_prompt_name [context: string] {
+        let starship_profiles = get_starship_profiles
+        return {
+            completions: [
+                { value: builtin description: 'Default prompt built in to nushell' style: magenta }
+                ...($starship_profiles | columns)
+            ]
+            options: {
+                sort: false
+            }
+        }
+    }
+
+    export def --env use [prompt: string@complete_prompt_name]: nothing -> nothing {
+        if $prompt == 'builtin' {
+            $env.NU_PROMPT = null
+            $env.PROMPT_COMMAND = null
+            $env.PROMPT_COMMAND_RIGHT = null
+            $env.TRANSIENT_PROMPT_COMMAND = null
+            return
+        }
+
+        let prompt_info = get_starship_profiles | get $prompt
+        $env.NU_PROMPT = $prompt
+        $env.PROMPT_COMMAND = {|| do_prompt }
+        $env.PROMPT_COMMAND_RIGHT = if $prompt_info.has_right { {|| do_prompt_right } } else { {|| ''} }
+        $env.TRANSIENT_PROMPT_COMMAND = (do_prompt_trans --with-truncate=$prompt_info.has_truncated --with-transient=$prompt_info.has_transient)
+    }
+
+    def do_prompt []: nothing -> string {
+        (ansi rst) + (
+            ^starship prompt
+                --profile ('nu_' + $env.NU_PROMPT)
+                --cmd-duration (get_cmd_duration)
+                $"--status=($env.LAST_EXIT_CODE)"
+                --terminal-width (term size).columns
+                --jobs (job list | length)
+        )
+    }
+
+    def do_prompt_right []: nothing -> string {
+        (
+            ^starship prompt
+                --profile ('nu_' + $env.NU_PROMPT + '_right')
+                --cmd-duration (get_cmd_duration)
+                $"--status=($env.LAST_EXIT_CODE)"
+                --terminal-width (term size).columns
+                --jobs (job list | length)
+        )
+    }
+
+    def do_prompt_trans [
+        --with-truncate
+        --with-transient
+    ] {
+        if not ($with_transient or $with_truncate) {
+            return null
+        }
+        return {||
+            if ($with_truncate and $env.NU_PROMPT_TRUNCATE) {
+                (
+                    ^starship prompt
+                    --profile ('nu_' + $env.NU_PROMPT + '_trunc')
+                    --cmd-duration (get_cmd_duration)
+                    $"--status=($env.LAST_EXIT_CODE)"
+                    --terminal-width (term size).columns
+                    --jobs (job list | length)
+                )
+            } else if $with_transient {
+                (
+                    ^starship prompt
+                    --profile ('nu_' + $env.NU_PROMPT + '_trans')
+                    --cmd-duration (get_cmd_duration)
+                    $"--status=($env.LAST_EXIT_CODE)"
+                    --terminal-width (term size).columns
+                    --jobs (job list | length)
+                )
+            } else {
+                ''
+            }
+        }
+    }
+
+    export-env {
+        $env.STARSHIP_SHELL = "nu"
+        $env.NU_PROMPT_TRUNCATE = false
+        $env.NU_PROMPT = 'full'
+        load-env {
+            STARSHIP_SESSION_KEY: (random chars -l 16)
+            PROMPT_MULTILINE_INDICATOR: (
+                ^starship prompt --continuation
+            )
+
+            # Does not play well with default character module.
+            # TODO: Also Use starship vi mode indicators?
+            PROMPT_INDICATOR: ""
+
+            PROMPT_COMMAND: {|| do_prompt }
+            PROMPT_COMMAND_RIGHT: {|| do_prompt_right }
+            TRANSIENT_PROMPT_COMMAND: {|| do_prompt_trans }
+
+            config: ($env.config? | default {} | merge {
+                render_right_prompt_on_last_line: true
+            })
+        }
+    }
 }
+use prompt
+prompt use full
 
 if (which zoxide | is-not-empty) {
     autoeval ensure 'zoxide' {|| ^zoxide init nushell }
