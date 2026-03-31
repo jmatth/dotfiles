@@ -2,11 +2,7 @@
 # Not actually ini but close enough for syntax highlighting
 
 {{ if eq .theme "solarized" -}}
-{{ if eq .chezmoi.os "darwin" -}}
 theme = dark:iTerm2 Solarized Dark,light:iTerm2 Solarized Light
-{{ else -}}
-theme = dark:Builtin Solarized Dark,light:Builtin Solarized Light
-{{ end -}}
 {{ else if eq .theme "ayu" -}}
 theme = dark:Ayu Mirage,light:Ayu Light
 {{ else if eq .theme "rose-pine" -}}
@@ -25,3 +21,6 @@ font-family = FiraCode Nerd Font
 font-size = 12
 {{- end }}
 
+{{ if ne .chezmoi.os "windows" -}}
+command = $HOME/.local/bin/mise x -- nu
+{{- end }}
