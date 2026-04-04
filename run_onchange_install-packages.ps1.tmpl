@@ -1,0 +1,43 @@
+{{- if .chezmoi.config.data.installMise -}}
+winget install `
+    --accept-package-agreements `
+    --accept-source-agreements `
+    --silent `
+    --disable-interactivity `
+    jdx.mise
+
+$env:Path = `
+    [System.Environment]::GetEnvironmentVariable("Path","Machine") + `
+    ';' + `
+    [System.Environment]::GetEnvironmentVariable("Path","User")
+
+mise use -g 'github:nushell/nushell[exe=nu]'
+mise use -g `
+    carapace `
+    vivid `
+    jq `
+    fzf `
+    bat `
+    starship `
+    ripgrep `
+    neovim `
+    zoxide `
+    git-lfs
+
+$nuModDir = (mise x -- nu -nc '$nu.default-config-dir'/modules) + `
+    '\modules'
+New-Item -Force -Path $nuModDir -Type Directory
+mise activate nu > ($nuModDir + '\mise.nu')
+{{- end }}
+
+{{ if .chezmoi.config.data.installNative -}}
+winget install `
+    --accept-package-agreements `
+    --accept-source-agreements `
+    --silent `
+    --disable-interactivity `
+    Git.Git `
+    VSCodium.VSCodium `
+    Ablaze.Floorp `
+    GnuPG.Gpg4win
+{{- end -}}
