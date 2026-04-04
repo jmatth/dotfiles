@@ -14,6 +14,7 @@ Library
 AppData
 {{- end }}
 {{- if eq .chezmoi.os "windows" -}}
-run_*.sh
-run_*.sh.tmpl
+install-packages.sh
+install-dot_zshrc_main.sh
+pull-pgp.sh
 {{- end -}}
