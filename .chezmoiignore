@@ -17,4 +17,6 @@ AppData
 install-packages.sh
 install-dot_zshrc_main.sh
 pull-pgp.sh
+{{- else }}
+install-packages.ps1
 {{- end -}}
