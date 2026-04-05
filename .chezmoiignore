@@ -13,10 +13,8 @@ Library
 {{- if ne .chezmoi.os "windows" -}}
 AppData
 {{- end }}
-{{- if eq .chezmoi.os "windows" -}}
-install-packages.sh
-install-dot_zshrc_main.sh
-pull-pgp.sh
+{{ if eq .chezmoi.os "windows" -}}
+*.sh
 {{- else }}
-install-packages.ps1
+*.ps1
 {{- end -}}
