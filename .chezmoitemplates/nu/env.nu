@@ -25,6 +25,7 @@ if (uname).kernel-name == 'Darwin' {
 
 path add ($nu.home-dir | path join .local bin)
 path add ($nu.home-dir | path join .pixi bin)
+path add ($nu.home-dir | path join .cargo bin)
 
 $env.NU_LIB_DIRS ++= [($nu.default-config-dir | path join modules)]
 
