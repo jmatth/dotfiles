@@ -27,24 +27,14 @@ path add ($nu.home-dir | path join .local bin)
 path add ($nu.home-dir | path join .pixi bin)
 path add ($nu.home-dir | path join .cargo bin)
 
-$env.NU_LIB_DIRS ++= [($nu.default-config-dir | path join modules)]
+$env.NU_LIB_DIRS ++= [
+    ($nu.default-config-dir | path join modules)
+]
 
-const mise_mod_path = ($nu.default-config-dir | path join modules mise.nu)
+const mise_mod_path = $nu.default-config-dir | path join modules mise.nu
 
 use $mise_mod_path
 # Mise doesn't run the full env update code on activation. Retreive it as the
 # most recently added pre_prompt hook and run it manually so $env.PATH is
 # populated for future config files.
 do --env ($env.config.hooks.pre_prompt | last | get code)
-
-if (uname).kernel-name == 'Linux' {
-    let omarchy_bin_path = ($nu.home-dir | path join .local share omarchy bin)
-    if ($omarchy_bin_path | path exists) {
-        path add $omarchy_bin_path
-    }
-}
-
-let cargohome = $"($nu.home-dir)/.cargo"
-if ($cargohome | path exists) {
-    path add $'($cargohome)/bin'
-}
