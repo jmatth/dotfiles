@@ -362,21 +362,37 @@ if (which usage | is-not-empty) {
 ## Aliases and custom commands
 #
 
-// Write to the system clipboard.
+# Write to the system clipboard.
 def pbcopy []: any -> nothing {
     if $nu.os-info.name == 'windows' {
-	^clip
+        ^clip
+    } else if $nu.os-info.name == 'macos' {
+        ^pbcopy
+    } else if $nu.os-info.name == 'linux' {
+        if (which wl-copy | is-not-empty) {
+            ^wl-copy
+        } else {
+            error make "Missing system dependency wl-copy, install wl-clipboard"
+        }
     } else {
-	print -e $"Don't know how to copy to clipboard on ($nu.os-info.name)"
+        error make $"Don't know how to copy to clipboard on ($nu.os-info.name)"
     }
 }
 
-// Read from the system clipboard.
+# Read from the system clipboard.
 def pbpaste []: nothing -> string {
     if $nu.os-info.name == 'windows' {
-	^powershell -Command 'Get-Clipboard'
+        ^powershell -Command 'Get-Clipboard'
+    } else if $nu.os-info.name == 'macos' {
+        ^pbpaste
+    } else if $nu.os-info.name == 'linux' {
+        if (which wl-copy | is-not-empty) {
+            ^wl-paste
+        } else {
+            error make "Missing system dependency wl-paste, install wl-clipboard"
+        }
     } else {
-	print -e $"Don't know how to paste from clipboard on ($nu.os-info.name)"
+        error make $"Don't know how to paste from clipboard on ($nu.os-info.name)"
     }
 }
 
