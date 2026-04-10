@@ -358,11 +358,27 @@ if (which usage | is-not-empty) {
 }
 
 
-
-
 #
 ## Aliases and custom commands
 #
+
+// Write to the system clipboard.
+def pbcopy []: any -> nothing {
+    if $nu.os-info.name == 'windows' {
+	^clip
+    } else {
+	print -e $"Don't know how to copy to clipboard on ($nu.os-info.name)"
+    }
+}
+
+// Read from the system clipboard.
+def pbpaste []: nothing -> string {
+    if $nu.os-info.name == 'windows' {
+	^powershell -Command 'Get-Clipboard'
+    } else {
+	print -e $"Don't know how to paste from clipboard on ($nu.os-info.name)"
+    }
+}
 
 # Open Yazi file manager and update $env.PWD when it exits
 def --wrapped --env y [...args] {
@@ -385,7 +401,9 @@ alias ll = ls -la
 alias tree = eza -T
 
 alias jobs = job list
+{{ if ne .chezmoi.os "windows" -}}
 alias fg = job unfreeze
+{{- end }}
 
 # Run ls and l
 def lg []: [nothing -> string] {
