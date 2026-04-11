@@ -27,7 +27,7 @@ mise use -g `
 $nuModDir = (mise x -- nu -nc '$nu.default-config-dir'/modules) + `
     '\modules'
 New-Item -Force -Path $nuModDir -Type Directory
-mise activate nu > ($nuModDir + '\mise.nu')
+mise activate nu | Set-Content -LiteralPath ($nuModDir + '\mise.nu')
 {{- end }}
 
 {{ if .chezmoi.config.data.installNative -}}
@@ -39,5 +39,6 @@ winget install `
     Git.Git `
     VSCodium.VSCodium `
     Ablaze.Floorp `
+    Microsoft.PowerToys `
     GnuPG.Gpg4win
 {{- end -}}
