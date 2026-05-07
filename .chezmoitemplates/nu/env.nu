@@ -16,25 +16,22 @@
 #
 # You can remove these comments if you want or leave
 # them for future reference.
-use std/util "path add"
 
-if (uname).kernel-name == 'Darwin' {
-    path add '/opt/homebrew/sbin'
-    path add '/opt/homebrew/bin'
+$env.ENV_CONVERSIONS = $env.ENV_CONVERSIONS | merge {
+    "XDG_DATA_DIRS": {
+        from_string: {|s| $s | split row (char esep) | path expand --no-symlink }
+        to_string: {|v| $v | path expand --no-symlink | str join (char esep) }
+    }
+    "LD_LIBRARY_PATH": {
+        from_string: {|s| $s | split row (char esep) | path expand --no-symlink }
+        to_string: {|v| $v | path expand --no-symlink | str join (char esep) }
+    }
+    "PKG_CONFIG_PATH": {
+        from_string: {|s| $s | split row (char esep) | path expand --no-symlink }
+        to_string: {|v| $v | path expand --no-symlink | str join (char esep) }
+    }
 }
-
-path add ($nu.home-dir | path join .local bin)
-path add ($nu.home-dir | path join .pixi bin)
-path add ($nu.home-dir | path join .cargo bin)
 
 $env.NU_LIB_DIRS ++= [
     ($nu.default-config-dir | path join modules)
 ]
-
-const mise_mod_path = $nu.default-config-dir | path join modules mise.nu
-
-use $mise_mod_path
-# Mise doesn't run the full env update code on activation. Retreive it as the
-# most recently added pre_prompt hook and run it manually so $env.PATH is
-# populated for future config files.
-do --env ($env.config.hooks.pre_prompt | last | get code)

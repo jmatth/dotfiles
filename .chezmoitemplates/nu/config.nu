@@ -23,6 +23,32 @@ use git/aliases *
 use git/ngit
 use git/ngit aliases *
 
+# -----------
+# Set up PATH
+# -----------
+if (uname).kernel-name == 'Darwin' {
+    path add '/opt/homebrew/sbin'
+    path add '/opt/homebrew/bin'
+}
+path add ($nu.home-dir | path join .local bin)
+path add ($nu.home-dir | path join .pixi bin)
+path add ($nu.home-dir | path join .cargo bin)
+
+# -----------
+# Set up mise
+# -----------
+const mise_mod_path = $nu.default-config-dir | path join modules mise.nu
+use $mise_mod_path
+# Mise doesn't run the full env update code on activation. Manually update PATH
+# so future config files can use tools installed through mise.
+$env.PATH = mise hook-env -f -s nu
+    | from csv -n
+    | rename op name val
+    | where op == set and name == PATH
+    | last
+    | get val
+    | split row (char esep)
+
 # Disable the welcome banner.
 # Run `banner` to show it manually for checking stuff like startup time.
 $env.config.show_banner = false
