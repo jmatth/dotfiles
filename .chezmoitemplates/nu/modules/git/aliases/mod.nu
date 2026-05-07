@@ -196,8 +196,7 @@ export alias gwX = git rm -r --force
 
 # cd to the root of the current git directory.
 def --env gwt [] {
-    let path_to_root = git rev-parse --show-cdup | str trim
-    if (path_to_root | is-empty) { return }
-    cd $path_to_root
+	let path_to_root = git rev-parse --show-cdup | str trim
+	if (path_to_root | is-empty) { return }
+	cd $path_to_root
 }
-
