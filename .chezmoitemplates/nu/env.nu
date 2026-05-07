@@ -18,20 +18,20 @@
 # them for future reference.
 
 $env.ENV_CONVERSIONS = $env.ENV_CONVERSIONS | merge {
-    "XDG_DATA_DIRS": {
-        from_string: {|s| $s | split row (char esep) | path expand --no-symlink }
-        to_string: {|v| $v | path expand --no-symlink | str join (char esep) }
-    }
-    "LD_LIBRARY_PATH": {
-        from_string: {|s| $s | split row (char esep) | path expand --no-symlink }
-        to_string: {|v| $v | path expand --no-symlink | str join (char esep) }
-    }
-    "PKG_CONFIG_PATH": {
-        from_string: {|s| $s | split row (char esep) | path expand --no-symlink }
-        to_string: {|v| $v | path expand --no-symlink | str join (char esep) }
-    }
+	"XDG_DATA_DIRS": {
+		from_string: {|s| $s | split row (char esep) | path expand --no-symlink }
+		to_string: {|v| $v | path expand --no-symlink | str join (char esep) }
+	}
+	"LD_LIBRARY_PATH": {
+		from_string: {|s| $s | split row (char esep) | path expand --no-symlink }
+		to_string: {|v| $v | path expand --no-symlink | str join (char esep) }
+	}
+	"PKG_CONFIG_PATH": {
+		from_string: {|s| $s | split row (char esep) | path expand --no-symlink }
+		to_string: {|v| $v | path expand --no-symlink | str join (char esep) }
+	}
 }
 
 $env.NU_LIB_DIRS ++= [
-    ($nu.default-config-dir | path join modules)
+	($nu.default-config-dir | path join modules)
 ]
