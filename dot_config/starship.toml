@@ -140,13 +140,13 @@ recognize_signal_code = true
 map_symbol = false
 
 [dart]
-format = '[─\[](blue)[$symbol$version]($style)[\]](blue)'
+format = '[$symbol$version]($style)'
 version_format = '${raw}'
 symbol = ' '
 style = 'cyan'
 
 [rust]
-format = '[─\[](blue)[$symbol$version]($style)[\]](blue)'
+format = '[$symbol$version]($style)'
 version_format = '${raw}'
 symbol = ' '
 style = 'bright-red'
@@ -157,7 +157,7 @@ version_format = '${raw}'
 style = 'green'
 
 [python]
-format = '[─\[](blue)[$symbol$version]($style)[\]](blue)'
+format = '[$symbol$version]($style)'
 version_format = '${raw}'
 symbol = ' '
 style = 'yellow'
