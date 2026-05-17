@@ -1,13 +1,13 @@
 const palette = {
 	standard: {
-		primary:   'white'
+		primary: 'white'
 		secondary: 'white_dimmed'
-		red:       'red'
-		green:     'green'
-		yellow:    'yellow'
-		blue:      'blue'
-		magenta:   'magenta'
-		cyan:      'cyan'
+		red: 'red'
+		green: 'green'
+		yellow: 'yellow'
+		blue: 'blue'
+		magenta: 'magenta'
+		cyan: 'cyan'
 	}
 }
 
@@ -15,37 +15,37 @@ export def generate [light: bool] {
 	return {
 		palette: {
 			standard: {
-				primary:   (if $light { 'black' } else { 'white' })
+				primary: (if $light { 'black' } else { 'white' })
 				secondary: (if $light { 'black_dimmed' } else { 'white_dimmed' })
-				red:       'red'
-				green:     'green'
-				yellow:    'yellow'
-				blue:      'blue'
-				magenta:   'magenta'
-				cyan:      'cyan'
+				red: 'red'
+				green: 'green'
+				yellow: 'yellow'
+				blue: 'blue'
+				magenta: 'magenta'
+				cyan: 'cyan'
 			}
 			ansi_mapping: {
-				0:  '000000'
-				1:  'c40000'
-				2:  '00c400'
-				3:  'c47e00'
-				4:  '0000c4'
-				5:  'c400c4'
-				6:  '00c4c4'
-				7:  'c4c4c4'
-				8:  '4e4e4e'
-				9:  'dc4e4e'
-				A:  '4edc4e'
-				B:  'f3f34e'
-				C:  '4e4edc'
-				D:  'f34ef3'
-				E:  '4ef3f3'
-				F:  'ffffff'
+				0: '000000'
+				1: 'c40000'
+				2: '00c400'
+				3: 'c47e00'
+				4: '0000c4'
+				5: 'c400c4'
+				6: '00c4c4'
+				7: 'c4c4c4'
+				8: '4e4e4e'
+				9: 'dc4e4e'
+				A: '4edc4e'
+				B: 'f3f34e'
+				C: '4e4edc'
+				D: 'f34ef3'
+				E: '4ef3f3'
+				F: 'ffffff'
 			}
 		}
 		color_config: {
 			separator: default
-			leading_trailing_space_bg: { attr: n }
+			leading_trailing_space_bg: {attr: n}
 			header: green_bold
 			empty: blue
 			bool: light_cyan
@@ -63,10 +63,10 @@ export def generate [light: bool] {
 			record: default
 			list: default
 			closure: green_bold
-			glob:cyan_bold
+			glob: cyan_bold
 			block: default
 			hints: dark_gray
-			search_result: { bg: red fg: default }
+			search_result: {bg: red, fg: default}
 			shape_binary: purple_bold
 			shape_block: blue_bold
 			shape_bool: light_cyan
@@ -88,7 +88,7 @@ export def generate [light: bool] {
 			shape_list: cyan_bold
 			shape_literal: blue
 			shape_match_pattern: green
-			shape_matching_brackets: { attr: u }
+			shape_matching_brackets: {attr: u}
 			shape_nothing: light_cyan
 			shape_operator: yellow
 			shape_pipe: purple_bold
@@ -102,11 +102,7 @@ export def generate [light: bool] {
 			shape_variable: purple
 			shape_vardecl: purple
 			shape_raw_string: light_purple
-			shape_garbage: {
-				fg: default
-				bg: red
-				attr: b
-			}
+			shape_garbage: {fg: default, bg: red, attr: b}
 		}
 	}
 }

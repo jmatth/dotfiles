@@ -56,22 +56,22 @@ export def 'fetch name' []: nothing -> string {
 }
 
 export def fetch [name: string@themes]: nothing -> record {
-    let theme = match $name {
-        'solarized-dark'  => (solarized generate false)
-        'solarized-light' => (solarized generate true)
-        'rose-pine'       => (rose_pine generate false false)
-        'rose-pine-moon'  => (rose_pine generate false true)
-        'rose-pine-dawn'  => (rose_pine generate true false)
-        'ayu-dark'        => (ayu generate false false)
-        'ayu-mirage'      => (ayu generate false true)
-        'ayu-light'       => (ayu generate true false)
-        'default'         => (default_theme generate false)
-    }
-    return $theme
+	let theme = match $name {
+		'solarized-dark'  => (solarized generate false)
+		'solarized-light' => (solarized generate true)
+		'rose-pine'       => (rose_pine generate false false)
+		'rose-pine-moon'  => (rose_pine generate false true)
+		'rose-pine-dawn'  => (rose_pine generate true false)
+		'ayu-dark'        => (ayu generate false false)
+		'ayu-mirage'      => (ayu generate false true)
+		'ayu-light'       => (ayu generate true false)
+		'default'         => (default_theme generate false)
+	}
+	return $theme
 }
 
 export def 'fetch auto' []: nothing -> record {
-    return (fetch (fetch name))
+	return (fetch (fetch name))
 }
 
 # Set the colors of the linux console.
