@@ -32,8 +32,9 @@ vim.opt.showmode = false
 -- 	vim.opt.clipboard = "unnamedplus"
 -- end)
 
--- By default use a single tab to indent and render it as 4 spaces
-vim.opt.tabstop = 4
+-- Default indentation behavior
+vim.opt.expandtab = false
+vim.opt.tabstop = 2
 vim.opt.shiftwidth = 0
 
 -- Enable break indent
@@ -63,7 +64,7 @@ vim.opt.splitbelow = true
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+vim.opt.listchars = { tab = "  ", trail = "·", nbsp = "␣" }
 vim.opt.ts = 2
 
 -- Preview substitutions live, as you type!
@@ -119,6 +120,14 @@ vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" }
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
+
+vim.api.nvim_create_user_command("ListToggleTab", function()
+	if vim.opt.listchars:get()["tab"] == "  " then
+		vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+	else
+		vim.opt.listchars = { tab = "  ", trail = "·", nbsp = "␣" }
+	end
+end, { desc = "Toggle whether tabs are shown when list is enabled" })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -1133,6 +1142,14 @@ require("lazy").setup({
 			--  - yinq - [Y]ank [I]nside [N]ext [Q]uote
 			--  - ci'  - [C]hange [I]nside [']quote
 			require("mini.ai").setup({ n_lines = 500 })
+
+			-- Align text interactively
+			require("mini.align").setup({
+				mappings = {
+					start = "<leader>a",
+					start_with_preview = "<leader>A",
+				},
+			})
 
 			-- Add/delete/replace surroundings (brackets, quotes, etc.)
 			--

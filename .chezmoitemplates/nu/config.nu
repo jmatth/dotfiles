@@ -797,3 +797,37 @@ def tplex [
 		tmux set -w -t $'($effective_session):($effective_window)' synchronize-panes
 	}
 }
+
+# Update packages from various providers.
+def pkgup [
+	--mise-tools (-t) = true # Update globally installed mise tools
+	--mise-self  (-m) = true # Update mise itself
+	--flatpak    (-f) = true # Update flatpak apps
+	--brew       (-b) = true # Update brew packages
+	--system     (-s) = true # Update the OS using the system package manager
+] {
+	if $mise_self {
+		mise self-update -y
+	}
+	if $mise_tools {
+		cd ~/
+		mise up
+	}
+	if $nu.os-info.name == linux and $flatpak and (which flatpak | is-not-empty) {
+		flatpak update -y
+	}
+	if $brew and (which brew | is-not-empty) {
+		brew update -y
+	}
+	if $system {
+		if (which paru | is-not-empty) {
+			paru -Syu --noconfirm
+		} else if (which dnf | is-not-empty) {
+			sudo dnf update -y
+		} else if (which apt-get | is-not-empty) {
+			sudo sh -c 'apt-get update && apt-get upgrade -y'
+		} else {
+			error make 'Cannot determine system package manager'
+		}
+	}
+}

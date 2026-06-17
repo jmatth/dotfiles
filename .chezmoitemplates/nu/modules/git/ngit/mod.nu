@@ -46,7 +46,7 @@ export def "status" [] {
 		'??' => 'untracked',
 		'A ' => 'added'
 		' M' | 'M ' | 'MM' => 'modified',
-		'D ' => 'deleted',
+		' D' | 'D ' | 'DD' => 'deleted',
 		_ => 'UNKNOWN',
 	}}
 	| metadata set --path-columns [name]
