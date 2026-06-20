@@ -831,3 +831,13 @@ def pkgup [
 		}
 	}
 }
+
+# Edit neovim configuration.
+def 'config nvim' [] {
+	nvim ~/.config/nvim/init.lua
+}
+
+# Edit git configuration.
+def 'config git' [] {
+	nvim ~/.gitconfig
+}

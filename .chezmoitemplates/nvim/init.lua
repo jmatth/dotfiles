@@ -85,6 +85,11 @@ vim.opt.confirm = true
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
+-- Custom digraph mapping because blink remaps <C-k>
+vim.keymap.set("i", "<C-g>", "<C-k>")
+-- Custom digraphs
+vim.cmd("digraph ss 7779") -- ṣ
+
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
