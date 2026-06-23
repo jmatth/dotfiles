@@ -832,6 +832,16 @@ def pkgup [
 	}
 }
 
+# Nu wrapper around the Unix `df` command.
+def ndf []: nothing -> table<filesystem: string, size: filesize, used: filesize, avail: filesize, used_percent: string, mounted: string> {
+	df -h
+	| detect columns --guess
+	| rename filesystem size used avail used_percent mounted
+	| update size { into filesize }
+	| update used { into filesize }
+	| update avail { into filesize }
+}
+
 # Edit neovim configuration.
 def 'config nvim' [] {
 	nvim ~/.config/nvim/init.lua
