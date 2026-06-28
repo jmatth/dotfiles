@@ -827,7 +827,9 @@ def pkgup [
 		brew upgrade --formulae -y
 	}
 	if ($system or $all) {
-		if $nu.os-info.name == 'linux' {
+		if $nu.os-info.name == 'macos' {
+			brew upgrade --casks -y
+		} else if $nu.os-info.name == 'linux' {
 			if (which ujust | is-not-empty) {
 				ujust upgrade
 			} else if (which paru | is-not-empty) {
