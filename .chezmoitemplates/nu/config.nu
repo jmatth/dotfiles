@@ -831,7 +831,8 @@ def pkgup [
 			if (which ujust | is-not-empty) {
 				ujust upgrade
 			} else if (which paru | is-not-empty) {
-				paru -Syu --noconfirm
+				sudo pacman -Syu --noconfirm
+				paru -Su
 			} else if (which dnf | is-not-empty) {
 				sudo dnf update -y
 			} else if (which apt-get | is-not-empty) {
