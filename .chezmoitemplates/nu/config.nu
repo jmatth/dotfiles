@@ -660,7 +660,7 @@ module archive {
 					unzip -lv $i |
 					detect columns -s 1 --guess |
 					skip 1 | drop 2 |
-					rename -b { str downcase } |
+					rename -b { str lowercase } |
 					move --first name |
 					update size { into filesize } | update length { into filesize } |
 					update date {|r| $'($r.date)T($r.time)+00:00' | into datetime } | reject time |
@@ -676,7 +676,7 @@ module archive {
 				{|i|
 					if (which unrar | is-not-empty) {
 						unrar v $i | detect columns --skip 6 | skip 1 | drop 2 |
-						rename -b { str downcase } |
+						rename -b { str lowercase } |
 						update size { into filesize } |
 						update packed { into filesize } |
 						update date {|r| $'($r.date)T($r.time)+00:00' | into datetime } | reject time |
@@ -701,7 +701,7 @@ module archive {
 			[[.7z]
 				{|i|
 					7za l $i | detect columns -s 18 --guess | skip 1 | drop 2 |
-					rename -b { str downcase } |
+					rename -b { str lowercase } |
 					update date {|r| $'($r.date)T($r.time)+00:00' | into datetime } | reject time |
 					update size { into filesize } | update compressed { if ($in | is-not-empty) { $in | into filesize } else { null } } |
 					move name --first | metadata set --path-columns [name]
