@@ -44,7 +44,7 @@ use $mise_mod_path
 $env.PATH = mise hook-env -f -s nu
 | from csv -n
 | rename op name val
-| where op == set and name == PATH
+| where op == set and ($it.name | str uppercase) == PATH
 | last
 | get val
 | split row (char esep)
@@ -369,7 +369,7 @@ if (which zoxide | is-not-empty) {
 # easier.
 def 'mise nugen' []: nothing -> nothing {
 	mkdir ($mise_mod_path | path dirname)
-	mise activate nu | save -f $mise_mod_path
+	^mise activate nu | save -f $mise_mod_path
 }
 
 # Generate and load mise completions
