@@ -800,34 +800,39 @@ def tplex [
 
 # Update packages from various providers.
 def pkgup [
-	--mise-tools (-t) = true # Update globally installed mise tools
-	--mise-self  (-m) = true # Update mise itself
-	--flatpak    (-f) = true # Update flatpak apps
-	--brew       (-b) = true # Update brew packages
-	--system     (-s) = true # Update the OS using the system package manager
+	--mise-tools (-t) # Update globally installed mise tools
+	--mise-self  (-m) # Update mise itself
+	--flatpak    (-f) # Update flatpak apps
+	--brew       (-b) # Update brew packages
+	--system     (-s) # Update the OS using the system package manager
+	--all        (-a) # Apply updates of all types. Overrides all other options
 ] {
-	if $mise_self {
+	if $mise_self or $all {
 		mise self-update -y
 	}
-	if $mise_tools {
+	if $mise_tools or $all {
 		cd ~/
 		mise up
 	}
-	if $nu.os-info.name == linux and $flatpak and (which flatpak | is-not-empty) {
+	if $nu.os-info.name == linux and ($flatpak or $all) and (which flatpak | is-not-empty) {
 		flatpak update -y
 	}
-	if $brew and (which brew | is-not-empty) {
-		brew update -y
+	if ($brew or $all) and (which brew | is-not-empty) {
+		brew upgrade --formulae -y
 	}
-	if $system {
-		if (which paru | is-not-empty) {
-			paru -Syu --noconfirm
-		} else if (which dnf | is-not-empty) {
-			sudo dnf update -y
-		} else if (which apt-get | is-not-empty) {
-			sudo sh -c 'apt-get update && apt-get upgrade -y'
-		} else {
-			error make 'Cannot determine system package manager'
+	if ($system or $all) {
+		if $nu.os-info.name == 'linux' {
+			if (which ujust | is-not-empty) {
+				ujust upgrade
+			} else if (which paru | is-not-empty) {
+				paru -Syu --noconfirm
+			} else if (which dnf | is-not-empty) {
+				sudo dnf update -y
+			} else if (which apt-get | is-not-empty) {
+				sudo sh -c 'apt-get update && apt-get upgrade -y'
+			} else {
+				error make 'Cannot determine system package manager'
+			}
 		}
 	}
 }
