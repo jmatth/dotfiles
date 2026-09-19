@@ -250,7 +250,7 @@ module prompt {
 		}
 	}
 
-	export def --env use [prompt: string@complete_prompt_name]: nothing -> nothing {
+	export def --env set [prompt: string@complete_prompt_name]: nothing -> nothing {
 		if $prompt == 'builtin' {
 			$env.NU_PROMPT = null
 			$env.PROMPT_COMMAND = null
@@ -349,7 +349,7 @@ module prompt {
 }
 
 use prompt
-prompt use full
+prompt set full
 
 #
 ## Generated autoload files.
