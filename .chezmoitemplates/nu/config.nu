@@ -357,7 +357,13 @@ prompt set full
 use autoeval
 
 if (which zoxide | is-not-empty) {
-    autoeval ensure 'zoxide' {|| ^zoxide init nushell }
+	autoeval ensure 'zoxide' {|| ^zoxide init nushell }
+}
+
+if (which atuin | is-not-empty) {
+	# pty-proxy must load before the primary atuin module
+	autoeval ensure 'atuin-00-pty-proxy' {|| ^atuin pty-proxy init nu }
+	autoeval ensure 'atuin-10-main'     {|| ^atuin init nu --disable-ai --disable-up-arrow }
 }
 
 #
@@ -855,4 +861,9 @@ def 'config nvim' [] {
 # Edit git configuration.
 def 'config git' [] {
 	nvim ~/.gitconfig
+}
+
+# Edit atuin configuration.
+def 'config atuin' [] {
+	nvim ~/.config/atuin/config.toml
 }
