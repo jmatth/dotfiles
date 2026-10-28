@@ -2,6 +2,23 @@
 
 export const user_autoload = $nu.user-autoload-dirs.0
 
+module core {
+	export alias ls = ls
+	export alias cd = cd
+}
+use core
+
+# Change directory to where autoeval files are stored.
+export def --env cd []: nothing -> nothing {
+	core cd $user_autoload
+}
+
+# List current autoeval files on disk.
+export def ls []: nothing -> table {
+	core cd $user_autoload
+	core ls -sf auto-*.nu
+}
+
 # Check that a file exists in the user autoload directory, and create it
 # with the contents of the provided closure if not.
 export def ensure [name: string, create: closure]: nothing -> nothing {
