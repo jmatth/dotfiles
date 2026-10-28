@@ -17,7 +17,7 @@
 # You can remove these comments if you want or leave
 # them for future reference.
 
-$env.ENV_CONVERSIONS = $env.ENV_CONVERSIONS | merge {
+$env.ENV_CONVERSIONS = $env.ENV_CONVERSIONS? | default {} | merge {
 	"XDG_DATA_DIRS": {
 		from_string: {|s| $s | split row (char esep) | path expand --no-symlink }
 		to_string: {|v| $v | path expand --no-symlink | str join (char esep) }

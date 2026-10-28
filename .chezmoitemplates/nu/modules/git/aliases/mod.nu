@@ -194,9 +194,9 @@ export alias gwC = git clean --force
 export alias gwx = git rm -r
 export alias gwX = git rm -r --force
 
-# cd to the root of the current git directory.
-def --env gwt [] {
-	let path_to_root = git rev-parse --show-cdup | str trim
-	if (path_to_root | is-empty) { return }
-	cd $path_to_root
+# Navigate to root of current git repo.
+def --env gwt []: nothing -> nothing {
+	let to_root = git rev-parse --show-cdup
+	if ($to_root | is-empty) { return }
+	cd $to_root
 }

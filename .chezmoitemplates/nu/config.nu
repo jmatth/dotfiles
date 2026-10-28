@@ -870,3 +870,18 @@ def 'config git' [] {
 def 'config atuin' [] {
 	nvim ~/.config/atuin/config.toml
 }
+
+# Edit mise config
+def 'config mise' [--global (-g)] {
+	let target = if $global {
+		'~/.config/mise/config.toml' | path expand
+	} else {
+		let cfgs = mise config ls -J | from json
+		if ($cfgs | length) < 2 {
+			error make 'No local mise config found, pass -g to edit global.'
+		}
+		$cfgs | first | get path | path expand
+	}
+	nvim $target
+}
+
