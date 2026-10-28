@@ -11,3 +11,6 @@
 
 # Mise
 mise.local.toml
+
+# Git
+.worktrees

@@ -1,4 +1,7 @@
+Include local_config
+
 Host *
+    SetEnv TERM=vt220
     ServerAliveInterval 60
     HashKnownHosts no
     ControlMaster auto
@@ -16,5 +19,3 @@ Host localhost
 
 Host github.com
     User git
-
-Include local_config
