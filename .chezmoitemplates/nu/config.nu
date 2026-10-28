@@ -37,7 +37,7 @@ path add ($nu.home-dir | path join .cargo bin)
 # -----------
 # Set up mise
 # -----------
-const mise_mod_path = $nu.default-config-dir | path join modules mise.nu
+const mise_mod_path = $nu.default-config-dir | path join scripts mise.nu
 use $mise_mod_path
 # Mise doesn't run the full env update code on activation. Manually update PATH
 # so future config files can use tools installed through mise.
@@ -447,6 +447,7 @@ alias code = codium
 alias la = ls -a
 alias ll = ls -la
 alias tree = eza -T
+alias nvp = nvim - +Man!
 
 alias jobs = job list
 {{ if ne .chezmoi.os "windows" -}}

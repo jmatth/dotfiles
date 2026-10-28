@@ -31,7 +31,3 @@ $env.ENV_CONVERSIONS = $env.ENV_CONVERSIONS? | default {} | merge {
 		to_string: {|v| $v | path expand --no-symlink | str join (char esep) }
 	}
 }
-
-$env.NU_LIB_DIRS ++= [
-	($nu.default-config-dir | path join modules)
-]
