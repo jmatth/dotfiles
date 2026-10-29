@@ -635,18 +635,22 @@ module archive {
 		$options | where (which ($it | split row ' ' | first) | is-not-empty) | first | default ($options | last)
 	}
 
+	def extract_tar [input: path, programs: list<string>, to?: path]: nothing -> nothing {
+		tar -xvf $input --use-compress-program=$'(choose_program ...$programs)' ...(if ($to | is-not-empty) { [-C $to] })
+	}
+
 	def handlers []: nothing -> table<matches: list<string>, list: closure, extract: closure, create: closure> {
 		[[matches list extract create];
 			[[.tar.gz .tgz]
 				{|i, raw| tar tvzf $i | maybe_parse { tabulate_tar } $raw }
-				{|i| tar -xvf $i --use-compress-program=$'(choose_program unpigz gunzip)' }
+				{|i, to| extract_tar $i [unpigz gunzip] $to }
 				{|i: string, ...rest: glob|
 					tar -cvf $i --use-compress-program=$'(choose_program pigz gzip)' ...$rest
 				}
 			]
 			[[.tar.bz2 .tbz .tbz2]
 				{|i, raw| tar tvjf $i | maybe_parse { tabulate_tar } $raw }
-				{|i| tar -xvf $i --use-compress-program=$'(choose_program lbunzip2 pbunzip2 bunzip2)' }
+				{|i, to| extract_tar $i [lbunzip2 pbunzip2 bunzip2] $to }
 				{|i, ...rest|
 					tar -cvf $i --use-compress-program=$'(choose_program lbzip2 pbzip2 bzip2)' ...$rest
 				}
@@ -660,7 +664,7 @@ module archive {
 						xzcat $i | tar tvf -
 					} | maybe_parse { tabulate_tar } $raw
 				}
-				{|i| tar -xvf $i --use-compress-program=$'(choose_program "pixz -d" xz)' }
+				{|i, to| extract_tar $i ['pixz -d' xz] $to }
 				{|i, ...rest|
 					tar -cvf $i --use-compress-program=$'(choose_program pixz xz)' ...$rest
 				}
@@ -674,30 +678,34 @@ module archive {
 						lzcat $i | tar tvf -
 					} | maybe_parse { tabulate_tar } $raw
 				}
-				{|i|
+				{|i, to|
 					let tar_has_lzma = (tar --lzma --help | complete).exit_code == 0
 					if $tar_has_lzma {
-						tar --lzma -xvf $i
+						tar --lzma -xvf $i ...(if ($to | is-not-empty) { [-C $to] })
 					} else {
-						lzcat $i | tar -xvf -
+						lzcat $i | tar -xvf ...(if ($to | is-not-empty) { [-C $to] }) -
 					}
 				}
 				{|i, ...rest| tar -cvf $i --lzma ...$rest }
 			]
 			[[.tar.zst .tzst]
 				{|i, raw| tar -I zstd -tvf $i | maybe_parse { tabulate_tar } $raw }
-				{|i| tar -xvf $i --use-compress-program='zstd' }
+				{|i, to| extract_tar $i [zstd] $to }
 				{|i, ...rest| tar -cvf $i --use-compress-program='zstd' ...$rest }
 			]
 			[[.tar]
 				{|i, raw| tar tvf $i | maybe_parse { tabulate_tar } $raw }
-				{|i| tar -xvf $i }
+				{|i, to| tar -xvf $i ...(if ($to | is-not-empty) { [-C $to] }) }
 				{|i, ...rest| tar -cvf $i ...$rest }
 			]
 			[[.zip .jar]
 				{|i, raw| unzip -lv $i | maybe_parse { tabulate_zip } $raw }
-				{|i|
-					let extract_dir = ($i | path parse | get stem)
+				{|i, to|
+					let extract_dir = if ($to | is-not-empty) {
+						$to
+					} else {
+						$i | path parse | get stem
+					}
 					unzip $i -d $extract_dir
 				}
 				{|i, ...rest| ^zip -r $i ...$rest}
@@ -712,20 +720,20 @@ module archive {
 						lsar -l $i
 					}
 				}
-				{|i|
+				{|i, to|
 					if (which unrar | is-not-empty) {
-						unrar x -ad $i
+						unrar x -ad $i ...(if ($to | is-not-empty) { [$to] })
 					} else if (which rar | is-not-empty) {
-						rar x -ad $i
+						rar x -ad $i ...(if ($to | is-not-empty) { [$to] })
 					} else {
-						unar -d $i
+						unar -d $i ...(if ($to | is-not-empty) { [-o $to] })
 					}
 				}
 				{|i, ...rest| rar a $i ...$rest}
 			]
 			[[.7z]
 				{|i, raw| 7za l $i | maybe_parse { tabulate_7z } $raw }
-				{|i| 7za x $i }
+				{|i, to| 7za x $i ...(if ($to | is-not-empty) { [$'-o($to)'] }) }
 				{|i, ...rest| 7za a $i ...$rest }
 			]
 		]
@@ -770,18 +778,19 @@ module archive {
 	}
 
 	# Extract common archive formats.
-	export def extract [input: path] {
+	export def extract [
+		input: path            # Archive file to read.
+		--directory (-C): path # Directory to extract to. Will be created if it does not exist. Uses default of underlying program if unset, which is usually the current directory.
+	] {
 		let h = get_handler $input
-		do $h.extract $input
+		if $directory != null { mkdir $directory }
+		do $h.extract $input $directory
 	}
 
-	# Create an archive in a common format. Format is determined by the
-	# extension of the first argument.
+	# Create an archive in a common format. Format is determined by the extension of the first argument.
 	export def create [
-		archive: path
-		# Path to file archive to create. If a file already exists at this path it may be overwritten.
-		...inputs: glob
-		# Files to include in the archive.
+		archive: path   # Path to file archive to create. If a file already exists at this path it may be overwritten.
+		...inputs: glob # Files to include in the archive.
 	] {
 		let h = get_handler $archive
 		do $h.create $archive ...$inputs
