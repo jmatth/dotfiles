@@ -22,5 +22,5 @@ font-size = 12
 {{- end }}
 
 {{ if ne .chezmoi.os "windows" -}}
-command = $HOME/.local/bin/mise x -- nu
+command = $HOME/.local/bin/mise x --no-deps --raw -- nu -l
 {{- end }}
