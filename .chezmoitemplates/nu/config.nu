@@ -629,6 +629,19 @@ module archive {
 		| move name --first | metadata set --path-columns [name]
 	}
 
+	def tabulate_deb []: string -> table {
+		detect columns -n
+		| rename mode owner size date time name
+		| update size { into filesize }
+		| insert user { get owner | split row / | first }
+		| insert group { get owner | split row / | last }
+		| reject owner
+		| update date {|r| $'($r.date)-($r.time)Z' | into datetime }
+		| reject time
+		| metadata set --path-columns [name]
+		| select name size date mode user group
+	}
+
 	# Of the provided options, return the first that is found in PATH, or the
 	# last option if no matches are found.
 	def choose_program [...options: string]: nothing -> string {
@@ -735,6 +748,16 @@ module archive {
 				{|i, raw| 7za l $i | maybe_parse { tabulate_7z } $raw }
 				{|i, to| 7za x $i ...(if ($to | is-not-empty) { [$'-o($to)'] }) }
 				{|i, ...rest| 7za a $i ...$rest }
+			]
+			[[.rpm]
+				{|i, raw| rpm2archive --format pax $i | tar tvz | maybe_parse { tabulate_tar } $raw }
+				{|i, to| rpm2archive --format pax $i | tar xvz ...(if ($to | is-not-empty) { [-C $to] }) }
+				{|i, ...rest| error make 'rpm creation not supported' }
+			]
+			[[.deb]
+				{|i, raw| dpkg-deb -c $i | maybe_parse { tabulate_deb } $raw }
+				{|i, to| dpkg-deb -v -x $i (if ($to | is-not-empty) { $to } else { '.' }) }
+				{|i, ...rest| error make 'deb creation not supported' }
 			]
 		]
 	}
