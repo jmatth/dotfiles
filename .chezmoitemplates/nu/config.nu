@@ -602,28 +602,53 @@ module archive {
 		if $raw { } else { do $tabulate }
 	}
 
+	def try_parse_date [date: cell-path, time: cell-path]: record -> oneof<datetime, string> {
+		let d = $'($in | get $date)-($in | get $time)Z'
+		try {
+			$d | into datetime
+		} catch {
+			$d
+		}
+	}
+
+	def reject_if_empty [...cols: cell-path]: table -> table {
+		let t = $in
+		let empty = $cols | where {|c| $t | get $c | all { is-empty } }
+		$t | reject ...$empty
+	}
+
+	def tar_parse_re [] {
+		[
+			'^(?P<mode>\S{10,11})'
+			'(?P<user>\w+)/(?P<group>\w+)'
+			'(?:(?P<size>\d+)|(?P<major>\d+),(?P<minor>\d+))'
+			'(?P<date>\d{4}-\d{2}-\d{2})'
+			'(?P<time>\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?)'
+			'(?P<rest>.*)$'
+		] | str join '\s+'
+	}
+
 	def tabulate_tar []: string -> table {
-		detect columns -n --guess
-		| rename mode owner size date time name
-		| insert user { get -o owner | default '' | split row '/' | first }
-		| insert group { get -o owner | default '' | split row '/' | last }
-		| reject -o owner
-		| update size { into filesize }
-		| move mode --after date
-		| update date {|r| try { $'($r.date)T($r.time)+00:00' | into datetime } }
-		| reject time
-		| move --first name
+		lines | parse --regex (tar_parse_re)
+		| update date {|r| $r | try_parse_date date time } | reject time
+		| update size { try { into filesize } }
+		| update rest { split column ' -> ' src dst }
+		| insert name {|r| $r.rest.0.src? }
+		| insert target {|r| $r.rest.0.dst? }
+		| reject rest
 		| metadata set --path-columns [name]
+		| select name target size date mode major minor user group
+		| reject_if_empty target major minor
 	}
 
 	def tabulate_zip []: string -> table {
-		detect columns --skip 1 --guess |
-		skip 1 | drop 2 |
-		rename -b { str lowercase } |
-		move --first name |
-		update size { into filesize } | update length { into filesize } |
-		update date {|r| $'($r.date)T($r.time)+00:00' | into datetime } | reject time |
-		metadata set --path-columns [name]
+		detect columns --skip 1 --guess
+		| skip 1 | drop 2
+		| rename -b { str lowercase }
+		| move --first name
+		| update size { into filesize } | update length { into filesize }
+		| update date {|r| $r | try_parse_date date time } | reject time
+		| metadata set --path-columns [name]
 	}
 
 	def tabulate_rar []: string -> table {
@@ -631,14 +656,14 @@ module archive {
 		| rename -b { str lowercase }
 		| update size { into filesize }
 		| update packed { into filesize }
-		| update date {|r| $'($r.date)T($r.time)+00:00' | into datetime } | reject time
+		| update date {|r| $r | try_parse_date date time } | reject time |
 		| move name --first | metadata set --path-columns [name]
 	}
 
 	def tabulate_7z []: string -> table {
 		detect columns -s 18 --guess | skip 1 | drop 2
 		| rename -b { str lowercase }
-		| update date {|r| $'($r.date)T($r.time)+00:00' | into datetime } | reject time
+		| update date {|r| $r | try_parse_date date time } | reject time |
 		| update size { into filesize } | update compressed { if ($in | is-not-empty) { $in | into filesize } else { null } }
 		| move name --first | metadata set --path-columns [name]
 	}
@@ -650,8 +675,7 @@ module archive {
 		| insert user { get owner | split row / | first }
 		| insert group { get owner | split row / | last }
 		| reject owner
-		| update date {|r| $'($r.date)-($r.time)Z' | into datetime }
-		| reject time
+		| update date {|r| $r | try_parse_date date time } | reject time |
 		| metadata set --path-columns [name]
 		| select name size date mode user group
 	}
@@ -666,17 +690,21 @@ module archive {
 		tar -xvf $input --use-compress-program=$'(choose_program ...$programs)' ...(if ($to | is-not-empty) { [-C $to] })
 	}
 
+	def list_tar [type: string, input: string] {
+		tar $'tv($type)f' $input --utc --quoting-style=escape
+	}
+
 	def handlers []: nothing -> table<matches: list<string>, list: closure, extract: closure, create: closure> {
 		[[matches list extract create];
 			[[.tar.gz .tgz]
-				{|i, raw| tar tvzf $i | maybe_parse { tabulate_tar } $raw }
+				{|i, raw| list_tar z $i | maybe_parse { tabulate_tar } $raw }
 				{|i, to| extract_tar $i [unpigz gunzip] $to }
 				{|i: string, ...rest: glob|
 					tar -cvf $i --use-compress-program=$'(choose_program pigz gzip)' ...$rest
 				}
 			]
 			[[.tar.bz2 .tbz .tbz2]
-				{|i, raw| tar tvjf $i | maybe_parse { tabulate_tar } $raw }
+				{|i, raw| list_tar j $i | maybe_parse { tabulate_tar } $raw }
 				{|i, to| extract_tar $i [lbunzip2 pbunzip2 bunzip2] $to }
 				{|i, ...rest|
 					tar -cvf $i --use-compress-program=$'(choose_program lbzip2 pbzip2 bzip2)' ...$rest
@@ -721,7 +749,7 @@ module archive {
 				{|i, ...rest| tar -cvf $i --use-compress-program='zstd' ...$rest }
 			]
 			[[.tar]
-				{|i, raw| tar tvf $i | maybe_parse { tabulate_tar } $raw }
+				{|i, raw| list_tar '' $i | maybe_parse { tabulate_tar } $raw }
 				{|i, to| tar -xvf $i ...(if ($to | is-not-empty) { [-C $to] }) }
 				{|i, ...rest| tar -cvf $i ...$rest }
 			]
@@ -764,7 +792,7 @@ module archive {
 				{|i, ...rest| 7za a $i ...$rest }
 			]
 			[[.rpm]
-				{|i, raw| rpm2archive --format pax $i | tar tvz | maybe_parse { tabulate_tar } $raw }
+				{|i, raw| rpm2archive --format pax $i | tar tvz --utc --quoting-style escape | maybe_parse { tabulate_tar } $raw }
 				{|i, to| rpm2archive --format pax $i | tar xvz ...(if ($to | is-not-empty) { [-C $to] }) }
 				{|i, ...rest| error make 'rpm creation not supported' }
 			]
