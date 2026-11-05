@@ -37,6 +37,8 @@ div = 'blue'
 nu_full = """
 [╭─](div)\
 [\\[](div)$directory[\\]─](div)\
+([\\[](div)$pixi[\\]─](div))\
+([\\[](div)$container[\\]─](div))\
 $fill\
 ([\\[](div)$golang[\\]─](div))\
 ([\\[](div)$nodejs[\\]─](div))\
@@ -51,6 +53,8 @@ nu_full_right = '$status [<─(\[$git_branch$git_commit$git_status\])─╯](div
 nu_full_trans = """
 [╭─](div)\
 [\\[](div)$directory[\\]─](div)\
+([\\[](div)$pixi[\\]─](div))\
+([\\[](div)$container[\\]─](div))\
 $fill\
 ([\\[](div)$golang[\\]─](div))\
 ([\\[](div)$nodejs[\\]─](div))\
@@ -96,7 +100,6 @@ format = '[$path]($style)[$read_only]($read_only_style)'
 style = 'green'
 read_only = ' '
 
-
 [username]
 show_always = true
 format = '[$user]($style)'
@@ -138,6 +141,17 @@ symbol = '!'
 success_symbol = ''
 recognize_signal_code = true
 map_symbol = false
+
+[container]
+format = '[$symbol $name]($style)'
+style = 'red dimmed'
+
+[pixi]
+format = '[$symbol $project_name(\($environment\))]($style)'
+symbol = "󰐱"
+style = 'yellow'
+show_default_environment = false
+detect_files = []
 
 [dart]
 format = '[$symbol$version]($style)'
