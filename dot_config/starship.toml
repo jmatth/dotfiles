@@ -37,8 +37,8 @@ div = 'blue'
 nu_full = """
 [╭─](div)\
 [\\[](div)$directory[\\]─](div)\
-([\\[](div)$pixi[\\]─](div))\
 ([\\[](div)$container[\\]─](div))\
+([\\[](div)$pixi[\\]─](div))\
 $fill\
 ([\\[](div)$golang[\\]─](div))\
 ([\\[](div)$nodejs[\\]─](div))\
@@ -53,8 +53,8 @@ nu_full_right = '$status [<─(\[$git_branch$git_commit$git_status\])─╯](div
 nu_full_trans = """
 [╭─](div)\
 [\\[](div)$directory[\\]─](div)\
-([\\[](div)$pixi[\\]─](div))\
 ([\\[](div)$container[\\]─](div))\
+([\\[](div)$pixi[\\]─](div))\
 $fill\
 ([\\[](div)$golang[\\]─](div))\
 ([\\[](div)$nodejs[\\]─](div))\
@@ -144,7 +144,7 @@ map_symbol = false
 
 [container]
 format = '[$symbol $name]($style)'
-style = 'red dimmed'
+style = 'red'
 
 [pixi]
 format = '[$symbol $project_name(\($environment\))]($style)'
