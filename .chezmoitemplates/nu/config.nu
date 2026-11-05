@@ -253,7 +253,7 @@ module prompt {
 		)
 	}
 
-	def complete_prompt_name [context: string] {
+	def complete_prompt_name [buffer: string, place] {
 		let starship_profiles = get_starship_profiles
 		return {
 			completions: [
@@ -992,6 +992,11 @@ def 'config git' [] {
 # Edit atuin configuration.
 def 'config atuin' [] {
 	nvim ~/.config/atuin/config.toml
+}
+
+# Edit starship configuration.
+def 'config starship' [] {
+	nvim ~/.config/starship.toml
 }
 
 # Edit mise config
