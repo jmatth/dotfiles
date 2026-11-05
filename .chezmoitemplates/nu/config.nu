@@ -461,14 +461,19 @@ alias code = codium
 alias la = ls -a
 alias ll = ls -la
 alias tree = eza -T
-alias nvp = nvim - +Man!
+alias ness = nvim - +Man!
 
 alias jobs = job list
 {{ if ne .chezmoi.os "windows" -}}
 alias fg = job unfreeze
 {{- end }}
 
-# Run ls and l
+# Run ls, sorted by most rectently modified.
+def lr []: nothing -> table {
+	%ls | sort-by modified
+}
+
+# Display ls outpit as a grid.
 def lg []: nothing -> string {
 	ls
 	| sort-by type name -i
