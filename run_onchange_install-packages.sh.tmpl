@@ -6,8 +6,8 @@ export PATH="$HOME/.local/bin:$PATH"
 if ! command -v mise &> /dev/null; then
     curl https://mise.run | sh
 fi
-mise use -g 'github:nushell/nushell[exe=nu]'
 mise use -g \
+    nushell \
     carapace \
     vivid \
     jq \

@@ -11,8 +11,8 @@ $env:Path = `
     ';' + `
     [System.Environment]::GetEnvironmentVariable("Path","User")
 
-mise use -g 'github:nushell/nushell[exe=nu]'
 mise use -g `
+    nushell `
     carapace `
     vivid `
     jq `
